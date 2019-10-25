@@ -1,0 +1,52 @@
+{
+  "name": "example-frontend-react-application",
+  "version": "1.0.0",
+  "description": "An example frontend application built with React.",
+  "main": "index.js",
+  "scripts": {
+    "build": "react-scripts build",
+    "eject": "react-scripts eject",
+    "flow": "flow",
+    "format": "prettier --write \"**/*.+(js|jsx|json)\"",
+    "lint:js": "./node_modules/.bin/eslint ./src",
+    "lint:sass": "./node_modules/.bin/sass-lint -v -q",
+    "validate": "npm run lint:js && npm run format -- --list-different && npm run flow && npm run lint:sass",
+    "start": "react-scripts start",
+    "test": "react-scripts test",
+    "watch": "echo \"Error: no watch specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "UNLICENSED",
+  "private": true,
+  "devDependencies": {
+    "babel-eslint": "^10.0.3",
+    "eslint": "^6.5.1",
+    "eslint-config-airbnb": "^18.0.1",
+    "eslint-plugin-import": "^2.18.2",
+    "eslint-plugin-jsx-a11y": "^6.2.3",
+    "eslint-plugin-react": "^7.16.0",
+    "flow-bin": "^0.110.1",
+    "husky": "^3.0.9",
+    "lint-staged": "^9.4.2",
+    "prettier": "^1.18.2",
+    "sass-lint": "^1.13.1"
+  },
+  "dependencies": {
+    "node-sass": "4.13.0",
+    "prop-types": "^15.7.2",
+    "react": "^16.11.0",
+    "react-dom": "^16.11.0",
+    "react-router-dom": "^5.1.2",
+    "react-scripts": "^3.2.0"
+  },
+  "browserslist": [
+    ">0.2%",
+    "not dead",
+    "not ie <= 11",
+    "not op_mini all"
+  ],
+  "eslintConfig": {
+    "extends": "react-app"
+  }
+}
