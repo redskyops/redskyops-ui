@@ -1,0 +1,11 @@
+@import '../../styles/colors';
+
+.header {
+  background-color: $white;
+  display: flex;
+  justify-content: center;
+}
+
+.logo {
+  width: 200px;
+}
