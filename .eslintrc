@@ -5,7 +5,9 @@
   },
   "env": {
       "browser": true,
-      "node": true
+      "node": true,
+      "jest": true,
+      "es6": true
   },
   "extends": [
     "eslint:recommended",
@@ -22,6 +24,7 @@
   },
   "plugins": [
     "react",
-    "jsx-a11y"
+    "jsx-a11y",
+    "jest"
   ]
 }
