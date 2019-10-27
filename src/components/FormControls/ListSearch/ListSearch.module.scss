@@ -1,0 +1,16 @@
+@import '../../../styles/colors';
+@import '../../../styles/vars';
+
+.listSearch {
+  position: relative;
+}
+
+.input {
+  background-color: $bg-light;
+  border: 0;
+  border-radius: $size-5x / 2;
+  line-height: $size-5x;
+  min-width: 200px;
+  outline: 0;
+  padding: 0 $size-5x / 2;
+}

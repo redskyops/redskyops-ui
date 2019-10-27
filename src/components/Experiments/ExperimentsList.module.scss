@@ -1,14 +1,13 @@
 @import '../../styles/colors';
 @import '../../styles/vars';
 
-.header {
+
+.expList {
   align-items: center;
-  background-color: $white;
   display: flex;
   justify-content: space-between;
-  padding-right: 24px;
 }
 
-.logo {
-  height: $header-height;
+.list {
+  margin-left: $size-2x;
 }

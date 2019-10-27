@@ -1,7 +1,8 @@
 import React, {useEffect} from 'react'
 
-import style from './Experiments.module.scss'
+import style from './ExperimentsList.module.scss'
 import {ExperimentsService} from '../../services/Experiments.service'
+import ListSearch from '../FormControls/ListSearch/ListSearch.component'
 import {connectWithState} from '../../context/StateContext'
 
 type Props = {
@@ -24,7 +25,12 @@ export const ExperimentsList = (props: Props) => {
           },
         })
       } catch (e) {
-        console.log(e)
+        updateState({
+          experiments: {
+            ...experiments,
+            error: 'Error loading experiments list',
+          },
+        })
       }
     })()
 
@@ -32,13 +38,12 @@ export const ExperimentsList = (props: Props) => {
   }, [])
   return (
     <div className={style.expList}>
-      <pre>
-        {experiments.list.map(e => (
-          <h3 key={e.id}>
-            {e.displayName}/{e.id}
-          </h3>
-        ))}
-      </pre>
+      <div>
+        <strong>{experiments.list.length}</strong> experiments loaded
+      </div>
+      <div className={style.list}>
+        <ListSearch />
+      </div>
     </div>
   )
 }
