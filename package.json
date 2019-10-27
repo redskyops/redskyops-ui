@@ -21,6 +21,7 @@
   "private": true,
   "devDependencies": {
     "babel-eslint": "10.0.3",
+    "enzyme": "^3.10.0",
     "enzyme-adapter-react-16": "^1.15.1",
     "eslint": "6.5.1",
     "eslint-config-airbnb": "18.0.1",
