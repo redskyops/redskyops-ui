@@ -1,12 +1,13 @@
 @import '../../styles/colors';
 @import '../../styles/vars';
 
-.header {
-  background-color: $white;
+.page404 {
+  align-items: center;
   display: flex;
   justify-content: center;
+  height: calc(100vh - #{$header-height};
 }
 
-.logo {
-  height: $header-height;
+.content {
+  text-align: center;
 }

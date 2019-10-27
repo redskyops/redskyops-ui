@@ -1,0 +1,930 @@
+{
+  "experiments": [
+    {
+      "_metadata": {
+        "Last-Modified": "Thu, 24 Oct 2019 20:48:30 GMT",
+        "Link": [
+          "<https://latest-master.carbonrelay.dev/api/experiments/postgres-ofer>;rel=self",
+          "<https://latest-master.carbonrelay.dev/api/experiments/postgres-ofer/trials/>;rel=https://carbonrelay.com/rel/trials",
+          "<https://latest-master.carbonrelay.dev/api/experiments/postgres-ofer/trials/next>;rel=https://carbonrelay.com/rel/nextTrial"
+        ]
+      },
+      "displayName": "postgres-ofer",
+      "metrics": [
+        {
+          "minimize": true,
+          "name": "cost"
+        },
+        {
+          "minimize": true,
+          "name": "duration"
+        }
+      ],
+      "observations": 40,
+      "optimization": {
+        "burnIn": 10,
+        "experimentBudget": 40,
+        "parallelTrials": 1
+      },
+      "parameters": [
+        {
+          "bounds": {
+            "max": 4000,
+            "min": 100
+          },
+          "name": "cpu",
+          "type": "int"
+        },
+        {
+          "bounds": {
+            "max": 4000,
+            "min": 500
+          },
+          "name": "memory",
+          "type": "int"
+        }
+      ]
+    },
+    {
+      "_metadata": {
+        "Last-Modified": "Thu, 24 Oct 2019 18:20:51 GMT",
+        "Link": [
+          "<https://latest-master.carbonrelay.dev/api/experiments/check-defaults-GCWMYKBZ>;rel=self",
+          "<https://latest-master.carbonrelay.dev/api/experiments/check-defaults-GCWMYKBZ/trials/>;rel=https://carbonrelay.com/rel/trials",
+          "<https://latest-master.carbonrelay.dev/api/experiments/check-defaults-GCWMYKBZ/trials/next>;rel=https://carbonrelay.com/rel/nextTrial"
+        ]
+      },
+      "displayName": "ELK demo",
+      "metrics": [
+        {
+          "minimize": true,
+          "name": "cost"
+        }
+      ],
+      "observations": 0,
+      "optimization": {
+        "burnIn": 10,
+        "experimentBudget": 40,
+        "parallelTrials": 1
+      },
+      "parameters": [
+        {
+          "bounds": {
+            "max": 3.5,
+            "min": 0.5
+          },
+          "name": "es_cpu",
+          "type": "double"
+        },
+        {
+          "bounds": {
+            "max": 12000,
+            "min": 2000
+          },
+          "name": "es_memory",
+          "type": "int"
+        },
+        {
+          "bounds": {
+            "max": 4,
+            "min": 2
+          },
+          "name": "es_replicas",
+          "type": "int"
+        },
+        {
+          "bounds": {
+            "max": 12000,
+            "min": 2000
+          },
+          "name": "ls_memory",
+          "type": "int"
+        }
+      ]
+    },
+    {
+      "_metadata": {
+        "Last-Modified": "Thu, 24 Oct 2019 18:20:47 GMT",
+        "Link": [
+          "<https://latest-master.carbonrelay.dev/api/experiments/too-many-trials-GCWMYKBZ>;rel=self",
+          "<https://latest-master.carbonrelay.dev/api/experiments/too-many-trials-GCWMYKBZ/trials/>;rel=https://carbonrelay.com/rel/trials",
+          "<https://latest-master.carbonrelay.dev/api/experiments/too-many-trials-GCWMYKBZ/trials/next>;rel=https://carbonrelay.com/rel/nextTrial"
+        ]
+      },
+      "displayName": "ELK demo",
+      "metrics": [
+        {
+          "minimize": true,
+          "name": "cost"
+        }
+      ],
+      "observations": 0,
+      "optimization": {
+        "burnIn": 5,
+        "experimentBudget": 200,
+        "parallelTrials": 4
+      },
+      "parameters": [
+        {
+          "bounds": {
+            "max": 3.5,
+            "min": 0.5
+          },
+          "name": "es_cpu",
+          "type": "double"
+        },
+        {
+          "bounds": {
+            "max": 12000,
+            "min": 2000
+          },
+          "name": "es_memory",
+          "type": "int"
+        },
+        {
+          "bounds": {
+            "max": 4,
+            "min": 2
+          },
+          "name": "es_replicas",
+          "type": "int"
+        },
+        {
+          "bounds": {
+            "max": 12000,
+            "min": 2000
+          },
+          "name": "ls_memory",
+          "type": "int"
+        }
+      ]
+    },
+    {
+      "_metadata": {
+        "Last-Modified": "Thu, 24 Oct 2019 18:20:46 GMT",
+        "Link": [
+          "<https://latest-master.carbonrelay.dev/api/experiments/too-many-params-GCWMYKBZ>;rel=self",
+          "<https://latest-master.carbonrelay.dev/api/experiments/too-many-params-GCWMYKBZ/trials/>;rel=https://carbonrelay.com/rel/trials",
+          "<https://latest-master.carbonrelay.dev/api/experiments/too-many-params-GCWMYKBZ/trials/next>;rel=https://carbonrelay.com/rel/nextTrial"
+        ]
+      },
+      "displayName": "ELK demo",
+      "metrics": [
+        {
+          "minimize": true,
+          "name": "cost"
+        }
+      ],
+      "observations": 0,
+      "optimization": {
+        "burnIn": 5,
+        "experimentBudget": 50,
+        "parallelTrials": 4
+      },
+      "parameters": [
+        {
+          "bounds": {
+            "max": 3.5,
+            "min": 0.5
+          },
+          "name": "es_cpu_1",
+          "type": "double"
+        },
+        {
+          "bounds": {
+            "max": 3.5,
+            "min": 0.5
+          },
+          "name": "es_cpu_2",
+          "type": "double"
+        },
+        {
+          "bounds": {
+            "max": 3.5,
+            "min": 0.5
+          },
+          "name": "es_cpu_3",
+          "type": "double"
+        },
+        {
+          "bounds": {
+            "max": 3.5,
+            "min": 0.5
+          },
+          "name": "es_cpu_4",
+          "type": "double"
+        },
+        {
+          "bounds": {
+            "max": 12000,
+            "min": 2000
+          },
+          "name": "es_memory_1",
+          "type": "int"
+        },
+        {
+          "bounds": {
+            "max": 12000,
+            "min": 2000
+          },
+          "name": "es_memory_2",
+          "type": "int"
+        },
+        {
+          "bounds": {
+            "max": 12000,
+            "min": 2000
+          },
+          "name": "es_memory_3",
+          "type": "int"
+        },
+        {
+          "bounds": {
+            "max": 12000,
+            "min": 2000
+          },
+          "name": "es_memory_4",
+          "type": "int"
+        },
+        {
+          "bounds": {
+            "max": 4,
+            "min": 2
+          },
+          "name": "es_replicas_1",
+          "type": "int"
+        },
+        {
+          "bounds": {
+            "max": 4,
+            "min": 2
+          },
+          "name": "es_replicas_2",
+          "type": "int"
+        },
+        {
+          "bounds": {
+            "max": 4,
+            "min": 2
+          },
+          "name": "es_replicas_3",
+          "type": "int"
+        },
+        {
+          "bounds": {
+            "max": 4,
+            "min": 2
+          },
+          "name": "es_replicas_4",
+          "type": "int"
+        },
+        {
+          "bounds": {
+            "max": 3.5,
+            "min": 0.5
+          },
+          "name": "ls_cpu_1",
+          "type": "double"
+        },
+        {
+          "bounds": {
+            "max": 3.5,
+            "min": 0.5
+          },
+          "name": "ls_cpu_2",
+          "type": "double"
+        },
+        {
+          "bounds": {
+            "max": 3.5,
+            "min": 0.5
+          },
+          "name": "ls_cpu_3",
+          "type": "double"
+        },
+        {
+          "bounds": {
+            "max": 3.5,
+            "min": 0.5
+          },
+          "name": "ls_cpu_4",
+          "type": "double"
+        },
+        {
+          "bounds": {
+            "max": 12000,
+            "min": 2000
+          },
+          "name": "ls_memory_1",
+          "type": "int"
+        },
+        {
+          "bounds": {
+            "max": 12000,
+            "min": 2000
+          },
+          "name": "ls_memory_2",
+          "type": "int"
+        },
+        {
+          "bounds": {
+            "max": 12000,
+            "min": 2000
+          },
+          "name": "ls_memory_3",
+          "type": "int"
+        },
+        {
+          "bounds": {
+            "max": 12000,
+            "min": 2000
+          },
+          "name": "ls_memory_4",
+          "type": "int"
+        },
+        {
+          "bounds": {
+            "max": 4,
+            "min": 2
+          },
+          "name": "ls_replicas_1",
+          "type": "int"
+        },
+        {
+          "bounds": {
+            "max": 4,
+            "min": 2
+          },
+          "name": "ls_replicas_2",
+          "type": "int"
+        },
+        {
+          "bounds": {
+            "max": 4,
+            "min": 2
+          },
+          "name": "ls_replicas_3",
+          "type": "int"
+        },
+        {
+          "bounds": {
+            "max": 4,
+            "min": 2
+          },
+          "name": "ls_replicas_4",
+          "type": "int"
+        }
+      ]
+    },
+    {
+      "_metadata": {
+        "Last-Modified": "Thu, 24 Oct 2019 18:20:46 GMT",
+        "Link": [
+          "<https://latest-master.carbonrelay.dev/api/experiments/too-many-metrics-GCWMYKBZ>;rel=self",
+          "<https://latest-master.carbonrelay.dev/api/experiments/too-many-metrics-GCWMYKBZ/trials/>;rel=https://carbonrelay.com/rel/trials",
+          "<https://latest-master.carbonrelay.dev/api/experiments/too-many-metrics-GCWMYKBZ/trials/next>;rel=https://carbonrelay.com/rel/nextTrial"
+        ]
+      },
+      "displayName": "ELK demo",
+      "metrics": [
+        {
+          "minimize": true,
+          "name": "cost"
+        },
+        {
+          "minimize": false,
+          "name": "latency"
+        },
+        {
+          "minimize": false,
+          "name": "throughput"
+        }
+      ],
+      "observations": 0,
+      "optimization": {
+        "burnIn": 5,
+        "experimentBudget": 10,
+        "parallelTrials": 4
+      },
+      "parameters": [
+        {
+          "bounds": {
+            "max": 3.5,
+            "min": 0.5
+          },
+          "name": "es_cpu",
+          "type": "double"
+        },
+        {
+          "bounds": {
+            "max": 12000,
+            "min": 2000
+          },
+          "name": "es_memory",
+          "type": "int"
+        },
+        {
+          "bounds": {
+            "max": 4,
+            "min": 2
+          },
+          "name": "es_replicas",
+          "type": "int"
+        },
+        {
+          "bounds": {
+            "max": 3.5,
+            "min": 0.5
+          },
+          "name": "ls_cpu",
+          "type": "double"
+        },
+        {
+          "bounds": {
+            "max": 12000,
+            "min": 2000
+          },
+          "name": "ls_memory",
+          "type": "int"
+        },
+        {
+          "bounds": {
+            "max": 4,
+            "min": 2
+          },
+          "name": "ls_replicas",
+          "type": "int"
+        }
+      ]
+    },
+    {
+      "_metadata": {
+        "Last-Modified": "Thu, 24 Oct 2019 18:20:46 GMT",
+        "Link": [
+          "<https://latest-master.carbonrelay.dev/api/experiments/valid-experiment-GCWMYKBZ>;rel=self",
+          "<https://latest-master.carbonrelay.dev/api/experiments/valid-experiment-GCWMYKBZ/trials/>;rel=https://carbonrelay.com/rel/trials",
+          "<https://latest-master.carbonrelay.dev/api/experiments/valid-experiment-GCWMYKBZ/trials/next>;rel=https://carbonrelay.com/rel/nextTrial"
+        ]
+      },
+      "displayName": "ELK demo",
+      "metrics": [
+        {
+          "minimize": true,
+          "name": "cost"
+        }
+      ],
+      "observations": 0,
+      "optimization": {
+        "burnIn": 5,
+        "experimentBudget": 50,
+        "parallelTrials": 4
+      },
+      "parameters": [
+        {
+          "bounds": {
+            "max": 3.5,
+            "min": 0.5
+          },
+          "name": "es_cpu",
+          "type": "double"
+        },
+        {
+          "bounds": {
+            "max": 12000,
+            "min": 2000
+          },
+          "name": "es_memory",
+          "type": "int"
+        },
+        {
+          "bounds": {
+            "max": 4,
+            "min": 2
+          },
+          "name": "es_replicas",
+          "type": "int"
+        },
+        {
+          "bounds": {
+            "max": 12000,
+            "min": 2000
+          },
+          "name": "ls_memory",
+          "type": "int"
+        }
+      ]
+    },
+    {
+      "_metadata": {
+        "Last-Modified": "Thu, 24 Oct 2019 18:19:33 GMT",
+        "Link": [
+          "<https://latest-master.carbonrelay.dev/api/experiments/check-defaults-QXMBAGFH>;rel=self",
+          "<https://latest-master.carbonrelay.dev/api/experiments/check-defaults-QXMBAGFH/trials/>;rel=https://carbonrelay.com/rel/trials",
+          "<https://latest-master.carbonrelay.dev/api/experiments/check-defaults-QXMBAGFH/trials/next>;rel=https://carbonrelay.com/rel/nextTrial"
+        ]
+      },
+      "displayName": "ELK demo",
+      "metrics": [
+        {
+          "minimize": true,
+          "name": "cost"
+        }
+      ],
+      "observations": 0,
+      "optimization": {
+        "burnIn": 10,
+        "experimentBudget": 40,
+        "parallelTrials": 1
+      },
+      "parameters": [
+        {
+          "bounds": {
+            "max": 3.5,
+            "min": 0.5
+          },
+          "name": "es_cpu",
+          "type": "double"
+        },
+        {
+          "bounds": {
+            "max": 12000,
+            "min": 2000
+          },
+          "name": "es_memory",
+          "type": "int"
+        },
+        {
+          "bounds": {
+            "max": 4,
+            "min": 2
+          },
+          "name": "es_replicas",
+          "type": "int"
+        },
+        {
+          "bounds": {
+            "max": 12000,
+            "min": 2000
+          },
+          "name": "ls_memory",
+          "type": "int"
+        }
+      ]
+    },
+    {
+      "_metadata": {
+        "Last-Modified": "Thu, 24 Oct 2019 18:19:32 GMT",
+        "Link": [
+          "<https://latest-master.carbonrelay.dev/api/experiments/too-many-trials-QXMBAGFH>;rel=self",
+          "<https://latest-master.carbonrelay.dev/api/experiments/too-many-trials-QXMBAGFH/trials/>;rel=https://carbonrelay.com/rel/trials",
+          "<https://latest-master.carbonrelay.dev/api/experiments/too-many-trials-QXMBAGFH/trials/next>;rel=https://carbonrelay.com/rel/nextTrial"
+        ]
+      },
+      "displayName": "ELK demo",
+      "metrics": [
+        {
+          "minimize": true,
+          "name": "cost"
+        }
+      ],
+      "observations": 0,
+      "optimization": {
+        "burnIn": 5,
+        "experimentBudget": 200,
+        "parallelTrials": 4
+      },
+      "parameters": [
+        {
+          "bounds": {
+            "max": 3.5,
+            "min": 0.5
+          },
+          "name": "es_cpu",
+          "type": "double"
+        },
+        {
+          "bounds": {
+            "max": 12000,
+            "min": 2000
+          },
+          "name": "es_memory",
+          "type": "int"
+        },
+        {
+          "bounds": {
+            "max": 4,
+            "min": 2
+          },
+          "name": "es_replicas",
+          "type": "int"
+        },
+        {
+          "bounds": {
+            "max": 12000,
+            "min": 2000
+          },
+          "name": "ls_memory",
+          "type": "int"
+        }
+      ]
+    },
+    {
+      "_metadata": {
+        "Last-Modified": "Thu, 24 Oct 2019 18:19:31 GMT",
+        "Link": [
+          "<https://latest-master.carbonrelay.dev/api/experiments/too-many-params-QXMBAGFH>;rel=self",
+          "<https://latest-master.carbonrelay.dev/api/experiments/too-many-params-QXMBAGFH/trials/>;rel=https://carbonrelay.com/rel/trials",
+          "<https://latest-master.carbonrelay.dev/api/experiments/too-many-params-QXMBAGFH/trials/next>;rel=https://carbonrelay.com/rel/nextTrial"
+        ]
+      },
+      "displayName": "ELK demo",
+      "metrics": [
+        {
+          "minimize": true,
+          "name": "cost"
+        }
+      ],
+      "observations": 0,
+      "optimization": {
+        "burnIn": 5,
+        "experimentBudget": 50,
+        "parallelTrials": 4
+      },
+      "parameters": [
+        {
+          "bounds": {
+            "max": 3.5,
+            "min": 0.5
+          },
+          "name": "es_cpu_1",
+          "type": "double"
+        },
+        {
+          "bounds": {
+            "max": 3.5,
+            "min": 0.5
+          },
+          "name": "es_cpu_2",
+          "type": "double"
+        },
+        {
+          "bounds": {
+            "max": 3.5,
+            "min": 0.5
+          },
+          "name": "es_cpu_3",
+          "type": "double"
+        },
+        {
+          "bounds": {
+            "max": 3.5,
+            "min": 0.5
+          },
+          "name": "es_cpu_4",
+          "type": "double"
+        },
+        {
+          "bounds": {
+            "max": 12000,
+            "min": 2000
+          },
+          "name": "es_memory_1",
+          "type": "int"
+        },
+        {
+          "bounds": {
+            "max": 12000,
+            "min": 2000
+          },
+          "name": "es_memory_2",
+          "type": "int"
+        },
+        {
+          "bounds": {
+            "max": 12000,
+            "min": 2000
+          },
+          "name": "es_memory_3",
+          "type": "int"
+        },
+        {
+          "bounds": {
+            "max": 12000,
+            "min": 2000
+          },
+          "name": "es_memory_4",
+          "type": "int"
+        },
+        {
+          "bounds": {
+            "max": 4,
+            "min": 2
+          },
+          "name": "es_replicas_1",
+          "type": "int"
+        },
+        {
+          "bounds": {
+            "max": 4,
+            "min": 2
+          },
+          "name": "es_replicas_2",
+          "type": "int"
+        },
+        {
+          "bounds": {
+            "max": 4,
+            "min": 2
+          },
+          "name": "es_replicas_3",
+          "type": "int"
+        },
+        {
+          "bounds": {
+            "max": 4,
+            "min": 2
+          },
+          "name": "es_replicas_4",
+          "type": "int"
+        },
+        {
+          "bounds": {
+            "max": 3.5,
+            "min": 0.5
+          },
+          "name": "ls_cpu_1",
+          "type": "double"
+        },
+        {
+          "bounds": {
+            "max": 3.5,
+            "min": 0.5
+          },
+          "name": "ls_cpu_2",
+          "type": "double"
+        },
+        {
+          "bounds": {
+            "max": 3.5,
+            "min": 0.5
+          },
+          "name": "ls_cpu_3",
+          "type": "double"
+        },
+        {
+          "bounds": {
+            "max": 3.5,
+            "min": 0.5
+          },
+          "name": "ls_cpu_4",
+          "type": "double"
+        },
+        {
+          "bounds": {
+            "max": 12000,
+            "min": 2000
+          },
+          "name": "ls_memory_1",
+          "type": "int"
+        },
+        {
+          "bounds": {
+            "max": 12000,
+            "min": 2000
+          },
+          "name": "ls_memory_2",
+          "type": "int"
+        },
+        {
+          "bounds": {
+            "max": 12000,
+            "min": 2000
+          },
+          "name": "ls_memory_3",
+          "type": "int"
+        },
+        {
+          "bounds": {
+            "max": 12000,
+            "min": 2000
+          },
+          "name": "ls_memory_4",
+          "type": "int"
+        },
+        {
+          "bounds": {
+            "max": 4,
+            "min": 2
+          },
+          "name": "ls_replicas_1",
+          "type": "int"
+        },
+        {
+          "bounds": {
+            "max": 4,
+            "min": 2
+          },
+          "name": "ls_replicas_2",
+          "type": "int"
+        },
+        {
+          "bounds": {
+            "max": 4,
+            "min": 2
+          },
+          "name": "ls_replicas_3",
+          "type": "int"
+        },
+        {
+          "bounds": {
+            "max": 4,
+            "min": 2
+          },
+          "name": "ls_replicas_4",
+          "type": "int"
+        }
+      ]
+    },
+    {
+      "_metadata": {
+        "Last-Modified": "Thu, 24 Oct 2019 18:19:31 GMT",
+        "Link": [
+          "<https://latest-master.carbonrelay.dev/api/experiments/too-many-metrics-QXMBAGFH>;rel=self",
+          "<https://latest-master.carbonrelay.dev/api/experiments/too-many-metrics-QXMBAGFH/trials/>;rel=https://carbonrelay.com/rel/trials",
+          "<https://latest-master.carbonrelay.dev/api/experiments/too-many-metrics-QXMBAGFH/trials/next>;rel=https://carbonrelay.com/rel/nextTrial"
+        ]
+      },
+      "displayName": "ELK demo",
+      "metrics": [
+        {
+          "minimize": true,
+          "name": "cost"
+        },
+        {
+          "minimize": false,
+          "name": "latency"
+        },
+        {
+          "minimize": false,
+          "name": "throughput"
+        }
+      ],
+      "observations": 0,
+      "optimization": {
+        "burnIn": 5,
+        "experimentBudget": 10,
+        "parallelTrials": 4
+      },
+      "parameters": [
+        {
+          "bounds": {
+            "max": 3.5,
+            "min": 0.5
+          },
+          "name": "es_cpu",
+          "type": "double"
+        },
+        {
+          "bounds": {
+            "max": 12000,
+            "min": 2000
+          },
+          "name": "es_memory",
+          "type": "int"
+        },
+        {
+          "bounds": {
+            "max": 4,
+            "min": 2
+          },
+          "name": "es_replicas",
+          "type": "int"
+        },
+        {
+          "bounds": {
+            "max": 3.5,
+            "min": 0.5
+          },
+          "name": "ls_cpu",
+          "type": "double"
+        },
+        {
+          "bounds": {
+            "max": 12000,
+            "min": 2000
+          },
+          "name": "ls_memory",
+          "type": "int"
+        },
+        {
+          "bounds": {
+            "max": 4,
+            "min": 2
+          },
+          "name": "ls_replicas",
+          "type": "int"
+        }
+      ]
+    }
+  ]
+}
