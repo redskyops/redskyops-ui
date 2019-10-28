@@ -5,6 +5,9 @@ const experiments = {
   error: '',
 }
 
+const activeExperiment = null
+
 export const DEFAULT_STATE = {
   experiments,
+  activeExperiment,
 }

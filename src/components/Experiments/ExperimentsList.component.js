@@ -7,11 +7,12 @@ import {connectWithState} from '../../context/StateContext'
 
 type Props = {
   experiments: Array<Object>,
+  activeExperiment: Object,
   updateState: () => any,
 }
 
 export const ExperimentsList = (props: Props) => {
-  const {experiments = [], updateState} = props
+  const {experiments = [], activeExperiment = null, updateState} = props
   useEffect(() => {
     const expService = new ExperimentsService()
     const [request, abort] = expService.getExperimentsFactory()
@@ -36,6 +37,15 @@ export const ExperimentsList = (props: Props) => {
 
     return () => abort()
   }, [])
+
+  const setActiveExperiment = ({index}) => {
+    updateState({
+      activeExperiment: {
+        ...activeExperiment,
+        index,
+      },
+    })
+  }
   return (
     <div className={style.expList}>
       <div>
@@ -44,7 +54,7 @@ export const ExperimentsList = (props: Props) => {
       <div className={style.list}>
         <ListSearch
           itemsList={experiments.list.map(e => ({label: e.id, value: e.id}))}
-          onSelect={console.log}
+          onSelect={setActiveExperiment}
         />
       </div>
     </div>
