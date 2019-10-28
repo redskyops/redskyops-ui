@@ -16,6 +16,7 @@ export const ListSearch = (props: Props) => {
   const [isOpen, setIsOpen] = useState(false)
   const [selectedIndex, setSelectedIndex] = useState(initialIndex)
   const [tempIndex, setTempIndex] = useState(selectedIndex)
+  const [tempSearch, setTempSearch] = useState('')
   const wrapperRef = useRef(null)
   let blurInterval
 
@@ -23,6 +24,7 @@ export const ListSearch = (props: Props) => {
     clearTimeout(blurInterval)
     setIsOpen(true)
     setTempIndex(selectedIndex)
+    setTempSearch('')
     document.addEventListener('click', documentClick)
   }
 
@@ -30,6 +32,7 @@ export const ListSearch = (props: Props) => {
     clearTimeout(blurInterval)
     setIsOpen(false)
     setTempIndex(selectedIndex)
+    setTempSearch('')
     document.removeEventListener('click', documentClick)
   }
 
@@ -52,7 +55,9 @@ export const ListSearch = (props: Props) => {
   }
 
   const setValue = index => {
+    setTempSearch('')
     setSelectedIndex(index)
+
     onSelect({
       index,
       item: itemsList[index],
@@ -92,6 +97,7 @@ export const ListSearch = (props: Props) => {
         closeMenu()
         return
       default:
+        setTempSearch(e.target.value)
         return
     }
     if (nextIndex < 0) nextIndex = 0
@@ -109,7 +115,8 @@ export const ListSearch = (props: Props) => {
     [],
   )
 
-  const textToShow = selectedIndex >= 0 ? itemsList[selectedIndex].label : value
+  let textToShow = selectedIndex >= 0 ? itemsList[selectedIndex].label : value
+
   return (
     <div className={style.listSearch} ref={wrapperRef}>
       <input
@@ -126,20 +133,25 @@ export const ListSearch = (props: Props) => {
       </button>
       {isOpen && (
         <div className={style.list}>
-          {itemsList.map((item, index) => {
-            let css = style.item
-            css += index === tempIndex ? ` ${style.active}` : ''
-            css += index === selectedIndex ? ` ${style.selected}` : ''
-            return (
-              <button
-                className={css}
-                key={`${index}-${item.value}`}
-                onClick={itemClick(index)}
-              >
-                {item.label}
-              </button>
-            )
-          })}
+          {itemsList
+            .map((i, index) => ({...i, index}))
+            .filter(item => {
+              return item.label.match(new RegExp(`${tempSearch}`, 'ig'))
+            })
+            .map((item, index) => {
+              let css = style.item
+              css += index === tempIndex ? ` ${style.active}` : ''
+              css += item.index === selectedIndex ? ` ${style.selected}` : ''
+              return (
+                <button
+                  className={css}
+                  key={`${item.index}-${item.value}`}
+                  onClick={itemClick(item.index)}
+                >
+                  {item.label}
+                </button>
+              )
+            })}
         </div>
       )}
     </div>
