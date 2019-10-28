@@ -1,0 +1,25 @@
+# rules reference https://github.com/sasstools/sass-lint/tree/master/docs/rules
+severity: 'error'
+options:
+    max-warnings: 0
+files:
+  include: 'src/**/*.s+(a|c)ss'
+  ignore:
+    - '**/ignore-this-file.scss'
+rules:
+    property-sort-order:
+        - 0
+    hex-notation:
+        - 1
+        - style: lowercase
+    class-name-format:
+        - 1
+        - convention: camelcase
+    indentation:
+        - 2
+        - size: 2
+    no-color-literals:
+        - false
+        - allow-rgba: true
+    nesting-depth:
+        - 3

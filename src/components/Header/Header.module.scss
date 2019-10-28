@@ -1,0 +1,14 @@
+@import '../../styles/colors';
+@import '../../styles/vars';
+
+.header {
+  align-items: center;
+  background-color: $white;
+  display: flex;
+  justify-content: space-between;
+  padding-right: 24px;
+}
+
+.logo {
+  height: $header-height;
+}

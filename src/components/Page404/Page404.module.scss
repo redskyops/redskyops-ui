@@ -1,0 +1,13 @@
+@import '../../styles/colors';
+@import '../../styles/vars';
+
+.page404 {
+  align-items: center;
+  display: flex;
+  justify-content: center;
+  height: calc(100vh - #{$header-height});
+}
+
+.content {
+  text-align: center;
+}
