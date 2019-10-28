@@ -1,0 +1,23 @@
+@import './colors';
+
+@mixin shadow($x, $y, $o, $b, $c) {
+  box-shadow: $x $y $o $b $c;
+}
+
+@mixin default-shadow {
+  @include shadow(2px, 4px, 10px, 1px, rgba($gray, .3));
+}
+
+@mixin no-shadow {
+  @include shadow(0, 0, 0, 0, rgba($white, 0));
+}
+
+@mixin transition($p: all, $t: .5s, $ease: ease-out) {
+  transition-duration: $t;
+  transition-property: $p;
+  transition-timing-function: $ease;
+}
+
+@mixin translate($x, $y) {
+  transform: translate($x, $y);
+}

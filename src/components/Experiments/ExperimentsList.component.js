@@ -42,7 +42,10 @@ export const ExperimentsList = (props: Props) => {
         <strong>{experiments.list.length}</strong> experiments loaded
       </div>
       <div className={style.list}>
-        <ListSearch />
+        <ListSearch
+          itemsList={experiments.list.map(e => ({label: e.id, value: e.id}))}
+          onSelect={console.log}
+        />
       </div>
     </div>
   )

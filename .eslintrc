@@ -15,7 +15,7 @@
     "plugin:jsx-a11y/recommended"
   ],
   "rules": {
-      "indent": ["error", 2]
+      "indent": ["error", 2, { "SwitchCase": 1 }]
   },
   "settings": {
     "react":{
