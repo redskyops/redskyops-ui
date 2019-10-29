@@ -3,14 +3,14 @@ import React from 'react'
 import {connectWithState} from '../../../context/StateContext'
 
 import style from './ExperimentDetails.module.scss'
+import {
+  TypeActiveExperiment,
+  TypeExperiments,
+} from '../../../context/DefaultState'
 
 type Props = {
-  activeExperiment: {
-    index: Number,
-  },
-  experiments: {
-    list: Array<Object>,
-  },
+  activeExperiment: TypeActiveExperiment,
+  experiments: TypeExperiments,
 }
 
 export const ExperimentDetails = (props: Props) => {
