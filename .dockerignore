@@ -1,0 +1,3 @@
+# Ignore these files/directories when copying root files/directories to the image
+node_modules
+.git
