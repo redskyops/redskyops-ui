@@ -11,7 +11,11 @@ export type TypeActiveExperiment = {
   isLoading: boolean,
 }
 
+export type TypeTrials = Array<Object>
+
 const experimentsList: TypeExperimentsList = []
+
+const trials: TypeTrials = null
 
 const experiments: TypeExperiments = {
   list: experimentsList,
@@ -24,4 +28,5 @@ const activeExperiment: TypeActiveExperiment = null
 export const DEFAULT_STATE = {
   experiments,
   activeExperiment,
+  trials,
 }

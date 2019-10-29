@@ -1,4 +1,5 @@
 import experimentsData from './_stubs/exp-data'
+import trialsData from './_stubs/trials-data'
 
 let instance
 
@@ -28,6 +29,14 @@ export class ExperimentsService {
     const abort = () => {}
     const getExperiments = () =>
       Promise.resolve(this.addIdsToExperments(experimentsData))
+    return [getExperiments, abort]
+  }
+
+  getTrialsFactory({id}) {
+    const abort = () => ({id})
+    const getExperiments = () => {
+      return Promise.resolve(trialsData)
+    }
     return [getExperiments, abort]
   }
 }
