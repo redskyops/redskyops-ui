@@ -31,3 +31,25 @@ go generate ./ui
 1. Run a clean build to ensure the latest code is in the build directory
 2. Generate the `assets_vfsdata.go` file and commit to Git
 3. Tag the repository and push
+
+
+# Red Sky Frontend
+
+the UI application is based on "Create React App". You need to install Node modules before starting the application by running
+
+```
+npm install
+```
+
+## Starting the application for development
+
+```
+npm start
+```
+then you can browse the app http://localhost:3000
+
+## Building the UI app assets
+
+```
+npm run build
+```

@@ -1,0 +1,64 @@
+@import '../../../styles/colors';
+@import '../../../styles/vars';
+@import '../../../styles/mixins';
+
+.listSearch {
+  position: relative;
+  width: 100%;
+}
+
+.input {
+  background-color: $bg-light;
+  border: 0;
+  border-radius: $size-5x / 2;
+  font-size: 12px;
+  line-height: $size-5x;
+  min-width: 200px;
+  outline: 0;
+  padding: 0 $size-5x 0 $size-5x / 2;
+  width: 100%;
+}
+
+.icon {
+  background-color: transparent;
+  border: 0;
+  cursor: pointer;
+  outline: 0;
+  position: absolute;
+  top: 4px;
+  right: 5px;
+}
+
+
+.list {
+  @include default-shadow;
+  display: block;
+  position: absolute;
+  top: $size-5x;
+  width: 100%;
+  z-index: 100;
+}
+
+.item {
+  background-color: $bg-light;
+  border: 0;
+  color: $black;
+  cursor: pointer;
+  font-size: 12px;
+  line-height: $size-5x;
+  outline: 0;
+  padding: 0 $size-1x;
+  text-align: left;
+  width: 100%;
+
+  &.active,
+  &:hover {
+    background-color: $white;
+    color: $cr-navy;
+  }
+
+  &.selected {
+    background-color: $cr-navy;
+    color: $white;
+  }
+}

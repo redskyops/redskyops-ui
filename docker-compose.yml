@@ -1,0 +1,13 @@
+version: '3'
+services:
+  app:
+    build: .
+    command: npm run start
+    environment:
+      - CONTAINER_PORT=${CONTAINER_PORT}
+      - LOCAL_PORT=${LOCAL_PORT}
+    ports:
+      - ${LOCAL_PORT}:${CONTAINER_PORT}
+    volumes:
+      - .:/usr/app
+      - /usr/app/node_modules

@@ -1,0 +1,12 @@
+{
+  "*.js": [
+    "eslint"
+  ],
+  "*.+(js|jsx)": [
+    "prettier --write",
+    "git add"
+  ],
+  "*.+(scss|sass)": [
+    "./node_modules/.bin/sass-lint -v -q"
+  ]
+}

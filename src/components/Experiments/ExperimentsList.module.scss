@@ -1,0 +1,14 @@
+@import '../../styles/colors';
+@import '../../styles/vars';
+
+
+.expList {
+  align-items: center;
+  display: flex;
+  justify-content: space-between;
+}
+
+.list {
+  margin-left: $size-2x;
+}
+
