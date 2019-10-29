@@ -46,7 +46,7 @@ npm install
 ```
 npm start
 ```
-then you can browse the app http://localhost:3000
+then you can browse the app [http://localhost:3000][http://localhost:3000]
 
 ## Building the UI app assets
 
