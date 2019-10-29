@@ -11,6 +11,7 @@ import {
   TypeExperiments,
   TypeTrials,
 } from '../../../context/DefaultState'
+import Trials from '../Trials/Trials.component'
 
 type Props = {
   activeExperiment: TypeActiveExperiment,
@@ -20,7 +21,7 @@ type Props = {
 }
 
 export const ExperimentDetails = (props: Props) => {
-  const {activeExperiment, experiments, updateState} = props
+  const {activeExperiment, experiments, updateState, trials} = props
   const expService = new ExperimentsService()
 
   const requestFactory = () =>
@@ -50,6 +51,7 @@ export const ExperimentDetails = (props: Props) => {
       <h1>
         {experiment.displayName} / {experiment.id}
       </h1>
+      {activeExperiment && trials && <Trials trials={trials} />}
     </div>
   )
 }
@@ -57,4 +59,5 @@ export const ExperimentDetails = (props: Props) => {
 export default connectWithState(ExperimentDetails, [
   'activeExperiment',
   'experiments',
+  'trials',
 ])
