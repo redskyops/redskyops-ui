@@ -7,6 +7,8 @@ import style from './Trials.module.scss'
 
 type Props = {
   trials: TypeTrials,
+  xAxisMetricName: string,
+  yAxisMetricName: string,
 }
 
 export class Trials extends React.Component<Props> {
@@ -18,18 +20,21 @@ export class Trials extends React.Component<Props> {
   buildChart() {
     const width = 800
     const height = 400
+    const xValueName = this.props.xAxisMetricName
+    const yValueName = this.props.yAxisMetricName
+
     const completedTrials = this.props.trials.filter(
       t => t.status === 'completed',
     )
     const [minCost, maxCost] = d3.extent(
       completedTrials.map(
-        v => v.values.filter(c => c.metricName === 'cost')[0].value,
+        v => v.values.filter(c => c.metricName === xValueName)[0].value,
       ),
     )
     const [minDuration, maxDuration] = d3.extent(
-      completedTrials.map(
-        v => v.values.filter(c => c.metricName === 'duration')[0].value,
-      ),
+      completedTrials.map(v => {
+        return v.values.filter(c => c.metricName === yValueName)[0].value
+      }),
     )
 
     const xScale = d3
@@ -52,8 +57,8 @@ export class Trials extends React.Component<Props> {
       .append('g')
       .attr('transform', d => {
         const [cost, duration] = d.values.reduce((acc, v) => {
-          if (v.metricName === 'cost') acc[0] = v
-          if (v.metricName === 'duration') acc[1] = v
+          if (v.metricName === xValueName) acc[0] = v
+          if (v.metricName === yValueName) acc[1] = v
           return acc
         }, [])
 
