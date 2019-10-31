@@ -42,7 +42,11 @@ export const ExperimentDetails = (props: Props) => {
   ])
 
   if (!activeExperiment) {
-    return <div>Select an experiment!</div>
+    return (
+      <div className={style.expDetails}>
+        <h1 className={style.h1}>Select an experiment!</h1>
+      </div>
+    )
   }
   const experiment = experiments.list[activeExperiment.index] || {}
 
@@ -72,7 +76,7 @@ export const ExperimentDetails = (props: Props) => {
   }
   return (
     <div className={style.expDetails}>
-      <h1>
+      <h1 className={style.h1}>
         {experiment.displayName} / {experiment.id}
       </h1>
       {renderTrials()}
