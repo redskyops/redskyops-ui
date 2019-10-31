@@ -1,11 +1,16 @@
-import experimentsData from './_stubs/exp-data'
+// import experimentsData from './_stubs/exp-data'
 import trialsData from './_stubs/trials-data'
+import {HttpService} from './HttpService'
+
+import {backedAddress} from '../config'
 
 let instance
 
 export class ExperimentsService {
   constructor() {
     if (!instance) {
+      this.http = new HttpService()
+      this.url = `${backedAddress}/experiments`
       instance = this
     }
     return instance
@@ -26,9 +31,16 @@ export class ExperimentsService {
   }
 
   getExperimentsFactory() {
-    const abort = () => {}
+    const [request, abort] = this.http.get({
+      url: this.url,
+    })
     const getExperiments = () =>
-      Promise.resolve(this.addIdsToExperments(experimentsData))
+      request().then(async response => {
+        if (!response) {
+          throw new Error('Error in ExperimentsService.getExperiments')
+        }
+        return await response.json()
+      })
     return [getExperiments, abort]
   }
 
