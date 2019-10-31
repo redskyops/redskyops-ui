@@ -24,13 +24,25 @@ fetch(`${REDSKY_ADDRESS}/auth/token/`, {
 
 module.exports = function(app) {
   app.use(
-    '/api',
+    '/api/experiments',
     proxy({
-      target: `${REDSKY_ADDRESS}/api`,
-      changeOrigin: true,
+      target: `${REDSKY_ADDRESS}/api/experiments/`,
+      changeOrigin: false,
+      logLevel: 'debug',
+      secure: false,
       headers: {
         Authorization: `${tokenType} ${token}`,
+        Connection: 'keep-alive',
       },
+      // onProxyRes: function(proxyRes, req, res) {
+      //   // proxyRes.headers['x-added'] = 'foobar';
+      //   // delete proxyRes.headers['x-removed'];
+      //   // console.log(res)
+      // },
+      // onProxyReq: function(proxyReq, req, res) {
+      //   // console.log(res)
+      //   // proxyReq.setHeader('x-powered-by', 'foobar');
+      // },
     }),
   )
 }
