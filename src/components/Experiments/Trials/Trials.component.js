@@ -18,8 +18,12 @@ export class Trials extends React.Component<Props> {
   }
 
   buildChart() {
-    const width = 800
-    const height = 400
+    const canvasWidth = 800
+    const canvasHeight = 400
+    const margins = {top: 20, right: 20, bottom: 20, left: 20}
+    const width = canvasWidth - margins.top - margins.left
+    const height = canvasHeight - margins.top - margins.bottom
+
     const xValueName = this.props.xAxisMetricName
     const yValueName = this.props.yAxisMetricName
 
@@ -49,8 +53,10 @@ export class Trials extends React.Component<Props> {
 
     d3.select('#chart')
       .append('svg')
-      .attr('width', width)
-      .attr('height', height)
+      .attr('width', canvasWidth)
+      .attr('height', canvasHeight)
+      .append('g')
+      .attr('transform', `translate(${margins.left}, ${margins.top})`)
       .selectAll('g')
       .data(completedTrials)
       .enter()
@@ -65,7 +71,7 @@ export class Trials extends React.Component<Props> {
         return `translate(${xScale(cost.value)}, ${yScale(duration.value)})`
       })
       .append('circle')
-      .attr('r', 5)
+      .attr('r', 3)
       .attr('class', style.circle)
   }
 
