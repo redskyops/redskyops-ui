@@ -27,7 +27,7 @@ export const ExperimentDetails = (props: Props) => {
   const requestFactory = () =>
     activeExperiment
       ? expService.getTrialsFactory({
-          id: experiments.list[activeExperiment.index].id, // eslint-disable-line indent
+          name: experiments.list[activeExperiment.index].id, // eslint-disable-line indent
         }) // eslint-disable-line indent
       : null
   const requestSuccess = ({trials}) => {
@@ -46,12 +46,36 @@ export const ExperimentDetails = (props: Props) => {
   }
   const experiment = experiments.list[activeExperiment.index] || {}
 
+  const renderTrials = () => {
+    if (
+      !(
+        activeExperiment &&
+        experiment &&
+        experiment.metrics &&
+        experiment.metrics.length > 1
+      )
+    ) {
+      return <div>No valid metric data found</div>
+    }
+
+    if (!(activeExperiment && trials && trials.length > 0)) {
+      return <div>No trials found</div>
+    }
+
+    return (
+      <Trials
+        trials={trials}
+        xAxisMetricName={experiment.metrics[0].name}
+        yAxisMetricName={experiment.metrics[1].name}
+      />
+    )
+  }
   return (
     <div className={style.expDetails}>
       <h1>
         {experiment.displayName} / {experiment.id}
       </h1>
-      {activeExperiment && trials && <Trials trials={trials} />}
+      {renderTrials()}
     </div>
   )
 }

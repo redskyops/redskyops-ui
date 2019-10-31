@@ -1,5 +1,3 @@
-// import experimentsData from './_stubs/exp-data'
-import trialsData from './_stubs/trials-data'
 import {HttpService} from './HttpService'
 
 import {backedAddress} from '../config'
@@ -39,16 +37,23 @@ export class ExperimentsService {
         if (!response) {
           throw new Error('Error in ExperimentsService.getExperiments')
         }
-        return await response.json()
+        const expData = await response.json()
+        return this.addIdsToExperments(expData)
       })
     return [getExperiments, abort]
   }
 
-  getTrialsFactory({id}) {
-    const abort = () => ({id})
-    const getExperiments = () => {
-      return Promise.resolve(trialsData)
-    }
-    return [getExperiments, abort]
+  getTrialsFactory({name}) {
+    const [request, abort] = this.http.get({
+      url: `${this.url}/${name}/trials`,
+    })
+    const getTrials = () =>
+      request().then(async response => {
+        if (!response) {
+          throw new Error('Error in ExperimentsService.getTrials')
+        }
+        return await response.json()
+      })
+    return [getTrials, abort]
   }
 }
