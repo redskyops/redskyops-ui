@@ -76,7 +76,8 @@ export class Trials extends React.Component<Props> {
       .style('fill', '#000')
       .text(yValueName)
 
-    const xAxis = d3.axisBottom(xScale)
+    const xAxis = d3.axisBottom(xScale).ticks(10)
+
     svg
       .append('g')
       .attr('transform', `translate(0, ${height})`)
@@ -89,6 +90,34 @@ export class Trials extends React.Component<Props> {
       .style('text-anchor', 'middle')
       .style('fill', '#000')
       .text(xValueName)
+
+    const makeXGridlines = () => {
+      return d3.axisBottom(xScale).ticks(10)
+    }
+
+    svg
+      .append('g')
+      .attr('class', style.grid)
+      .attr('transform', `translate(0, ${height})`)
+      .call(
+        makeXGridlines()
+          .tickSize(-height)
+          .tickFormat(''),
+      )
+
+    const makeYGridlines = () => {
+      return d3.axisLeft(yScale).ticks(10)
+    }
+
+    svg
+      .append('g')
+      .attr('class', style.grid)
+      .attr('transform', `translate(0, 0)`)
+      .call(
+        makeYGridlines()
+          .tickSize(-width)
+          .tickFormat(''),
+      )
 
     svg
       .selectAll('g')

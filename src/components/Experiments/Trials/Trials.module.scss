@@ -11,3 +11,16 @@
 .circle {
   fill: $cr-blue;
 }
+
+.grid {
+  line {
+    stroke: $gray-light;
+
+  }
+
+  path {
+    &:first-child {
+      display: none;
+    }
+  }
+}
