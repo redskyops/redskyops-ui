@@ -20,7 +20,7 @@ export class Trials extends React.Component<Props> {
   buildChart() {
     const canvasWidth = 800
     const canvasHeight = 400
-    const margins = {top: 20, right: 20, bottom: 20, left: 20}
+    const margins = {top: 20, right: 20, bottom: 40, left: 70}
     const width = canvasWidth - margins.top - margins.left
     const height = canvasHeight - margins.top - margins.bottom
 
@@ -49,14 +49,45 @@ export class Trials extends React.Component<Props> {
     const yScale = d3
       .scaleLinear()
       .domain([minDuration, maxDuration])
-      .range([0, height])
+      .range([height, 0])
 
-    d3.select('#chart')
+    const svg = d3
+      .select('#chart')
       .append('svg')
       .attr('width', canvasWidth)
       .attr('height', canvasHeight)
       .append('g')
       .attr('transform', `translate(${margins.left}, ${margins.top})`)
+
+    const yAxis = d3.axisLeft(yScale)
+    svg.call(yAxis)
+
+    svg
+      .append('text')
+      .attr(
+        'transform',
+        `translate(-${margins.left - 10}, ${height / 2}) rotate(-90)`,
+      )
+      .attr('dy', '1em')
+      .style('text-anchor', 'middle')
+      .style('fill', '#000')
+      .text(yValueName)
+
+    const xAxis = d3.axisBottom(xScale)
+    svg
+      .append('g')
+      .attr('transform', `translate(0, ${height})`)
+      .call(xAxis)
+
+    svg
+      .append('text')
+      .attr('transform', `translate(${width / 2}, ${height + 15})`)
+      .attr('dy', '1em')
+      .style('text-anchor', 'middle')
+      .style('fill', '#000')
+      .text(xValueName)
+
+    svg
       .selectAll('g')
       .data(completedTrials)
       .enter()
@@ -76,6 +107,10 @@ export class Trials extends React.Component<Props> {
   }
 
   componentDidMount() {
+    this.buildChart()
+  }
+
+  componentDidUpdate() {
     this.buildChart()
   }
 
