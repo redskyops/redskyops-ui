@@ -1,0 +1,13 @@
+@import '../../../styles/colors';
+@import '../../../styles/vars';
+
+.trials {
+  display: block;
+  padding: $size-4x 0;
+  background-color: $white;
+  width: 800px;
+}
+
+.circle {
+  fill: $cr-blue;
+}

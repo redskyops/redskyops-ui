@@ -1,0 +1,1068 @@
+{
+  "trials": [
+    {
+      "assignments": [
+        {
+          "parameterName": "cpu",
+          "value": 1612
+        },
+        {
+          "parameterName": "memory",
+          "value": 3154
+        }
+      ],
+      "number": 0,
+      "status": "failed"
+    },
+    {
+      "assignments": [
+        {
+          "parameterName": "cpu",
+          "value": 2970
+        },
+        {
+          "parameterName": "memory",
+          "value": 3301
+        }
+      ],
+      "number": 8,
+      "status": "failed"
+    },
+    {
+      "assignments": [
+        {
+          "parameterName": "cpu",
+          "value": 3465
+        },
+        {
+          "parameterName": "memory",
+          "value": 3410
+        }
+      ],
+      "labels": {},
+      "number": 1,
+      "status": "completed",
+      "values": [
+        {
+          "error": 0,
+          "metricName": "duration",
+          "value": 3
+        },
+        {
+          "error": 0,
+          "metricName": "cost",
+          "value": 86
+        }
+      ]
+    },
+    {
+      "assignments": [
+        {
+          "parameterName": "cpu",
+          "value": 3241
+        },
+        {
+          "parameterName": "memory",
+          "value": 3615
+        }
+      ],
+      "labels": {},
+      "number": 2,
+      "status": "completed",
+      "values": [
+        {
+          "error": 0,
+          "metricName": "duration",
+          "value": 2
+        },
+        {
+          "error": 0,
+          "metricName": "cost",
+          "value": 82
+        }
+      ]
+    },
+    {
+      "assignments": [
+        {
+          "parameterName": "cpu",
+          "value": 3390
+        },
+        {
+          "parameterName": "memory",
+          "value": 2192
+        }
+      ],
+      "labels": {},
+      "number": 3,
+      "status": "completed",
+      "values": [
+        {
+          "error": 0,
+          "metricName": "duration",
+          "value": 2
+        },
+        {
+          "error": 0,
+          "metricName": "cost",
+          "value": 81
+        }
+      ]
+    },
+    {
+      "assignments": [
+        {
+          "parameterName": "cpu",
+          "value": 1155
+        },
+        {
+          "parameterName": "memory",
+          "value": 1821
+        }
+      ],
+      "labels": {},
+      "number": 4,
+      "status": "completed",
+      "values": [
+        {
+          "error": 0,
+          "metricName": "duration",
+          "value": 2
+        },
+        {
+          "error": 0,
+          "metricName": "cost",
+          "value": 30
+        }
+      ]
+    },
+    {
+      "assignments": [
+        {
+          "parameterName": "cpu",
+          "value": 3935
+        },
+        {
+          "parameterName": "memory",
+          "value": 3474
+        }
+      ],
+      "labels": {},
+      "number": 5,
+      "status": "completed",
+      "values": [
+        {
+          "error": 0,
+          "metricName": "duration",
+          "value": 37
+        },
+        {
+          "error": 0,
+          "metricName": "cost",
+          "value": 96
+        }
+      ]
+    },
+    {
+      "assignments": [
+        {
+          "parameterName": "cpu",
+          "value": 694
+        },
+        {
+          "parameterName": "memory",
+          "value": 3794
+        }
+      ],
+      "labels": {},
+      "number": 6,
+      "status": "completed",
+      "values": [
+        {
+          "error": 0,
+          "metricName": "duration",
+          "value": 3
+        },
+        {
+          "error": 0,
+          "metricName": "cost",
+          "value": 26
+        }
+      ]
+    },
+    {
+      "assignments": [
+        {
+          "parameterName": "cpu",
+          "value": 3278
+        },
+        {
+          "parameterName": "memory",
+          "value": 1753
+        }
+      ],
+      "labels": {},
+      "number": 7,
+      "status": "completed",
+      "values": [
+        {
+          "error": 0,
+          "metricName": "duration",
+          "value": 3
+        },
+        {
+          "error": 0,
+          "metricName": "cost",
+          "value": 77
+        }
+      ]
+    },
+    {
+      "assignments": [
+        {
+          "parameterName": "cpu",
+          "value": 3836
+        },
+        {
+          "parameterName": "memory",
+          "value": 2994
+        }
+      ],
+      "labels": {},
+      "number": 9,
+      "status": "completed",
+      "values": [
+        {
+          "error": 0,
+          "metricName": "duration",
+          "value": 3
+        },
+        {
+          "error": 0,
+          "metricName": "cost",
+          "value": 93
+        }
+      ]
+    },
+    {
+      "assignments": [
+        {
+          "parameterName": "cpu",
+          "value": 1033
+        },
+        {
+          "parameterName": "memory",
+          "value": 984
+        }
+      ],
+      "labels": {},
+      "number": 10,
+      "status": "completed",
+      "values": [
+        {
+          "error": 0,
+          "metricName": "duration",
+          "value": 3
+        },
+        {
+          "error": 0,
+          "metricName": "cost",
+          "value": 25
+        }
+      ]
+    },
+    {
+      "assignments": [
+        {
+          "parameterName": "cpu",
+          "value": 3044
+        },
+        {
+          "parameterName": "memory",
+          "value": 2089
+        }
+      ],
+      "labels": {},
+      "number": 11,
+      "status": "completed",
+      "values": [
+        {
+          "error": 0,
+          "metricName": "duration",
+          "value": 2
+        },
+        {
+          "error": 0,
+          "metricName": "cost",
+          "value": 73
+        }
+      ]
+    },
+    {
+      "assignments": [
+        {
+          "parameterName": "cpu",
+          "value": 3809
+        },
+        {
+          "parameterName": "memory",
+          "value": 614
+        }
+      ],
+      "labels": {},
+      "number": 12,
+      "status": "completed",
+      "values": [
+        {
+          "error": 0,
+          "metricName": "duration",
+          "value": 3
+        },
+        {
+          "error": 0,
+          "metricName": "cost",
+          "value": 85
+        }
+      ]
+    },
+    {
+      "assignments": [
+        {
+          "parameterName": "cpu",
+          "value": 262
+        },
+        {
+          "parameterName": "memory",
+          "value": 1445
+        }
+      ],
+      "labels": {
+        "best": "true"
+      },
+      "number": 13,
+      "status": "completed",
+      "values": [
+        {
+          "error": 0,
+          "metricName": "duration",
+          "value": 3
+        },
+        {
+          "error": 0,
+          "metricName": "cost",
+          "value": 10
+        }
+      ]
+    },
+    {
+      "assignments": [
+        {
+          "parameterName": "cpu",
+          "value": 100
+        },
+        {
+          "parameterName": "memory",
+          "value": 4000
+        }
+      ],
+      "labels": {},
+      "number": 14,
+      "status": "completed",
+      "values": [
+        {
+          "error": 0,
+          "metricName": "duration",
+          "value": 7
+        },
+        {
+          "error": 0,
+          "metricName": "cost",
+          "value": 14
+        }
+      ]
+    },
+    {
+      "assignments": [
+        {
+          "parameterName": "cpu",
+          "value": 100
+        },
+        {
+          "parameterName": "memory",
+          "value": 829
+        }
+      ],
+      "labels": {},
+      "number": 15,
+      "status": "completed",
+      "values": [
+        {
+          "error": 0,
+          "metricName": "duration",
+          "value": 7
+        },
+        {
+          "error": 0,
+          "metricName": "cost",
+          "value": 4
+        }
+      ]
+    },
+    {
+      "assignments": [
+        {
+          "parameterName": "cpu",
+          "value": 100
+        },
+        {
+          "parameterName": "memory",
+          "value": 1865
+        }
+      ],
+      "labels": {},
+      "number": 16,
+      "status": "completed",
+      "values": [
+        {
+          "error": 0,
+          "metricName": "duration",
+          "value": 6
+        },
+        {
+          "error": 0,
+          "metricName": "cost",
+          "value": 7
+        }
+      ]
+    },
+    {
+      "assignments": [
+        {
+          "parameterName": "cpu",
+          "value": 100
+        },
+        {
+          "parameterName": "memory",
+          "value": 500
+        }
+      ],
+      "labels": {},
+      "number": 17,
+      "status": "completed",
+      "values": [
+        {
+          "error": 0,
+          "metricName": "duration",
+          "value": 7
+        },
+        {
+          "error": 0,
+          "metricName": "cost",
+          "value": 3
+        }
+      ]
+    },
+    {
+      "assignments": [
+        {
+          "parameterName": "cpu",
+          "value": 100
+        },
+        {
+          "parameterName": "memory",
+          "value": 1320
+        }
+      ],
+      "labels": {},
+      "number": 18,
+      "status": "completed",
+      "values": [
+        {
+          "error": 0,
+          "metricName": "duration",
+          "value": 8
+        },
+        {
+          "error": 0,
+          "metricName": "cost",
+          "value": 6
+        }
+      ]
+    },
+    {
+      "assignments": [
+        {
+          "parameterName": "cpu",
+          "value": 100
+        },
+        {
+          "parameterName": "memory",
+          "value": 500
+        }
+      ],
+      "labels": {},
+      "number": 19,
+      "status": "completed",
+      "values": [
+        {
+          "error": 0,
+          "metricName": "duration",
+          "value": 8
+        },
+        {
+          "error": 0,
+          "metricName": "cost",
+          "value": 3
+        }
+      ]
+    },
+    {
+      "assignments": [
+        {
+          "parameterName": "cpu",
+          "value": 1263
+        },
+        {
+          "parameterName": "memory",
+          "value": 1588
+        }
+      ],
+      "labels": {},
+      "number": 20,
+      "status": "completed",
+      "values": [
+        {
+          "error": 0,
+          "metricName": "duration",
+          "value": 2
+        },
+        {
+          "error": 0,
+          "metricName": "cost",
+          "value": 32
+        }
+      ]
+    },
+    {
+      "assignments": [
+        {
+          "parameterName": "cpu",
+          "value": 1054
+        },
+        {
+          "parameterName": "memory",
+          "value": 3039
+        }
+      ],
+      "labels": {},
+      "number": 21,
+      "status": "completed",
+      "values": [
+        {
+          "error": 0,
+          "metricName": "duration",
+          "value": 2
+        },
+        {
+          "error": 0,
+          "metricName": "cost",
+          "value": 32
+        }
+      ]
+    },
+    {
+      "assignments": [
+        {
+          "parameterName": "cpu",
+          "value": 100
+        },
+        {
+          "parameterName": "memory",
+          "value": 500
+        }
+      ],
+      "labels": {},
+      "number": 22,
+      "status": "completed",
+      "values": [
+        {
+          "error": 0,
+          "metricName": "duration",
+          "value": 7
+        },
+        {
+          "error": 0,
+          "metricName": "cost",
+          "value": 3
+        }
+      ]
+    },
+    {
+      "assignments": [
+        {
+          "parameterName": "cpu",
+          "value": 232
+        },
+        {
+          "parameterName": "memory",
+          "value": 500
+        }
+      ],
+      "labels": {
+        "best": "true"
+      },
+      "number": 23,
+      "status": "completed",
+      "values": [
+        {
+          "error": 0,
+          "metricName": "duration",
+          "value": 4
+        },
+        {
+          "error": 0,
+          "metricName": "cost",
+          "value": 6
+        }
+      ]
+    },
+    {
+      "assignments": [
+        {
+          "parameterName": "cpu",
+          "value": 311
+        },
+        {
+          "parameterName": "memory",
+          "value": 3963
+        }
+      ],
+      "labels": {},
+      "number": 24,
+      "status": "completed",
+      "values": [
+        {
+          "error": 0,
+          "metricName": "duration",
+          "value": 3
+        },
+        {
+          "error": 0,
+          "metricName": "cost",
+          "value": 18
+        }
+      ]
+    },
+    {
+      "assignments": [
+        {
+          "parameterName": "cpu",
+          "value": 763
+        },
+        {
+          "parameterName": "memory",
+          "value": 2724
+        }
+      ],
+      "labels": {},
+      "number": 25,
+      "status": "completed",
+      "values": [
+        {
+          "error": 0,
+          "metricName": "duration",
+          "value": 2
+        },
+        {
+          "error": 0,
+          "metricName": "cost",
+          "value": 24
+        }
+      ]
+    },
+    {
+      "assignments": [
+        {
+          "parameterName": "cpu",
+          "value": 100
+        },
+        {
+          "parameterName": "memory",
+          "value": 2872
+        }
+      ],
+      "labels": {},
+      "number": 26,
+      "status": "completed",
+      "values": [
+        {
+          "error": 0,
+          "metricName": "duration",
+          "value": 7
+        },
+        {
+          "error": 0,
+          "metricName": "cost",
+          "value": 10
+        }
+      ]
+    },
+    {
+      "assignments": [
+        {
+          "parameterName": "cpu",
+          "value": 537
+        },
+        {
+          "parameterName": "memory",
+          "value": 500
+        }
+      ],
+      "labels": {
+        "best": "true"
+      },
+      "number": 27,
+      "status": "completed",
+      "values": [
+        {
+          "error": 0,
+          "metricName": "duration",
+          "value": 2
+        },
+        {
+          "error": 0,
+          "metricName": "cost",
+          "value": 13
+        }
+      ]
+    },
+    {
+      "assignments": [
+        {
+          "parameterName": "cpu",
+          "value": 952
+        },
+        {
+          "parameterName": "memory",
+          "value": 1629
+        }
+      ],
+      "labels": {},
+      "number": 28,
+      "status": "completed",
+      "values": [
+        {
+          "error": 0,
+          "metricName": "duration",
+          "value": 3
+        },
+        {
+          "error": 0,
+          "metricName": "cost",
+          "value": 25
+        }
+      ]
+    },
+    {
+      "assignments": [
+        {
+          "parameterName": "cpu",
+          "value": 849
+        },
+        {
+          "parameterName": "memory",
+          "value": 2149
+        }
+      ],
+      "labels": {},
+      "number": 29,
+      "status": "completed",
+      "values": [
+        {
+          "error": 0,
+          "metricName": "duration",
+          "value": 131
+        },
+        {
+          "error": 0,
+          "metricName": "cost",
+          "value": 25
+        }
+      ]
+    },
+    {
+      "assignments": [
+        {
+          "parameterName": "cpu",
+          "value": 557
+        },
+        {
+          "parameterName": "memory",
+          "value": 500
+        }
+      ],
+      "labels": {},
+      "number": 30,
+      "status": "completed",
+      "values": [
+        {
+          "error": 0,
+          "metricName": "duration",
+          "value": 3
+        },
+        {
+          "error": 0,
+          "metricName": "cost",
+          "value": 13
+        }
+      ]
+    },
+    {
+      "assignments": [
+        {
+          "parameterName": "cpu",
+          "value": 3534
+        },
+        {
+          "parameterName": "memory",
+          "value": 1082
+        }
+      ],
+      "labels": {},
+      "number": 31,
+      "status": "completed",
+      "values": [
+        {
+          "error": 0,
+          "metricName": "duration",
+          "value": 2
+        },
+        {
+          "error": 0,
+          "metricName": "cost",
+          "value": 80
+        }
+      ]
+    },
+    {
+      "assignments": [
+        {
+          "parameterName": "cpu",
+          "value": 100
+        },
+        {
+          "parameterName": "memory",
+          "value": 1738
+        }
+      ],
+      "labels": {},
+      "number": 32,
+      "status": "completed",
+      "values": [
+        {
+          "error": 0,
+          "metricName": "duration",
+          "value": 7
+        },
+        {
+          "error": 0,
+          "metricName": "cost",
+          "value": 7
+        }
+      ]
+    },
+    {
+      "assignments": [
+        {
+          "parameterName": "cpu",
+          "value": 100
+        },
+        {
+          "parameterName": "memory",
+          "value": 668
+        }
+      ],
+      "labels": {},
+      "number": 33,
+      "status": "completed",
+      "values": [
+        {
+          "error": 0,
+          "metricName": "duration",
+          "value": 8
+        },
+        {
+          "error": 0,
+          "metricName": "cost",
+          "value": 4
+        }
+      ]
+    },
+    {
+      "assignments": [
+        {
+          "parameterName": "cpu",
+          "value": 100
+        },
+        {
+          "parameterName": "memory",
+          "value": 1021
+        }
+      ],
+      "labels": {
+        "best": "true"
+      },
+      "number": 34,
+      "status": "completed",
+      "values": [
+        {
+          "error": 0,
+          "metricName": "duration",
+          "value": 6
+        },
+        {
+          "error": 0,
+          "metricName": "cost",
+          "value": 5
+        }
+      ]
+    },
+    {
+      "assignments": [
+        {
+          "parameterName": "cpu",
+          "value": 100
+        },
+        {
+          "parameterName": "memory",
+          "value": 3355
+        }
+      ],
+      "labels": {},
+      "number": 35,
+      "status": "completed",
+      "values": [
+        {
+          "error": 0,
+          "metricName": "duration",
+          "value": 7
+        },
+        {
+          "error": 0,
+          "metricName": "cost",
+          "value": 12
+        }
+      ]
+    },
+    {
+      "assignments": [
+        {
+          "parameterName": "cpu",
+          "value": 2748
+        },
+        {
+          "parameterName": "memory",
+          "value": 3903
+        }
+      ],
+      "labels": {
+        "best": "true"
+      },
+      "number": 36,
+      "status": "completed",
+      "values": [
+        {
+          "error": 0,
+          "metricName": "duration",
+          "value": 1
+        },
+        {
+          "error": 0,
+          "metricName": "cost",
+          "value": 72
+        }
+      ]
+    },
+    {
+      "assignments": [
+        {
+          "parameterName": "cpu",
+          "value": 100
+        },
+        {
+          "parameterName": "memory",
+          "value": 1470
+        }
+      ],
+      "labels": {},
+      "number": 37,
+      "status": "completed",
+      "values": [
+        {
+          "error": 0,
+          "metricName": "duration",
+          "value": 7
+        },
+        {
+          "error": 0,
+          "metricName": "cost",
+          "value": 6
+        }
+      ]
+    },
+    {
+      "assignments": [
+        {
+          "parameterName": "cpu",
+          "value": 100
+        },
+        {
+          "parameterName": "memory",
+          "value": 3589
+        }
+      ],
+      "labels": {},
+      "number": 38,
+      "status": "completed",
+      "values": [
+        {
+          "error": 0,
+          "metricName": "duration",
+          "value": 7
+        },
+        {
+          "error": 0,
+          "metricName": "cost",
+          "value": 12
+        }
+      ]
+    },
+    {
+      "assignments": [
+        {
+          "parameterName": "cpu",
+          "value": 512
+        },
+        {
+          "parameterName": "memory",
+          "value": 1790
+        }
+      ],
+      "labels": {},
+      "number": 39,
+      "status": "completed",
+      "values": [
+        {
+          "error": 0,
+          "metricName": "duration",
+          "value": 3
+        },
+        {
+          "error": 0,
+          "metricName": "cost",
+          "value": 16
+        }
+      ]
+    }
+  ]
+}

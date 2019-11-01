@@ -1,3 +1,13 @@
+@import '../../../styles/colors';
+@import '../../../styles/vars';
+
 .expDetails {
+  color: $cr-navy;
   display: block;
+  padding: $size-6x;
+}
+
+.h1 {
+  font-size: 18px;
+  margin-bottom: $size-4x;
 }
