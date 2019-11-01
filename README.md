@@ -43,7 +43,10 @@ npm install
 
 ## Starting the application for development
 
+for intergration with Redsky backend you need to run a local proxy before running the dev server
+
 ```
+node proxy.js
 npm start
 ```
 then you can browse the app http://localhost:3000
