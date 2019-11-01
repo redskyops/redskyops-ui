@@ -46,8 +46,10 @@ go generate ./ui
 
 you need below environment variables to connect to Redsky backend server
 
-REDSKY_ADDRESS={https://url-of-backend-server}
+REDSKY_ADDRESS={url-to-backend-server}
+
 REDSKY_OAUTH2_CLIENT_ID={API-Key}
+
 REDSKY_OAUTH2_CLIENT_SECRET={API-Secret}
 
 you can make a copy of .env.example and rename it to .env and define these variable there
