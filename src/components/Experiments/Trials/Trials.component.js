@@ -136,6 +136,13 @@ export class Trials extends React.Component<Props> {
       .append('circle')
       .attr('r', 3)
       .attr('class', style.circle)
+      .classed(style.best, d => {
+        if ('best' in d.labels) {
+          console.log('best')
+          return true
+        }
+        return false
+      })
   }
 
   componentDidMount() {

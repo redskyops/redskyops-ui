@@ -10,7 +10,12 @@
 
 .circle {
   fill: $cr-blue;
+
+  &.best {
+    fill: $cr-orange;
+  }
 }
+
 
 .grid {
   line {
