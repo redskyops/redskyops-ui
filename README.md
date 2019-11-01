@@ -7,15 +7,27 @@ The User Interface project (redskyops-ui) is a web application for visualizing e
 
 ### Prerequisites
 
+To build the application you must have a recent version of npm. To install the required Node.js modules run:
+
+```
+npm install
+```
+
 To generate the Go code (only required for releases) you must have a recent version of Go (1.12+) and the latest version of `vfsgendev`:
 
 ```
 go get -u github.com/shurcooL/vfsgen/cmd/vfsgendev
 ```
 
-### Building Static Assets
 
-Right now running `./build.sh` just copies the contents of the `/public` directory.
+### Building
+
+This project is based on "Create React App", to generate an optimized production build in the `/build` directory run:
+
+```
+npm run build
+```
+
 
 ### Generating Go Code
 
@@ -26,33 +38,23 @@ go generate ./ui
 ```
 
 
-## Releasing
+## Development
+
+### Start Development Server
+
+In addition to the development server, you must run a local proxy to access the Red Sky Server:
+
+```
+node src/proxy.js
+npm start
+```
+
+The application will then be available at: http://localhost:3000
+
+
+### Releasing
 
 1. Run a clean build to ensure the latest code is in the build directory
 2. Generate the `assets_vfsdata.go` file and commit to Git
 3. Tag the repository and push
 
-
-# Red Sky Frontend
-
-the UI application is based on "Create React App". You need to install Node modules before starting the application by running
-
-```
-npm install
-```
-
-## Starting the application for development
-
-for intergration with Redsky backend you need to run a local proxy before running the dev server
-
-```
-node proxy.js
-npm start
-```
-then you can browse the app http://localhost:3000
-
-## Building the UI app assets
-
-```
-npm run build
-```
