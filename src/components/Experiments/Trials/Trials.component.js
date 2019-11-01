@@ -30,6 +30,7 @@ export class Trials extends React.Component<Props> {
     const completedTrials = this.props.trials.filter(
       t => t.status === 'completed',
     )
+
     const [minCost, maxCost] = d3.extent(
       completedTrials.map(
         v => v.values.filter(c => c.metricName === xValueName)[0].value,
@@ -51,6 +52,8 @@ export class Trials extends React.Component<Props> {
       .domain([minDuration, maxDuration])
       .range([height, 0])
 
+    d3.select('#chart svg').remove()
+
     const svg = d3
       .select('#chart')
       .append('svg')
@@ -66,9 +69,9 @@ export class Trials extends React.Component<Props> {
       .append('text')
       .attr(
         'transform',
-        `translate(-${margins.left - 10}, ${height / 2}) rotate(-90)`,
+        `translate(-${margins.left - 20}, ${height / 2}) rotate(-90)`,
       )
-      .attr('dy', '1em')
+      .attr('font-size', '1.5em')
       .style('text-anchor', 'middle')
       .style('fill', '#000')
       .text(yValueName)
@@ -81,8 +84,8 @@ export class Trials extends React.Component<Props> {
 
     svg
       .append('text')
-      .attr('transform', `translate(${width / 2}, ${height + 15})`)
-      .attr('dy', '1em')
+      .attr('transform', `translate(${width / 2}, ${height + 40})`)
+      .attr('font-size', '1.5em')
       .style('text-anchor', 'middle')
       .style('fill', '#000')
       .text(xValueName)
