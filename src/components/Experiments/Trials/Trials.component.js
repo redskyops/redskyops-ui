@@ -119,6 +119,20 @@ export class Trials extends React.Component<Props> {
           .tickFormat(''),
       )
 
+    const circleOver = () =>
+      function _circleOver() {
+        d3.select(this)
+          .classed(style.active, true)
+          .attr('r', 6)
+      }
+
+    const circleOut = () =>
+      function _circleOut() {
+        d3.select(this)
+          .classed(style.active, false)
+          .attr('r', 3)
+      }
+
     svg
       .selectAll('g')
       .data(completedTrials)
@@ -138,11 +152,12 @@ export class Trials extends React.Component<Props> {
       .attr('class', style.circle)
       .classed(style.best, d => {
         if ('best' in d.labels) {
-          console.log('best')
           return true
         }
         return false
       })
+      .on('mouseover', circleOver())
+      .on('mouseout', circleOut())
   }
 
   componentDidMount() {

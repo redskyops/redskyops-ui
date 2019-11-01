@@ -14,6 +14,10 @@
   &.best {
     fill: $cr-orange;
   }
+
+  &.active {
+    fill: $cr-green;
+  }
 }
 
 
