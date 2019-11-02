@@ -2,10 +2,6 @@ import React from 'react'
 
 import {connectWithState} from '../../../context/StateContext'
 import useApiCallEffect from '../../../hooks/useApiCallEffect'
-import {ExperimentsService} from '../../../services/Experiments.service'
-
-import style from './ExperimentDetails.module.scss'
-
 import {
   TypeActiveExperiment,
   TypeExperiments,
@@ -13,6 +9,10 @@ import {
   TypeActiveTrial,
 } from '../../../context/DefaultState'
 import Trials from '../Trials/Trials.component'
+import {TrialDetails} from '../TrialDetails/TrialDetails.component'
+import {ExperimentsService} from '../../../services/Experiments.service'
+
+import style from './ExperimentDetails.module.scss'
 
 type Props = {
   activeExperiment: TypeActiveExperiment,
@@ -94,12 +94,21 @@ export const ExperimentDetails = (props: Props) => {
       />
     )
   }
+
+  const renderTrialDetails = () => {
+    if (!activeTrial) {
+      return null
+    }
+
+    return <TrialDetails trial={activeTrial.trial} />
+  }
   return (
     <div className={style.expDetails}>
       <h1 className={style.h1}>
         {experiment.displayName} / {experiment.id}
       </h1>
       {renderTrials()}
+      {renderTrialDetails()}
     </div>
   )
 }

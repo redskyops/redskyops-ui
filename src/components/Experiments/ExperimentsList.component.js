@@ -45,6 +45,7 @@ export const ExperimentsList = (props: Props) => {
         index,
       },
       trials: null,
+      activeTrial: null,
     })
   }
   return (

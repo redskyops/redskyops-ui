@@ -1,0 +1,40 @@
+@import '../../../styles/colors';
+@import '../../../styles/vars';
+
+.trial {
+  background-color: $white;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  margin-top: $size-2x;
+  max-width: 1024px;
+  padding: $size-2x;
+  width: 100%;
+}
+
+.parameter {
+  background-color: $bg-light;
+  height: 40px;
+  line-height: 40px;
+  margin: $size-1x;
+  padding: 0 $size-1x;
+  width: calc(50% - #{$size-1x * 2});
+}
+
+.h3 {
+  align-items: center;
+  display: flex;
+  margin-top: $size-4x;
+  padding-left: $size-1x;
+  width: 100%;
+}
+
+.capitalize {
+  text-transform: uppercase;
+}
+
+.icon {
+  color: $cr-pink;
+  font-size: 24px;
+  margin-left: $size-1x;
+}
