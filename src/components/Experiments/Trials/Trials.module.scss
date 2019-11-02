@@ -1,6 +1,11 @@
 @import '../../../styles/colors';
 @import '../../../styles/vars';
 
+@keyframes fadeIn {
+  from {opacity: 0}
+  to {opacity: 1}
+}
+
 .trials {
   display: block;
   padding: $size-4x 0;
@@ -18,6 +23,10 @@
 
   &.active {
     fill: $cr-green;
+
+    &.best {
+      fill: $cr-pink;
+    }
   }
 }
 
@@ -37,13 +46,28 @@
 
 .popup {
   text {
-    fill: $cr-blue;
+    fill: $cr-green;
+  }
+
+  &.best {
+    text {
+      fill: $cr-pink;
+    }
+
+    .popupRect {
+      stroke: $cr-pink;
+    }
+  }
+
+  &.fadeIn {
+    animation-name: fadeIn;
+    animation-duration: .3s;
   }
 }
 
 .popupRect {
-  fill: $gray-light;
-  stroke: $gray;
+  fill: $bg-light;
+  stroke: $cr-green;
 }
 
 

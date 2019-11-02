@@ -48,7 +48,8 @@ const proxyRequest = (req, res) => {
       console.log('[PROXY:ERROR]', response.statusCode, error)
     }
     if (response.statusCode === 401) {
-      res.satus(401).send({error: 'Token expired, restart development proxy'})
+      res.status(401)
+      res.send({error: 'Token expired, restart development proxy'})
     }
     if (!error && response.statusCode === 200) {
       res.send(body)

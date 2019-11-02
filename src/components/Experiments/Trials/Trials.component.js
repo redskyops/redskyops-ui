@@ -24,6 +24,9 @@ export class Trials extends React.Component<Props> {
     const width = canvasWidth - margins.top - margins.left
     const height = canvasHeight - margins.top - margins.bottom
 
+    const popupWidth = 200
+    const popupHeight = 50
+
     const xValueName = this.props.xAxisMetricName
     const yValueName = this.props.yAxisMetricName
 
@@ -121,21 +124,28 @@ export class Trials extends React.Component<Props> {
 
     const circleOver = () =>
       function _circleOver(dataPoint) {
-        d3.select(this)
-          .classed(style.active, true)
-          .attr('r', 6)
-
-        const popup = d3
-          .select('#popup')
-          .attr('transform', d3.select(this.parentNode).attr('transform'))
-          .classed(style.hidden, false)
-
         var xValue = dataPoint.values.filter(
           v => v.metricName === xValueName,
         )[0].value
         var yValue = dataPoint.values.filter(
           v => v.metricName === yValueName,
         )[0].value
+
+        let xPos = xScale(xValue)
+        let yPos = yScale(yValue)
+        xPos -= xPos + popupWidth >= width ? popupWidth + 5 : 0
+        yPos -= yPos + popupHeight >= height ? popupHeight + 8 : 0
+
+        d3.select(this)
+          .classed(style.active, true)
+          .attr('r', 6)
+
+        const popup = d3
+          .select('#popup')
+          .attr('transform', `translate(${xPos}, ${yPos})`)
+          .classed(style.hidden, false)
+          .classed(style.fadeIn, true)
+          .classed(style.best, dataPoint.labels && 'best' in dataPoint.labels)
 
         popup.selectAll('text').remove()
         popup
@@ -161,7 +171,9 @@ export class Trials extends React.Component<Props> {
         d3.select(this)
           .classed(style.active, false)
           .attr('r', 3)
-        d3.select('#popup').classed(style.hidden, true)
+        d3.select('#popup')
+          .classed(style.hidden, true)
+          .classed(style.fadeIn, false)
       }
 
     svg
@@ -199,8 +211,8 @@ export class Trials extends React.Component<Props> {
       .attr('transform', 'translate(5, 5)')
       .style('filter', 'url(#dropshadow)')
       .attr('class', style.popupRect)
-      .attr('width', 200)
-      .attr('height', 50)
+      .attr('width', popupWidth)
+      .attr('height', popupHeight)
   }
 
   componentDidMount() {
