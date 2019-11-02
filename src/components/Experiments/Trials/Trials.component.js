@@ -18,8 +18,8 @@ export class Trials extends React.Component<Props> {
   }
 
   buildChart() {
-    const canvasWidth = 800
-    const canvasHeight = 400
+    const canvasWidth = 1024
+    const canvasHeight = 500
     const margins = {top: 20, right: 20, bottom: 40, left: 70}
     const width = canvasWidth - margins.top - margins.left
     const height = canvasHeight - margins.top - margins.bottom
@@ -120,10 +120,40 @@ export class Trials extends React.Component<Props> {
       )
 
     const circleOver = () =>
-      function _circleOver() {
+      function _circleOver(dataPoint) {
         d3.select(this)
           .classed(style.active, true)
           .attr('r', 6)
+
+        const popup = d3
+          .select('#popup')
+          .attr('transform', d3.select(this.parentNode).attr('transform'))
+          .classed(style.hidden, false)
+
+        var xValue = dataPoint.values.filter(
+          v => v.metricName === xValueName,
+        )[0].value
+        var yValue = dataPoint.values.filter(
+          v => v.metricName === yValueName,
+        )[0].value
+
+        popup.selectAll('text').remove()
+        popup
+          .append('text')
+          .attr('font-size', '1.5em')
+          .attr('font-family', 'sans-serif')
+          .style('text-anchor', 'start')
+          .attr('transform', 'translate(10, 23)')
+          .attr('width', 100)
+          .text(`${xValueName}: ${xValue}`)
+        popup
+          .append('text')
+          .attr('font-size', '1.5em')
+          .attr('font-family', 'sans-serif')
+          .style('text-anchor', 'start')
+          .attr('transform', 'translate(10, 45)')
+          .attr('width', 100)
+          .text(`${yValueName}: ${yValue}`)
       }
 
     const circleOut = () =>
@@ -131,6 +161,7 @@ export class Trials extends React.Component<Props> {
         d3.select(this)
           .classed(style.active, false)
           .attr('r', 3)
+        d3.select('#popup').classed(style.hidden, true)
       }
 
     svg
@@ -158,6 +189,18 @@ export class Trials extends React.Component<Props> {
       })
       .on('mouseover', circleOver())
       .on('mouseout', circleOut())
+
+    svg
+      .append('g')
+      .attr('id', 'popup')
+      .attr('class', style.popup)
+      .classed(style.hidden, true)
+      .append('rect')
+      .attr('transform', 'translate(5, 5)')
+      .style('filter', 'url(#dropshadow)')
+      .attr('class', style.popupRect)
+      .attr('width', 200)
+      .attr('height', 50)
   }
 
   componentDidMount() {
@@ -172,6 +215,21 @@ export class Trials extends React.Component<Props> {
     return (
       <div className={style.trials}>
         <div id="chart" ref={this.chartRef} />
+        <div className={style.svgFillter}>
+          <svg>
+            <filter id="dropshadow" height="130%">
+              <feGaussianBlur in="SourceAlpha" stdDeviation="4" />
+              <feOffset dx="3" dy="3" result="offsetblur" />
+              <feComponentTransfer>
+                <feFuncA type="linear" slope="0.2" />
+              </feComponentTransfer>
+              <feMerge>
+                <feMergeNode />
+                <feMergeNode in="SourceGraphic" />
+              </feMerge>
+            </filter>
+          </svg>
+        </div>
       </div>
     )
   }

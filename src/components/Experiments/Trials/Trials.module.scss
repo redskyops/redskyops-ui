@@ -5,10 +5,11 @@
   display: block;
   padding: $size-4x 0;
   background-color: $white;
-  width: 800px;
+  width: 1024px;
 }
 
 .circle {
+  cursor: pointer;
   fill: $cr-blue;
 
   &.best {
@@ -32,4 +33,25 @@
       display: none;
     }
   }
+}
+
+.popup {
+  text {
+    fill: $cr-blue;
+  }
+}
+
+.popupRect {
+  fill: $gray-light;
+  stroke: $gray;
+}
+
+
+.hidden {
+  display: none;
+}
+
+.svgFillter {
+  position: absolute;
+  z-index: -1;
 }
