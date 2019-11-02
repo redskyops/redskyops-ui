@@ -50,6 +50,12 @@ export const ExperimentDetails = (props: Props) => {
   ])
 
   const selectTrial = ({index, trial}) => {
+    if (activeTrial && activeTrial.index === index) {
+      updateState({
+        activeTrial: null,
+      })
+      return
+    }
     updateState({
       activeTrial: {
         ...activeTrial,
@@ -100,7 +106,16 @@ export const ExperimentDetails = (props: Props) => {
       return null
     }
 
-    return <TrialDetails trial={activeTrial.trial} />
+    return (
+      <TrialDetails
+        trial={activeTrial.trial}
+        closeHandler={() =>
+          updateState({
+            activeTrial: null,
+          })
+        }
+      />
+    )
   }
   return (
     <div className={style.expDetails}>

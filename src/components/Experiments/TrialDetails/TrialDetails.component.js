@@ -4,10 +4,11 @@ import style from './TrialDetails.module.scss'
 
 type Props = {
   trial?: Object,
+  closeHandler: () => any,
 }
 
 export const TrialDetails = (props: Props) => {
-  const {trial} = props
+  const {trial, closeHandler} = props
   if (!trial) {
     return null
   }
@@ -27,6 +28,9 @@ export const TrialDetails = (props: Props) => {
 
   return (
     <div className={style.trial}>
+      <button className={style.close} onClick={closeHandler}>
+        <span className="material-icons">close</span>
+      </button>
       <h3 className={style.h3}>
         Values
         {trial.labels && 'best' in trial.labels && (

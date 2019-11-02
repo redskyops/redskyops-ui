@@ -9,6 +9,7 @@
   margin-top: $size-2x;
   max-width: 1024px;
   padding: $size-2x;
+  position: relative;
   width: 100%;
 }
 
@@ -37,4 +38,15 @@
   color: $cr-pink;
   font-size: 24px;
   margin-left: $size-1x;
+}
+
+.close {
+  background-color: transparent;
+  border: 0;
+  cursor: pointer;
+  outline: 0;
+  padding: 0;
+  position: absolute;
+  right: 10px;
+  top: 10px;
 }
