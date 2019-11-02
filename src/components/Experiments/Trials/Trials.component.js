@@ -1,20 +1,21 @@
 import React from 'react'
 import * as d3 from 'd3'
 
-import {TypeTrials} from '../../../context/DefaultState'
+import {TypeTrials, TypeActiveTrial} from '../../../context/DefaultState'
 
 import style from './Trials.module.scss'
 
 type Props = {
   trials: TypeTrials,
+  activeTrial?: TypeActiveTrial,
   xAxisMetricName: string,
   yAxisMetricName: string,
+  selectTrialHandler: Function,
 }
 
 export class Trials extends React.Component<Props> {
   constructor(props: Props) {
     super(props)
-    this.chartRef = React.createRef()
   }
 
   buildChart() {
@@ -30,9 +31,9 @@ export class Trials extends React.Component<Props> {
     const xValueName = this.props.xAxisMetricName
     const yValueName = this.props.yAxisMetricName
 
-    const completedTrials = this.props.trials.filter(
-      t => t.status === 'completed',
-    )
+    const completedTrials = this.props.trials
+      .map((t, index) => ({...t, index}))
+      .filter(t => t.status === 'completed')
 
     const [minCost, maxCost] = d3.extent(
       completedTrials.map(
@@ -166,14 +167,25 @@ export class Trials extends React.Component<Props> {
           .text(`${yValueName}: ${yValue}`)
       }
 
-    const circleOut = () =>
-      function _circleOut() {
+    const circleOut = activeTrial =>
+      function _circleOut(dataPoint) {
         d3.select(this)
           .classed(style.active, false)
-          .attr('r', 3)
+          .attr(
+            'r',
+            activeTrial && dataPoint.index === activeTrial.index ? 6 : 3,
+          )
         d3.select('#popup')
           .classed(style.hidden, true)
           .classed(style.fadeIn, false)
+      }
+
+    const circleClick = selectTrialHandler =>
+      function _circleClick(dataPoint) {
+        selectTrialHandler({
+          index: dataPoint.index,
+          trial: dataPoint,
+        })
       }
 
     svg
@@ -191,7 +203,11 @@ export class Trials extends React.Component<Props> {
         return `translate(${xScale(cost.value)}, ${yScale(duration.value)})`
       })
       .append('circle')
-      .attr('r', 3)
+      .attr('r', d =>
+        this.props.activeTrial && d.index === this.props.activeTrial.index
+          ? 6
+          : 3,
+      )
       .attr('class', style.circle)
       .classed(style.best, d => {
         if ('best' in d.labels) {
@@ -199,8 +215,13 @@ export class Trials extends React.Component<Props> {
         }
         return false
       })
+      .classed(
+        style.selected,
+        d => this.props.activeTrial && d.index === this.props.activeTrial.index,
+      )
       .on('mouseover', circleOver())
-      .on('mouseout', circleOut())
+      .on('mouseout', circleOut(this.props.activeTrial))
+      .on('click', circleClick(this.props.selectTrialHandler))
 
     svg
       .append('g')
@@ -226,7 +247,7 @@ export class Trials extends React.Component<Props> {
   render() {
     return (
       <div className={style.trials}>
-        <div id="chart" ref={this.chartRef} />
+        <div id="chart" />
         <div className={style.svgFillter}>
           <svg>
             <filter id="dropshadow" height="130%">

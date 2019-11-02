@@ -10,6 +10,7 @@ import {
   TypeActiveExperiment,
   TypeExperiments,
   TypeTrials,
+  TypeActiveTrial,
 } from '../../../context/DefaultState'
 import Trials from '../Trials/Trials.component'
 
@@ -17,11 +18,18 @@ type Props = {
   activeExperiment: TypeActiveExperiment,
   experiments: TypeExperiments,
   trials: TypeTrials,
+  activeTrial: TypeActiveTrial,
   updateState: () => any,
 }
 
 export const ExperimentDetails = (props: Props) => {
-  const {activeExperiment, experiments, updateState, trials} = props
+  const {
+    activeExperiment,
+    experiments,
+    updateState,
+    trials,
+    activeTrial,
+  } = props
   const expService = new ExperimentsService()
 
   const requestFactory = () =>
@@ -40,6 +48,16 @@ export const ExperimentDetails = (props: Props) => {
   useApiCallEffect(requestFactory, requestSuccess, requestError, [
     activeExperiment,
   ])
+
+  const selectTrial = ({index, trial}) => {
+    updateState({
+      activeTrial: {
+        ...activeTrial,
+        index,
+        trial,
+      },
+    })
+  }
 
   if (!activeExperiment) {
     return (
@@ -69,8 +87,10 @@ export const ExperimentDetails = (props: Props) => {
     return (
       <Trials
         trials={trials}
+        activeTrial={activeTrial}
         xAxisMetricName={experiment.metrics[0].name}
         yAxisMetricName={experiment.metrics[1].name}
+        selectTrialHandler={selectTrial}
       />
     )
   }
@@ -88,4 +108,5 @@ export default connectWithState(ExperimentDetails, [
   'activeExperiment',
   'experiments',
   'trials',
+  'activeTrial',
 ])

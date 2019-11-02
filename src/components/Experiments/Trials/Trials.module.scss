@@ -21,7 +21,8 @@
     fill: $cr-orange;
   }
 
-  &.active {
+  &.active,
+  &.selected {
     fill: $cr-green;
 
     &.best {
