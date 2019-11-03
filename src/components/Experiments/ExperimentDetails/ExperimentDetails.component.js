@@ -135,17 +135,21 @@ export const ExperimentDetails = (props: Props) => {
       return {...acc, ...{[t.status]: [t]}}
     }, {})
 
+    const order = ['compelted', 'failed']
+
     return (
       <div className={style.status}>
         <p>
-          Total trials <strong>{trials.length}</strong>
+          <strong>{trials.length}</strong> total trials
         </p>
-        {Object.keys(trialsStatusMap).map(status => (
-          <p key={status}>
-            <strong>{trialsStatusMap[status].length}</strong> {status}{' '}
-            {status === 'completed' ? '(Showing)' : ''}
-          </p>
-        ))}
+        {Object.keys(trialsStatusMap)
+          .sort((s1, s2) => order.indexOf(s1) - order.indexOf(s2))
+          .map(status => (
+            <p key={status}>
+              <strong>{trialsStatusMap[status].length}</strong> {status}{' '}
+              {status === 'completed' ? '(showing)' : ''}
+            </p>
+          ))}
       </div>
     )
   }
