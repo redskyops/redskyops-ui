@@ -189,7 +189,7 @@ export class Trials extends React.Component<Props> {
       }
 
     svg
-      .selectAll('g')
+      .selectAll('g.point')
       .data(completedTrials)
       .enter()
       .append('g')
@@ -202,6 +202,7 @@ export class Trials extends React.Component<Props> {
         return `translate(${xScale(cost.value)}, ${yScale(duration.value)})`
       })
       .append('circle')
+      .attr('class', 'point')
       .attr('r', d =>
         this.props.activeTrial && d.index === this.props.activeTrial.index
           ? 6

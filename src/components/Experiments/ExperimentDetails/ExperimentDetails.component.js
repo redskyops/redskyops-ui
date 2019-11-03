@@ -33,7 +33,10 @@ export const ExperimentDetails = (props: Props) => {
   const expService = new ExperimentsService()
 
   const requestFactory = () =>
-    activeExperiment
+    activeExperiment &&
+    experiments.list[activeExperiment.index] &&
+    experiments.list[activeExperiment.index].metrics &&
+    experiments.list[activeExperiment.index].metrics.length > 1
       ? expService.getTrialsFactory({
           name: experiments.list[activeExperiment.index].id, // eslint-disable-line indent
         }) // eslint-disable-line indent
@@ -133,13 +136,15 @@ export const ExperimentDetails = (props: Props) => {
     }, {})
 
     return (
-      <div>
-        This experiment contains <strong>{trials.length}</strong> trials
-        <br />
+      <div className={style.status}>
+        <p>
+          Total trials <strong>{trials.length}</strong>
+        </p>
         {Object.keys(trialsStatusMap).map(status => (
-          <div key={status}>
-            <strong>{trialsStatusMap[status].length}</strong> {status}
-          </div>
+          <p key={status}>
+            <strong>{trialsStatusMap[status].length}</strong> {status}{' '}
+            {status === 'completed' ? '(Showing)' : ''}
+          </p>
         ))}
       </div>
     )
