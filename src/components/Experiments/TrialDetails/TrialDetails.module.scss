@@ -6,6 +6,7 @@
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
+  font-size: 14px;
   margin-top: $size-2x;
   max-width: 1024px;
   padding: $size-2x;
@@ -14,17 +15,19 @@
 }
 
 .parameter {
-  background-color: $bg-light;
+  border-bottom: 1px solid $gray-light;
   height: 40px;
   line-height: 40px;
-  margin: $size-1x;
+  margin-right: $size-2x;
   padding: 0 $size-1x;
   width: calc(50% - #{$size-1x * 2});
 }
 
 .h3 {
   align-items: center;
+  color: $cr-navy;
   display: flex;
+  font-size: 18px;
   margin-top: $size-4x;
   padding-left: $size-1x;
   width: 100%;
