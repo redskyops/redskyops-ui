@@ -3,11 +3,21 @@ const fetch = require('node-fetch')
 const express = require('express')
 const request = require('request')
 const app = express()
+const dotenv = require('dotenv')
 
-const REDSKY_ADDRESS = 'http://example.com'
-const REDSKY_OAUTH2_CLIENT_ID = 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX'
-const REDSKY_OAUTH2_CLIENT_SECRET =
-  'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX'
+dotenv.config()
+
+if (
+  !process.env.REDSKY_ADDRESS ||
+  !process.env.REDSKY_OAUTH2_CLIENT_ID ||
+  !process.env.REDSKY_OAUTH2_CLIENT_SECRET
+) {
+  throw new Error('Proxy cannot run without required environment variables')
+}
+
+const REDSKY_ADDRESS = process.env.REDSKY_ADDRESS
+const REDSKY_OAUTH2_CLIENT_ID = process.env.REDSKY_OAUTH2_CLIENT_ID
+const REDSKY_OAUTH2_CLIENT_SECRET = process.env.REDSKY_OAUTH2_CLIENT_SECRET
 
 let token
 let tokenType

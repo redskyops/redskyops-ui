@@ -42,6 +42,18 @@ go generate ./ui
 
 ### Start Development Server
 
+#### Set required environment variables in .env file
+
+you need below environment variables to connect to Redsky backend server
+
+REDSKY_ADDRESS={url-to-backend-server}
+
+REDSKY_OAUTH2_CLIENT_ID={API-Key}
+
+REDSKY_OAUTH2_CLIENT_SECRET={API-Secret}
+
+you can make a copy of .env.example and rename it to .env and define these variable there
+
 In addition to the development server, you must run a local proxy to access the Red Sky Server:
 
 ```
