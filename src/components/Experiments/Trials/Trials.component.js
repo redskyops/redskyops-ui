@@ -199,7 +199,6 @@ export class Trials extends React.Component<Props> {
           if (v.metricName === yValueName) acc[1] = v
           return acc
         }, [])
-
         return `translate(${xScale(cost.value)}, ${yScale(duration.value)})`
       })
       .append('circle')

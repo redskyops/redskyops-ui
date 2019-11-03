@@ -55,3 +55,7 @@
   right: 10px;
   top: 10px;
 }
+
+.indicatorPink {
+  color: $cr-pink !important; // sass-lint:disable-line no-important
+}

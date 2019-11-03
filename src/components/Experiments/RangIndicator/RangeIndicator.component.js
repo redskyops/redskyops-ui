@@ -8,9 +8,16 @@ type Props = {
   max: number,
   value: number,
   width?: number,
+  indecatorClass?: string,
 }
 
-export const RangeIndicator = ({min, max, value, width = 200}: Props) => {
+export const RangeIndicator = ({
+  min,
+  max,
+  value,
+  width = 200,
+  indecatorClass = '',
+}: Props) => {
   const iconWidth = 32
   const xScale = d3
     .scaleLinear()
@@ -22,7 +29,7 @@ export const RangeIndicator = ({min, max, value, width = 200}: Props) => {
   return (
     <div className={style.rangeIndicator} style={{width}}>
       <span
-        className={`material-icons ${style.icon}`}
+        className={`material-icons ${style.icon} ${indecatorClass}`}
         style={{left: `${leftPos}px`}}
       >
         arrow_drop_down

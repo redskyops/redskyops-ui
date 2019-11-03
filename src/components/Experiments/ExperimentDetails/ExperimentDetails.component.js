@@ -118,11 +118,39 @@ export const ExperimentDetails = (props: Props) => {
       />
     )
   }
+
+  const renderStatus = () => {
+    if (!(activeExperiment && trials && trials.length > 0)) {
+      return null
+    }
+
+    const trialsStatusMap = trials.reduce((acc, t) => {
+      if (t.status in acc) {
+        acc[t.status].push(t)
+        return acc
+      }
+      return {...acc, ...{[t.status]: [t]}}
+    }, {})
+
+    return (
+      <div>
+        This experiment contains <strong>{trials.length}</strong> trials
+        <br />
+        {Object.keys(trialsStatusMap).map(status => (
+          <div key={status}>
+            <strong>{trialsStatusMap[status].length}</strong> {status}
+          </div>
+        ))}
+      </div>
+    )
+  }
+
   return (
     <div className={style.expDetails}>
       <h1 className={style.h1}>
         {experiment.displayName} / {experiment.id}
       </h1>
+      {renderStatus()}
       {renderTrials()}
       {renderTrialDetails()}
     </div>

@@ -9,22 +9,23 @@
 }
 
 .bar {
-  background-color: $cr-blue;
+  background-color: $gray;
   display: block;
   height: 3px;
   width: 100%;
 }
 
 .labels {
-  color: $cr-blue;
+  color: $gray;
   display: flex;
   font-size: 12px;
+  font-weight: bold;
   justify-content: space-between;
   margin-top: 4px;
 }
 
 .icon {
-  color: $cr-blue;
+  color: $cr-green;
   font-size: 32px;
   position: absolute;
   top: -10px;

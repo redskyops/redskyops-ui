@@ -19,7 +19,9 @@ export const TrialDetails = (props: Props) => {
     (acc, para) => ({...acc, [para.name]: para}),
     {},
   )
-  console.log(parametersMap)
+
+  const isBest = trial.labels && 'best' in trial.labels
+
   const renderParameters = () => {
     return trial.assignments.map(para => {
       return (
@@ -32,6 +34,7 @@ export const TrialDetails = (props: Props) => {
             <RangeIndicator
               {...parametersMap[para.parameterName].bounds}
               value={para.value}
+              {...(isBest ? {indecatorClass: style.indicatorPink} : null)}
             />
           )}
         </div>
@@ -46,7 +49,7 @@ export const TrialDetails = (props: Props) => {
       </button>
       <h3 className={style.h3}>
         Values
-        {trial.labels && 'best' in trial.labels && (
+        {isBest && (
           <span className={`material-icons ${style.icon}`}>check_circle</span>
         )}
       </h3>
