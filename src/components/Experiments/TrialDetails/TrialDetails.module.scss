@@ -15,12 +15,14 @@
 }
 
 .parameter {
-  border-bottom: 1px solid $gray-light;
-  height: 40px;
-  line-height: 40px;
-  margin-right: $size-2x;
-  padding: 0 $size-1x;
-  width: calc(50% - #{$size-1x * 2});
+  align-items: center;
+  background-color: $bg-light;
+  display: flex;
+  height: 50px;
+  justify-content: space-between;
+  margin: $size-1x $size-2x;
+  padding: 0 $size-2x;
+  width: calc(50% - #{$size-2x * 2});
 }
 
 .h3 {
@@ -29,7 +31,7 @@
   display: flex;
   font-size: 18px;
   margin-top: $size-4x;
-  padding-left: $size-1x;
+  padding-left: $size-2x;
   width: 100%;
 }
 

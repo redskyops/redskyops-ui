@@ -109,6 +109,7 @@ export const ExperimentDetails = (props: Props) => {
     return (
       <TrialDetails
         trial={activeTrial.trial}
+        parameters={experiment.parameters}
         closeHandler={() =>
           updateState({
             activeTrial: null,

@@ -1,26 +1,39 @@
 import React from 'react'
 
 import style from './TrialDetails.module.scss'
+import RangeIndicator from '../RangIndicator/RangeIndicator.component'
 
 type Props = {
   trial?: Object,
+  parameters?: Array<Object>,
   closeHandler: () => any,
 }
 
 export const TrialDetails = (props: Props) => {
-  const {trial, closeHandler} = props
+  const {trial, parameters = [], closeHandler} = props
   if (!trial) {
     return null
   }
 
+  const parametersMap = parameters.reduce(
+    (acc, para) => ({...acc, [para.name]: para}),
+    {},
+  )
+  console.log(parametersMap)
   const renderParameters = () => {
     return trial.assignments.map(para => {
       return (
         <div className={style.parameter} key={para.parameterName}>
-          <strong className={style.capitalize}>
-            {para.parameterName.replace(/_/g, ' ')}:{' '}
-          </strong>
-          <span className={style.capitalize}>{para.value}</span>
+          <span className={style.capitalize}>
+            <strong>{para.parameterName.replace(/_/g, ' ')}: </strong>
+            {para.value}
+          </span>
+          {para.parameterName in parametersMap && (
+            <RangeIndicator
+              {...parametersMap[para.parameterName].bounds}
+              value={para.value}
+            />
+          )}
         </div>
       )
     })
