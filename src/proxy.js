@@ -36,8 +36,6 @@ fetch(`${REDSKY_ADDRESS}/auth/token/`, {
   })
 
 const proxyRequest = (req, res) => {
-  console.log(req.url)
-  console.log(req.path)
   const options = {
     url: `${REDSKY_ADDRESS}${req.url}`,
     headers: {
@@ -45,8 +43,13 @@ const proxyRequest = (req, res) => {
     },
   }
   request(options, function(error, response, body) {
+    console.log(`[PROXY] ${response.statusCode} ${req.url}`)
     if (error) {
       console.log('[PROXY:ERROR]', response.statusCode, error)
+    }
+    if (response.statusCode === 401) {
+      res.status(401)
+      res.send({error: 'Token expired, restart development proxy'})
     }
     if (!error && response.statusCode === 200) {
       res.send(body)

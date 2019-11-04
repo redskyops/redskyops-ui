@@ -70,7 +70,7 @@ export const ListSearch = (props: Props) => {
   }
 
   const documentClick = e => {
-    if (wrapperRef.current.contains(e.target)) {
+    if (wrapperRef.current && wrapperRef.current.contains(e.target)) {
       return
     }
     closeMenu()

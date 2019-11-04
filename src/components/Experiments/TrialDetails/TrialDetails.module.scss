@@ -1,0 +1,61 @@
+@import '../../../styles/colors';
+@import '../../../styles/vars';
+
+.trial {
+  background-color: $white;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  font-size: 14px;
+  margin-top: $size-2x;
+  max-width: 1024px;
+  padding: $size-2x;
+  position: relative;
+  width: 100%;
+}
+
+.parameter {
+  align-items: center;
+  background-color: $bg-light;
+  display: flex;
+  height: 50px;
+  justify-content: space-between;
+  margin: $size-1x $size-2x;
+  padding: 0 $size-2x;
+  width: calc(50% - #{$size-2x * 2});
+}
+
+.h3 {
+  align-items: center;
+  color: $cr-navy;
+  display: flex;
+  font-size: 18px;
+  margin-top: $size-4x;
+  padding-left: $size-2x;
+  width: 100%;
+}
+
+.capitalize {
+  text-transform: uppercase;
+}
+
+.icon {
+  color: $cr-pink;
+  font-size: 24px;
+  margin-left: $size-1x;
+}
+
+.close {
+  background-color: transparent;
+  border: 0;
+  cursor: pointer;
+  outline: 0;
+  padding: 0;
+  position: absolute;
+  right: 10px;
+  top: 10px;
+}
+
+.indicatorPink {
+  color: $cr-pink !important; // sass-lint:disable-line no-important
+}

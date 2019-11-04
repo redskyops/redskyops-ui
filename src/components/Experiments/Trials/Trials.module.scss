@@ -1,13 +1,82 @@
 @import '../../../styles/colors';
 @import '../../../styles/vars';
 
+@keyframes fadeIn {
+  from {opacity: 0}
+  to {opacity: 1}
+}
+
 .trials {
   display: block;
   padding: $size-4x 0;
   background-color: $white;
-  width: 800px;
+  width: 1024px;
 }
 
 .circle {
+  cursor: pointer;
   fill: $cr-blue;
+
+  &.best {
+    fill: $cr-orange;
+  }
+
+  &.active,
+  &.selected {
+    fill: $cr-green;
+
+    &.best {
+      fill: $cr-pink;
+    }
+  }
+}
+
+
+.grid {
+  line {
+    stroke: $gray-light;
+
+  }
+
+  path {
+    &:first-child {
+      display: none;
+    }
+  }
+}
+
+.popup {
+  text {
+    fill: $cr-green;
+  }
+
+  &.best {
+    text {
+      fill: $cr-pink;
+    }
+
+    .popupRect {
+      stroke: $cr-pink;
+    }
+  }
+
+  &.fadeIn {
+    animation-name: fadeIn;
+    animation-duration: .3s;
+  }
+}
+
+.popupRect {
+  fill: $bg-light;
+  stroke: $cr-green;
+}
+
+
+.hidden {
+  display: none;
+}
+
+.svgFillter {
+  position: absolute;
+  z-index: -1;
 }
