@@ -25,6 +25,7 @@ export const ListSearch = (props: Props) => {
     setIsOpen(true)
     setTempIndex(selectedIndex)
     setTempSearch('')
+    document.removeEventListener('click', documentClick)
     document.addEventListener('click', documentClick)
   }
 
@@ -47,7 +48,9 @@ export const ListSearch = (props: Props) => {
     }, 100)
   }
 
-  const handelClick = () => {
+  const handelClick = e => {
+    e.preventDefault()
+    e.nativeEvent.stopImmediatePropagation()
     if (isOpen) {
       return
     }
