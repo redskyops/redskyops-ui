@@ -18,6 +18,7 @@ export const ListSearch = (props: Props) => {
   const [tempIndex, setTempIndex] = useState(selectedIndex)
   const [tempSearch, setTempSearch] = useState('')
   const wrapperRef = useRef(null)
+  const inputRef = useRef(null)
   let blurInterval
 
   const openMenu = () => {
@@ -25,6 +26,7 @@ export const ListSearch = (props: Props) => {
     setIsOpen(true)
     setTempIndex(selectedIndex)
     setTempSearch('')
+    inputRef.current.value = ''
     document.removeEventListener('click', documentClick)
     document.addEventListener('click', documentClick)
   }
@@ -119,11 +121,32 @@ export const ListSearch = (props: Props) => {
   )
 
   let textToShow = selectedIndex >= 0 ? itemsList[selectedIndex].label : value
+  if (isOpen) {
+    textToShow = ''
+  }
+
+  const filteredList = (itemsList || [])
+    .map((i, index) => ({...i, index}))
+    .filter(item => {
+      return item.label.match(new RegExp(`${tempSearch}`, 'ig'))
+    })
 
   return (
     <div className={style.listSearch} ref={wrapperRef}>
+      {!isOpen && (
+        <div // eslint-disable-line
+          className={style.valuePlacehoder}
+          onClick={e => {
+            inputRef.current.focus()
+            handelClick(e)
+          }}
+        >
+          {textToShow}
+        </div>
+      )}
       <input
         type="text"
+        ref={inputRef}
         defaultValue={textToShow}
         className={style.input}
         onFocus={handelFocus}
@@ -136,12 +159,8 @@ export const ListSearch = (props: Props) => {
       </button>
       {isOpen && (
         <div className={style.list}>
-          {itemsList
-            .map((i, index) => ({...i, index}))
-            .filter(item => {
-              return item.label.match(new RegExp(`${tempSearch}`, 'ig'))
-            })
-            .map((item, index) => {
+          {filteredList.length > 0 &&
+            filteredList.map((item, index) => {
               let css = style.item
               css += index === tempIndex ? ` ${style.active}` : ''
               css += item.index === selectedIndex ? ` ${style.selected}` : ''
