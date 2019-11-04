@@ -21,10 +21,20 @@ export const ListSearch = (props: Props) => {
   const inputRef = useRef(null)
   let blurInterval
 
+  const filteredList = (itemsList || [])
+    .map((i, index) => ({...i, index}))
+    .filter(item => {
+      return item.label.match(new RegExp(`${tempSearch}`, 'ig'))
+    })
+
   const openMenu = () => {
     clearTimeout(blurInterval)
     setIsOpen(true)
-    setTempIndex(selectedIndex)
+    setTempIndex(
+      (found => (found && found.lenght > 0 ? found[0].index : -1))(
+        filteredList.find(i => i.index === selectedIndex),
+      ),
+    )
     setTempSearch('')
     inputRef.current.value = ''
     document.removeEventListener('click', documentClick)
@@ -94,7 +104,7 @@ export const ListSearch = (props: Props) => {
         nextIndex -= 1
         break
       case 'Enter':
-        setValue(tempIndex)
+        setValue(filteredList[tempIndex].index)
         closeMenu()
         return
       case 'Escape':
@@ -106,7 +116,7 @@ export const ListSearch = (props: Props) => {
         return
     }
     if (nextIndex < 0) nextIndex = 0
-    if (nextIndex > itemsList.length - 1) nextIndex = itemsList.length - 1
+    if (nextIndex > filteredList.length - 1) nextIndex = filteredList.length - 1
     setTempIndex(nextIndex)
   }
 
@@ -124,12 +134,6 @@ export const ListSearch = (props: Props) => {
   if (isOpen) {
     textToShow = ''
   }
-
-  const filteredList = (itemsList || [])
-    .map((i, index) => ({...i, index}))
-    .filter(item => {
-      return item.label.match(new RegExp(`${tempSearch}`, 'ig'))
-    })
 
   return (
     <div className={style.listSearch} ref={wrapperRef}>
