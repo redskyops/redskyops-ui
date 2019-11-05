@@ -18,13 +18,26 @@ export const ListSearch = (props: Props) => {
   const [tempIndex, setTempIndex] = useState(selectedIndex)
   const [tempSearch, setTempSearch] = useState('')
   const wrapperRef = useRef(null)
+  const inputRef = useRef(null)
   let blurInterval
+
+  const filteredList = (itemsList || [])
+    .map((i, index) => ({...i, index}))
+    .filter(item => {
+      return item.label.match(new RegExp(`${tempSearch}`, 'ig'))
+    })
 
   const openMenu = () => {
     clearTimeout(blurInterval)
     setIsOpen(true)
-    setTempIndex(selectedIndex)
+    setTempIndex(
+      (found => (found && found.lenght > 0 ? found[0].index : -1))(
+        filteredList.find(i => i.index === selectedIndex),
+      ),
+    )
     setTempSearch('')
+    inputRef.current.value = ''
+    document.removeEventListener('click', documentClick)
     document.addEventListener('click', documentClick)
   }
 
@@ -47,7 +60,9 @@ export const ListSearch = (props: Props) => {
     }, 100)
   }
 
-  const handelClick = () => {
+  const handelClick = e => {
+    e.preventDefault()
+    e.nativeEvent.stopImmediatePropagation()
     if (isOpen) {
       return
     }
@@ -89,7 +104,7 @@ export const ListSearch = (props: Props) => {
         nextIndex -= 1
         break
       case 'Enter':
-        setValue(tempIndex)
+        setValue(filteredList[tempIndex].index)
         closeMenu()
         return
       case 'Escape':
@@ -101,7 +116,7 @@ export const ListSearch = (props: Props) => {
         return
     }
     if (nextIndex < 0) nextIndex = 0
-    if (nextIndex > itemsList.length - 1) nextIndex = itemsList.length - 1
+    if (nextIndex > filteredList.length - 1) nextIndex = filteredList.length - 1
     setTempIndex(nextIndex)
   }
 
@@ -116,11 +131,26 @@ export const ListSearch = (props: Props) => {
   )
 
   let textToShow = selectedIndex >= 0 ? itemsList[selectedIndex].label : value
+  if (isOpen) {
+    textToShow = ''
+  }
 
   return (
     <div className={style.listSearch} ref={wrapperRef}>
+      {!isOpen && (
+        <div // eslint-disable-line
+          className={style.valuePlacehoder}
+          onClick={e => {
+            inputRef.current.focus()
+            handelClick(e)
+          }}
+        >
+          {textToShow}
+        </div>
+      )}
       <input
         type="text"
+        ref={inputRef}
         defaultValue={textToShow}
         className={style.input}
         onFocus={handelFocus}
@@ -133,12 +163,8 @@ export const ListSearch = (props: Props) => {
       </button>
       {isOpen && (
         <div className={style.list}>
-          {itemsList
-            .map((i, index) => ({...i, index}))
-            .filter(item => {
-              return item.label.match(new RegExp(`${tempSearch}`, 'ig'))
-            })
-            .map((item, index) => {
+          {filteredList.length > 0 &&
+            filteredList.map((item, index) => {
               let css = style.item
               css += index === tempIndex ? ` ${style.active}` : ''
               css += item.index === selectedIndex ? ` ${style.selected}` : ''
