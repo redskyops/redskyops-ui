@@ -15,6 +15,7 @@
     "test": "react-scripts test",
     "watch": "echo \"Error: no watch specified\" && exit 1"
   },
+  "homepage": ".",
   "keywords": [],
   "author": "",
   "license": "UNLICENSED",

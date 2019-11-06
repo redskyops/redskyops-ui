@@ -10,7 +10,7 @@ class App extends Component {
   render() {
     return (
       <div className="App">
-        <Router>
+        <Router basename={'/ui'}>
           <StateProvider>
             <Layout />
           </StateProvider>
