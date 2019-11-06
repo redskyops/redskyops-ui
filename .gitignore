@@ -10,6 +10,7 @@
 
 # production
 /build
+/redskyops-ui
 
 # misc
 .DS_Store
