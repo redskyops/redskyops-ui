@@ -6,4 +6,5 @@ COPY . .
 RUN npm run build
 
 FROM nginx
-COPY --from=builder /usr/app/build /usr/share/nginx/html
+COPY --from=builder /usr/app/build /usr/share/nginx/html/ui
+COPY ./docker/frontend/default.conf /etc/nginx/conf.d/default.conf
