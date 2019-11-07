@@ -139,6 +139,7 @@ export const ListSearch = (props: Props) => {
     <div className={style.listSearch} ref={wrapperRef}>
       {!isOpen && (
         <div // eslint-disable-line
+          data-dom-id="label"
           className={style.valuePlacehoder}
           onClick={e => {
             inputRef.current.focus()
