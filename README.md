@@ -87,7 +87,7 @@ docker-compose build
 docker-compose up
 ```
 For the first time these commands will take time to finish<br>
-NginX will will bind to port 8080<br>
+NginX will bind to port 8080<br>
 
 4. You can access the frontend app on http://localhost:8080/sub-folder
 
