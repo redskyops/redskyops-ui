@@ -68,27 +68,26 @@ The application will then be available at: http://localhost:3000
 As front assets will be served from sub folder in production server you can simulate the production setup by following steps
 
 1. you need a to define an environment variable REDSKY_UI_SUBFOLDER to set the folder name that will server the frontend from<br>
-**Please take note of the forward slash at the beginning this is important to keep when define your folder**<br>```
+**Please take note of the forward slash at the beginning this is important to keep when define your folder**<br>
+```
 REDSKY_UI_SUBFOLDER='/sub-folder'
-```<b>
-
+```
 you can define this in .env file, also important to keep the other Redsky api keys environment variables in .env
 
-2. Run the following commands to source the environments vars<br>```
+2. Run the following commands to source the environments vars<br>
+```
 set -a
 source ./.env
 ```
 
-3. Boot up Docker containers
+3. Boot up Docker containers<br>
 
 ```
 docker-compose build
 docker-compose up
 ```
-
-For the first time these commands will take time to finish
-
-NginX will will bind to port 8080
+For the first time these commands will take time to finish<br>
+NginX will will bind to port 8080<br>
 
 4. You can access the frontend app on http://localhost:8080/sub-folder
 
