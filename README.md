@@ -68,7 +68,7 @@ The application will then be available at: http://localhost:3000
 As front assets will be served from sub folder in production server you can simulate the production setup by following steps
 
 1. you need a to define an environment variable REDSKY_UI_SUBFOLDER to set the folder name that will server the frontend from<br>
-**Please take note of the forward slash at the beginning this is important to keep when define your folder**<br>
+**Please take note of the forward slash at the beginning, this is important to keep when defining folder name**<br>
 ```
 REDSKY_UI_SUBFOLDER='/sub-folder'
 ```
