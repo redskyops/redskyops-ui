@@ -76,33 +76,36 @@ describe('ListSearch component', () => {
   })
 
   it('should show dropdown menu on icon click', () => {
+    const event = {
+      preventDefault: () => {},
+      nativeEvent: {
+        stopImmediatePropagation: () => {},
+      },
+    }
     wrapper = mount(<ListSearch {...props} />)
     wrapper
       .find('button.icon')
       .first()
-      .simulate('click')
-    expect(wrapper.find('button.item')).toHaveLength(3)
-  })
-
-  it('should show dropdown menu on icon click', () => {
-    wrapper = mount(<ListSearch {...props} />)
-    wrapper
-      .find('button.icon')
-      .first()
-      .simulate('click')
+      .simulate('click', event)
     expect(wrapper.find('button.item')).toHaveLength(3)
   })
 
   it('should call onSelect on item click', () => {
+    const event = {
+      preventDefault: () => {},
+      nativeEvent: {
+        stopImmediatePropagation: () => {},
+      },
+    }
     wrapper = mount(<ListSearch {...props} />)
     wrapper
       .find('button.icon')
       .first()
-      .simulate('click')
+      .simulate('click', event)
     const menuItems = wrapper.find('button.item')
     expect(menuItems).toHaveLength(3)
 
-    menuItems.at(2).simulate('click')
+    menuItems.at(2).simulate('click', event)
     expect(props.onSelect).toHaveBeenCalledTimes(1)
     expect(props.onSelect.mock.calls[0][0]).toMatchObject({
       index: 2,
@@ -111,18 +114,24 @@ describe('ListSearch component', () => {
   })
 
   it('should call onSelect down arrow navigation and enter', () => {
+    const event = {
+      preventDefault: () => {},
+      nativeEvent: {
+        stopImmediatePropagation: () => {},
+      },
+    }
     wrapper = mount(<ListSearch {...props} />)
     wrapper
       .find('button.icon')
       .first()
-      .simulate('click')
+      .simulate('click', event)
     const menuItems = wrapper.find('button.item')
     expect(menuItems).toHaveLength(3)
 
     const input = wrapper.find('input[type="text"]')
-    input.simulate('keyUp', {key: 'ArrowDown'})
-    input.simulate('keyUp', {key: 'ArrowDown'})
-    input.simulate('keyUp', {key: 'Enter'})
+    input.simulate('keyUp', {...event, key: 'ArrowDown'})
+    input.simulate('keyUp', {...event, key: 'ArrowDown'})
+    input.simulate('keyUp', {...event, key: 'Enter'})
 
     expect(props.onSelect).toHaveBeenCalledTimes(1)
     expect(props.onSelect.mock.calls[0][0]).toMatchObject({
@@ -132,11 +141,17 @@ describe('ListSearch component', () => {
   })
 
   it('should call onSelect down arrow navigation and enter', () => {
+    const event = {
+      preventDefault: () => {},
+      nativeEvent: {
+        stopImmediatePropagation: () => {},
+      },
+    }
     wrapper = mount(<ListSearch {...props} value="three" />)
     wrapper
       .find('button.icon')
       .first()
-      .simulate('click')
+      .simulate('click', event)
     const menuItems = wrapper.find('button.item')
     expect(menuItems).toHaveLength(3)
 
@@ -153,11 +168,17 @@ describe('ListSearch component', () => {
   })
 
   it('should close menu on escape click', () => {
+    const event = {
+      preventDefault: () => {},
+      nativeEvent: {
+        stopImmediatePropagation: () => {},
+      },
+    }
     wrapper = mount(<ListSearch {...props} value="three" />)
     wrapper
       .find('button.icon')
       .first()
-      .simulate('click')
+      .simulate('click', event)
     const menuItems = wrapper.find('button.item')
     expect(menuItems).toHaveLength(3)
 
