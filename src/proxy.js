@@ -39,7 +39,7 @@ fetch(`${REDSKY_ADDRESS}/auth/token/`, {
 const proxyRequest = (req, res) => {
   const url = process.env.DOCKER_ENV ? req.originalUrl : req.path
   const options = {
-    url: `${REDSKY_ADDRESS}${url}`,
+    url: `${REDSKY_ADDRESS}${url.replace(/\/\//g, '/')}`,
     headers: {
       Authorization: `${tokenType} ${token}`,
     },
