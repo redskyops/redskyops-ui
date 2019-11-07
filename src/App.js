@@ -10,7 +10,7 @@ class App extends Component {
   render() {
     return (
       <div className="App">
-        <Router basename={'/ui'}>
+        <Router basename={process.env.REACT_APP_BASE_FOLDER || '/'}>
           <StateProvider>
             <Layout />
           </StateProvider>

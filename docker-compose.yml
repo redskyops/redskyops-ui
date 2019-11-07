@@ -4,6 +4,9 @@ services:
     build:
       context: .
       dockerfile: docker/frontend/Dockerfile
+      args:
+        - REDSKY_UI_SUBFOLDER=$REDSKY_UI_SUBFOLDER
+        - REACT_APP_BASE_FOLDER=$REDSKY_UI_SUBFOLDER
   apiproxy:
     restart: always
     build:
