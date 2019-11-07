@@ -1,13 +1,25 @@
 version: '3'
 services:
-  app:
-    build: .
-    command: npm run start
+  frontend:
+    build:
+      context: .
+      dockerfile: docker/frontend/Dockerfile
+      args:
+        - REDSKY_UI_SUBFOLDER=$REDSKY_UI_SUBFOLDER
+        - REACT_APP_BASE_FOLDER=$REDSKY_UI_SUBFOLDER
+  apiproxy:
+    restart: always
+    build:
+      context: .
+      dockerfile: docker/proxy/Dockerfile
     environment:
-      - CONTAINER_PORT=${CONTAINER_PORT}
-      - LOCAL_PORT=${LOCAL_PORT}
+      - REDSKY_ADDRESS
+      - REDSKY_OAUTH2_CLIENT_ID
+      - REDSKY_OAUTH2_CLIENT_SECRET
+      - DOCKER_ENV=1
+  nginx:
+    build:
+      context: .
+      dockerfile: docker/nginx/Dockerfile
     ports:
-      - ${LOCAL_PORT}:${CONTAINER_PORT}
-    volumes:
-      - .:/usr/app
-      - /usr/app/node_modules
+      - 8080:80
