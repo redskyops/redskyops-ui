@@ -1,9 +1,10 @@
-import React, {useEffect} from 'react'
+import React from 'react'
 
 import style from './ExperimentsList.module.scss'
 import {ExperimentsService} from '../../services/ExperimentsService'
 import ListSearch from '../FormControls/ListSearch/ListSearch.component'
 import {connectWithState} from '../../context/StateContext'
+import useApiCallEffect from '../../hooks/useApiCallEffect'
 
 type Props = {
   experiments: Array<Object>,
@@ -13,30 +14,50 @@ type Props = {
 
 export const ExperimentsList = (props: Props) => {
   const {experiments = [], activeExperiment = null, updateState} = props
-  useEffect(() => {
-    const expService = new ExperimentsService()
-    const [request, abort] = expService.getExperimentsFactory()
-    ;(async () => {
-      try {
-        const expResponse = await request()
-        updateState({
-          experiments: {
-            ...experiments,
-            list: expResponse.experiments,
-          },
-        })
-      } catch (e) {
-        updateState({
-          experiments: {
-            ...experiments,
-            error: 'Error loading experiments list',
-          },
-        })
-      }
-    })()
+  const expService = new ExperimentsService()
 
-    return () => abort()
-  }, [])
+  const requestFactory = () => expService.getExperimentsFactory()
+  const requestSuccess = expResponse => {
+    updateState({
+      experiments: {
+        ...experiments,
+        list: expResponse.experiments,
+      },
+    })
+  }
+  const requestError = () => {
+    updateState({
+      experiments: {
+        ...experiments,
+        error: 'Error loading experiments list',
+      },
+    })
+  }
+
+  useApiCallEffect(requestFactory, requestSuccess, requestError, [])
+  //   useEffect(() => {
+  //   const [request, abort] = expService.getExperimentsFactory()
+  //   ;(async () => {
+  //     try {
+  //       const expResponse = await request()
+  //       updateState({
+  //         experiments: {
+  //           ...experiments,
+  //           list: expResponse.experiments,
+  //         },
+  //       })
+  //     } catch (e) {
+  //       updateState({
+  //         experiments: {
+  //           ...experiments,
+  //           error: 'Error loading experiments list',
+  //         },
+  //       })
+  //     }
+  //   })()
+
+  //   return () => abort()
+  // }, [])
 
   const setActiveExperiment = ({index}) => {
     updateState({
@@ -48,10 +69,12 @@ export const ExperimentsList = (props: Props) => {
       activeTrial: null,
     })
   }
+
   return (
     <div className={style.expList}>
       <div>
-        <strong>{experiments.list.length}</strong> experiments loaded
+        <strong data-dom-id="experiments-num">{experiments.list.length}</strong>{' '}
+        experiments loaded
       </div>
       <div className={style.list}>
         <ListSearch
