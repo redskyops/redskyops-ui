@@ -30,7 +30,7 @@ export class ExperimentsService {
 
   getExperimentsFactory() {
     const [request, abort] = this.http.get({
-      url: this.url,
+      url: `${this.url}/`,
     })
     const getExperiments = () =>
       request().then(async response => {
@@ -45,7 +45,7 @@ export class ExperimentsService {
 
   getTrialsFactory({name}) {
     const [request, abort] = this.http.get({
-      url: `${this.url}/${name}/trials`,
+      url: `${this.url}/${name}/trials/`,
     })
     const getTrials = () =>
       request().then(async response => {
