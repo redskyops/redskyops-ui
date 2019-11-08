@@ -63,6 +63,15 @@ npm start
 
 The application will then be available at: http://localhost:3000
 
+## Building the frontend assets to run inside subfolder
+
+if the app need to be hosted in subfolder like http://some-domain.com/sub-folder you need to set this environment variable when running ```npum run build``` to make React app aware of that
+
+```
+REACT_APP_BASE_FOLDER='/sub-folder'
+```
+**Please take note of the forward slash at the beginning**
+
 ## Simulate a production run of frontend assets using Docker and NginX
 
 As front assets will be served from sub folder in production server you can simulate the production setup by following steps
