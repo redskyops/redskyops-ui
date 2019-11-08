@@ -1,7 +1,7 @@
 import React, {useEffect} from 'react'
 
 import style from './ExperimentsList.module.scss'
-import {ExperimentsService} from '../../services/Experiments.service'
+import {ExperimentsService} from '../../services/ExperimentsService'
 import ListSearch from '../FormControls/ListSearch/ListSearch.component'
 import {connectWithState} from '../../context/StateContext'
 

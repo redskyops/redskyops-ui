@@ -10,7 +10,7 @@ import {
 } from '../../../context/DefaultState'
 import Trials from '../Trials/Trials.component'
 import {TrialDetails} from '../TrialDetails/TrialDetails.component'
-import {ExperimentsService} from '../../../services/Experiments.service'
+import {ExperimentsService} from '../../../services/ExperimentsService'
 
 import style from './ExperimentDetails.module.scss'
 
