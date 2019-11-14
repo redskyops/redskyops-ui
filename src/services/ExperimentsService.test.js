@@ -87,7 +87,7 @@ describe('Service: ExperimentsService', () => {
   describe('getTrialsFactory', () => {
     it('should return array of 2 functions', () => {
       http.get.mockImplementationOnce(() => [() => {}, () => {}])
-      const result = expService.getTrialsFactory({name: 'postgres-ofer'})
+      const result = expService.getTrialsFactory({name: 'postgres-experiment'})
       expect(Array.isArray(result)).toBe(true)
       expect(result).toHaveLength(2)
       expect(typeof result[0]).toBe('function')
@@ -107,11 +107,13 @@ describe('Service: ExperimentsService', () => {
           () => {},
         ]
       })
-      const [request] = expService.getTrialsFactory({name: 'postgres-ofer'})
+      const [request] = expService.getTrialsFactory({
+        name: 'postgres-experiment',
+      })
       const expData = await request()
       expect(http.get).toHaveBeenCalledTimes(1)
       expect(http.get.mock.calls[0][0]).toMatchObject({
-        url: '/api/experiments/postgres-ofer/trials/',
+        url: '/api/experiments/postgres-experiment/trials/',
       })
       expect(expData).toMatchObject(trialStub)
     })
@@ -120,7 +122,9 @@ describe('Service: ExperimentsService', () => {
       http.get.mockImplementationOnce(() => {
         return [() => Promise.resolve(null), () => {}]
       })
-      const [request] = expService.getTrialsFactory({name: 'postgres-ofer'})
+      const [request] = expService.getTrialsFactory({
+        name: 'postgres-experiment',
+      })
       await expect(request()).rejects.toThrow(
         'Error in ExperimentsService.getTrials',
       )
