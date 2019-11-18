@@ -9,13 +9,13 @@ The User Interface project (redskyops-ui) is a web application for visualizing e
 
 To build the application you must have a recent version of npm. To install the required Node.js modules run:
 
-```
+```sh
 npm install
 ```
 
 To generate the Go code (only required for releases) you must have a recent version of Go (1.12+) and the latest version of `vfsgendev`:
 
-```
+```sh
 go get -u github.com/shurcooL/vfsgen/cmd/vfsgendev
 ```
 
@@ -24,8 +24,8 @@ go get -u github.com/shurcooL/vfsgen/cmd/vfsgendev
 
 This project is based on "Create React App", to generate an optimized production build in the `/build` directory run:
 
-```
-npm run build
+```sh
+REACT_APP_BASE_FOLDER=/ui REDSKY_UI_SUBFOLDER=/ui npm run build
 ```
 
 
@@ -42,21 +42,21 @@ go generate ./ui
 
 ### Start Development Server
 
-#### Set required environment variables in .env file
+#### Set required environment variables in the `.env` file
 
-you need below environment variables to connect to Redsky backend server
+You need below environment variables to connect to Redsky backend server
 
+```sh
 REDSKY_ADDRESS={url-to-backend-server}
-
 REDSKY_OAUTH2_CLIENT_ID={API-Key}
-
 REDSKY_OAUTH2_CLIENT_SECRET={API-Secret}
+```
 
-you can make a copy of .env.example and rename it to .env and define these variable there
+You can make a copy of `.env.example` and rename it to `.env` and define these variables there.
 
 In addition to the development server, you must run a local proxy to access the Red Sky Server:
 
-```
+```sh
 node src/proxy.js
 npm start
 ```
@@ -65,42 +65,46 @@ The application will then be available at: http://localhost:3000
 
 ## Building the frontend assets to run inside subfolder
 
-if the app need to be hosted in subfolder like http://some-domain.com/sub-folder you need to set this environment variable when running ```npum run build``` to make React app aware of that
+If the app need to be hosted in subfolder like `http://some-domain.com/sub-folder` you need to set this environment variable when running `npm run build` to make the React app aware of that:
 
-```
+```sh
 REACT_APP_BASE_FOLDER='/sub-folder'
 ```
 **Please take note of the forward slash at the beginning**
 
-## Simulate a production run of frontend assets using Docker and NginX
+## Simulate a production run of frontend assets using Docker and NGINX
 
-As front assets will be served from sub folder in production server you can simulate the production setup by following steps
+As frontend assets will be served from sub folder in production server you can simulate the production setup by following steps:
 
-1. you need a to define an environment variable REDSKY_UI_SUBFOLDER to set the folder name that will server the frontend from<br>
-**Please take note of the forward slash at the beginning, this is important to keep when defining folder name**<br>
-```
-REDSKY_UI_SUBFOLDER='/sub-folder'
-```
-you can define this in .env file, also important to keep the other Redsky api keys environment variables in .env
+1. You need a to define an environment variable `REDSKY_UI_SUBFOLDER` to set the folder name that will server the frontend from
+   **Please take note of the forward slash at the beginning, this is important to keep when defining folder name**
 
-2. Run the following commands to source the environments vars<br>
-```
-set -a
-source ./.env
-```
+   ```sh
+   REDSKY_UI_SUBFOLDER='/sub-folder'
+   ```
 
-3. Boot up Docker containers<br>
+   You can define this in the `.env` file, also important to keep the other Red Sky API keys environment variables in `.env`
 
-```
-docker-compose build
-docker-compose up
-```
-For the first time these commands will take time to finish<br>
-NginX will bind to port 8080<br>
+2. Run the following commands to source the environments vars
+
+   ```sh
+   set -a
+   source ./.env
+   ```
+
+3. Boot up Docker containers
+
+   ```sh
+   docker-compose build
+   docker-compose up
+   ```
+
+   For the first time these commands will take time to finish
+   NGINX will bind to port 8080
 
 4. You can access the frontend app on http://localhost:8080/sub-folder
 
-5. if you wan to change the folder you need to run the septs 2 and 3 again after you update the environment variable in .env
+5. If you want to change the folder you need to run the steps 2 and 3 again after you update the environment variable in `.env`
 
 ### Releasing
 
