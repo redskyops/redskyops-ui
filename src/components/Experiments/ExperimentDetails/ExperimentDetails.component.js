@@ -10,7 +10,7 @@ import {
 } from '../../../context/DefaultState'
 import Trials from '../Trials/Trials.component'
 import {TrialDetails} from '../TrialDetails/TrialDetails.component'
-import {ExperimentsService} from '../../../services/Experiments.service'
+import {ExperimentsService} from '../../../services/ExperimentsService'
 
 import style from './ExperimentDetails.module.scss'
 
@@ -70,7 +70,7 @@ export const ExperimentDetails = (props: Props) => {
 
   if (!activeExperiment) {
     return (
-      <div className={style.expDetails}>
+      <div className={style.expDetails} data-dom-id="exp-details-select">
         <h1 className={style.h1}>Select an experiment!</h1>
       </div>
     )
@@ -86,11 +86,15 @@ export const ExperimentDetails = (props: Props) => {
         experiment.metrics.length > 1
       )
     ) {
-      return <div>No valid metric data found</div>
+      return (
+        <div data-dom-id="exp-details-no-metrics">
+          No valid metric data found
+        </div>
+      )
     }
 
-    if (!(activeExperiment && trials && trials.length > 0)) {
-      return <div>No trials found</div>
+    if (activeExperiment && (!trials || trials.length < 1)) {
+      return <div data-dom-id="exp-details-no-trials">No trials found</div>
     }
 
     return (
@@ -135,19 +139,24 @@ export const ExperimentDetails = (props: Props) => {
       return {...acc, ...{[t.status]: [t]}}
     }, {})
 
-    const order = ['compelted', 'failed']
+    const order = ['completed', 'failed']
 
     return (
       <div className={style.status}>
         <p>
-          <strong>{trials.length}</strong> total trials
+          <strong data-dom-id="exp-details-trials-total">
+            {trials.length}
+          </strong>{' '}
+          total trials
         </p>
         {Object.keys(trialsStatusMap)
           .sort((s1, s2) => order.indexOf(s1) - order.indexOf(s2))
           .map(status => (
             <p key={status}>
-              <strong>{trialsStatusMap[status].length}</strong> {status}{' '}
-              {status === 'completed' ? '(showing)' : ''}
+              <strong data-dom-id={`exp-details-trials-${status}`}>
+                {trialsStatusMap[status].length}
+              </strong>{' '}
+              {status} {status === 'completed' ? '(showing)' : ''}
             </p>
           ))}
       </div>
