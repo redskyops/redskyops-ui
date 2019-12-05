@@ -22,6 +22,11 @@ export const TrialDetails = (props: Props) => {
 
   const isBest = trial.labels && 'best' in trial.labels
 
+  const addLabel = e => {
+    e.preventDefault()
+    console.log(e.target.childNodes[0].value)
+  }
+
   const renderParameters = () => {
     return trial.assignments.map(para => {
       return (
@@ -55,6 +60,18 @@ export const TrialDetails = (props: Props) => {
       >
         <span className="material-icons">close</span>
       </button>
+
+      <h3 className={style.h3}>Labels</h3>
+
+      <div className={style.labels}>
+        <form onSubmit={addLabel}>
+          <input type="text" className={style.labelInput} />
+        </form>
+        {Object.keys(trial.labels || {}).map(label => {
+          return <div key={label}>{label}</div>
+        })}
+      </div>
+
       <h3 className={style.h3}>
         Values
         {isBest && (
