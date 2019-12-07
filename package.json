@@ -22,6 +22,7 @@
   "private": true,
   "devDependencies": {
     "babel-eslint": "10.0.3",
+    "body-parser": "^1.19.0",
     "enzyme": "^3.10.0",
     "enzyme-adapter-react-16": "^1.15.1",
     "eslint": "6.5.1",

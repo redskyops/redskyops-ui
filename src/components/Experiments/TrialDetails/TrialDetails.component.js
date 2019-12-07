@@ -2,15 +2,19 @@ import React from 'react'
 
 import style from './TrialDetails.module.scss'
 import RangeIndicator from '../RangIndicator/RangeIndicator.component'
+import {ExperimentsService} from '../../../services/ExperimentsService'
 
 type Props = {
   trial?: Object,
+  experimentId: string,
   parameters?: Array<Object>,
   closeHandler: () => any,
 }
 
 export const TrialDetails = (props: Props) => {
-  const {trial, parameters = [], closeHandler} = props
+  const {trial, parameters = [], closeHandler, experimentId} = props
+  const expService = new ExperimentsService()
+
   if (!trial) {
     return null
   }
@@ -24,7 +28,14 @@ export const TrialDetails = (props: Props) => {
 
   const addLabel = e => {
     e.preventDefault()
-    console.log(e.target.childNodes[0].value)
+    // (e.target.childNodes[0].value
+
+    const [request] = expService.postLabelToTrial({
+      experimentId,
+      trialId: trial.number,
+      labels: {[e.target.childNodes[0].value]: 'true'},
+    })
+    request().then(res => console.log(res))
   }
 
   const renderParameters = () => {

@@ -116,6 +116,7 @@ export const ExperimentDetails = (props: Props) => {
     return (
       <TrialDetails
         trial={activeTrial.trial}
+        experimentId={experiments.list[activeExperiment.index].id}
         parameters={experiment.parameters}
         closeHandler={() =>
           updateState({

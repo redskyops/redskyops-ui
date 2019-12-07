@@ -56,4 +56,19 @@ export class ExperimentsService {
       })
     return [getTrials, abort]
   }
+
+  postLabelToTrial({experimentId, trialId, labels}) {
+    const [request, abort] = this.http.post({
+      url: `${this.url}/${experimentId}/trials/${trialId}/labels/`,
+      body: {labels},
+    })
+    const postLabel = () =>
+      request().then(async response => {
+        if (!response) {
+          throw new Error('Error in ExperimentsService.postLabel')
+        }
+        return await response.json()
+      })
+    return [postLabel, abort]
+  }
 }

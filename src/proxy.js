@@ -4,6 +4,7 @@ const express = require('express')
 const request = require('request')
 const app = express()
 const dotenv = require('dotenv')
+const bodyParser = require('body-parser')
 
 dotenv.config()
 
@@ -14,6 +15,8 @@ if (
 ) {
   throw new Error('Proxy cannot run without required environment variables')
 }
+
+app.use(bodyParser.json())
 
 const REDSKY_ADDRESS = process.env.REDSKY_ADDRESS
 const REDSKY_OAUTH2_CLIENT_ID = process.env.REDSKY_OAUTH2_CLIENT_ID
@@ -38,6 +41,14 @@ fetch(`${REDSKY_ADDRESS}/auth/token/`, {
 
 const proxyRequest = (req, res) => {
   const url = process.env.DOCKER_ENV ? req.originalUrl : req.path
+
+  // mocking response for posting label while implemteing it in server api
+  if (req.method === 'POST' && /\/labels\/?$/.test(url)) {
+    res.status(201)
+    res.json(req.body)
+    return
+  }
+
   const options = {
     url: `${REDSKY_ADDRESS}${url.replace(/\/\//g, '/')}`,
     headers: {
@@ -67,7 +78,7 @@ const proxyRequest = (req, res) => {
 }
 
 app.use('/api/experiments', proxyRequest)
-app.use('/api/experiments/:name/trials', proxyRequest)
+// app.use('/api/experiments/:name/trials', proxyRequest)
 
 app.listen(8000)
 
