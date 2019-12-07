@@ -11,6 +11,8 @@ import {
 
 import style from './Labels.module.scss'
 
+const DEFAULT_LABEL_VALUE = 'true'
+
 type Props = {
   activeTrial: TypeActiveTrial,
   trials: TypeTrials,
@@ -31,7 +33,7 @@ export const Labels = (props: Props) => {
       ? expService.postLabelToTrial({
           experimentId,
           trialId: trial.number,
-          labels: {[labels.newLabel]: 'true'},
+          labels: {[labels.newLabel.trim().toLowerCase()]: DEFAULT_LABEL_VALUE},
         })
       : null
   /* eslint-enable indent */
@@ -74,8 +76,21 @@ export const Labels = (props: Props) => {
     })
   }
 
+  const renderLabels = () => {
+    const list = Object.keys(trial.labels || {}).map(label => {
+      return (
+        <button key={label} className={style.label}>
+          {label}
+          <span className={`material-icons ${style.labelDel}`}>close</span>
+        </button>
+      )
+    })
+    return list.length > 0 ? <div className={style.list}>{list}</div> : null
+  }
+
   return (
     <div className={style.labels}>
+      {renderLabels()}
       <form onSubmit={addLabel}>
         <input
           type="text"
@@ -91,9 +106,6 @@ export const Labels = (props: Props) => {
           }
         />
       </form>
-      {Object.keys(trial.labels || {}).map(label => {
-        return <div key={label}>{label}</div>
-      })}
     </div>
   )
 }

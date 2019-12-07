@@ -8,5 +8,33 @@
 .labelInput {
   background-color: $white;
   border: 0;
+  outline: 0;
   padding: $size-1x $size-2x;
+}
+
+.list {
+  margin-bottom: $size-2x;
+}
+
+.label {
+  align-items: center;
+  background-color: $white;
+  border: 1px solid $gray;
+  border-radius: $size-4x / 2;
+  display: inline-block;
+  line-height: $size-4x;
+  margin-right: $size-1x;
+  outline: 0;
+  padding: 0 $size-4x 0 $size-2x;
+  position: relative;
+  width: auto;
+}
+
+.labelDel {
+  font-size: 14px;
+  margin-left: $size-1x;
+  position: absolute;
+  right: 5px;
+  top: 50%;
+  transform: translateY(-50%);
 }
