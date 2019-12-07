@@ -2,7 +2,7 @@ import React from 'react'
 
 import style from './TrialDetails.module.scss'
 import RangeIndicator from '../RangIndicator/RangeIndicator.component'
-import {ExperimentsService} from '../../../services/ExperimentsService'
+import Labels from '../Labels/Labels.component'
 
 type Props = {
   trial?: Object,
@@ -13,7 +13,6 @@ type Props = {
 
 export const TrialDetails = (props: Props) => {
   const {trial, parameters = [], closeHandler, experimentId} = props
-  const expService = new ExperimentsService()
 
   if (!trial) {
     return null
@@ -25,18 +24,6 @@ export const TrialDetails = (props: Props) => {
   )
 
   const isBest = trial.labels && 'best' in trial.labels
-
-  const addLabel = e => {
-    e.preventDefault()
-    // (e.target.childNodes[0].value
-
-    const [request] = expService.postLabelToTrial({
-      experimentId,
-      trialId: trial.number,
-      labels: {[e.target.childNodes[0].value]: 'true'},
-    })
-    request().then(res => console.log(res))
-  }
 
   const renderParameters = () => {
     return trial.assignments.map(para => {
@@ -73,14 +60,8 @@ export const TrialDetails = (props: Props) => {
       </button>
 
       <h3 className={style.h3}>Labels</h3>
-
       <div className={style.labels}>
-        <form onSubmit={addLabel}>
-          <input type="text" className={style.labelInput} />
-        </form>
-        {Object.keys(trial.labels || {}).map(label => {
-          return <div key={label}>{label}</div>
-        })}
+        <Labels trial={trial} experimentId={experimentId} />
       </div>
 
       <h3 className={style.h3}>

@@ -1,0 +1,12 @@
+@import '../../../styles/colors';
+@import '../../../styles/vars';
+
+.labels {
+  display: block;
+}
+
+.labelInput {
+  background-color: $white;
+  border: 0;
+  padding: $size-1x $size-2x;
+}

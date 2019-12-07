@@ -18,6 +18,11 @@ export type TypeActiveTrial = {
   trial: Object,
 }
 
+export type TypeLabels = {
+  posting: boolean,
+  newLabel: string,
+}
+
 const experimentsList: TypeExperimentsList = []
 
 const trials: TypeTrials = null
@@ -32,9 +37,15 @@ const activeExperiment: TypeActiveExperiment = null
 
 const activeTrial: TypeActiveTrial = null
 
+const labels: TypeTrials = {
+  posting: false,
+  newLabel: '',
+}
+
 export const DEFAULT_STATE = {
   experiments,
   activeExperiment,
   trials,
   activeTrial,
+  labels,
 }
