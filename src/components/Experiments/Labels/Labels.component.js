@@ -29,7 +29,7 @@ export const Labels = (props: Props) => {
 
   /* eslint-disable indent */
   const postLabelFactory = () =>
-    labels.posting === true && labels.newLabel
+    labels.postingNewLabel === true && labels.newLabel
       ? expService.postLabelToTrial({
           experimentId,
           trialId: trial.number,
@@ -53,7 +53,7 @@ export const Labels = (props: Props) => {
       trials: updatedTrials,
       labels: {
         ...labels,
-        posting: false,
+        postingNewLabel: false,
         newLabel: '',
       },
     })
@@ -62,16 +62,63 @@ export const Labels = (props: Props) => {
   const postLabelError = () => {}
 
   useApiCallEffect(postLabelFactory, postLabelSuccess, postLabelError, [
-    labels.posting,
+    labels.postingNewLabel,
   ])
 
   const addLabel = e => {
     e.preventDefault()
-
     updateState({
       labels: {
         ...labels,
-        posting: true,
+        postingNewLabel: true,
+      },
+    })
+  }
+
+  /* eslint-disable indent */
+  const deleteLabelFactory = () =>
+    labels.postingDelLabel === true && labels.labelToDelete
+      ? expService.postLabelToTrial({
+          experimentId,
+          trialId: trial.number,
+          labels: {[labels.labelToDelete.trim().toLowerCase()]: ''},
+        })
+      : null
+  /* eslint-enable indent */
+
+  const deleteLabelSuccess = () => {
+    const trialIndex = trials.findIndex(t => t.number === trial.number)
+    const newLabels = {...trials[trialIndex].labels}
+    delete newLabels[labels.labelToDelete]
+    const trialWithNewLables = {
+      ...trials[trialIndex],
+      labels: newLabels,
+    }
+    const updatedTrials = [...trials]
+    updatedTrials.splice(trialIndex, 1, trialWithNewLables)
+    updateState({
+      trials: updatedTrials,
+      labels: {
+        ...labels,
+        postingDelLabel: false,
+        labelToDelete: '',
+      },
+    })
+  }
+
+  const deleteLabelError = () => {}
+
+  useApiCallEffect(deleteLabelFactory, deleteLabelSuccess, deleteLabelError, [
+    labels.postingDelLabel,
+  ])
+
+  const deleteLabel = labelToDelete => e => {
+    e.preventDefault()
+    updateState({
+      labels: {
+        ...labels,
+        postingDelLabel: true,
+        labelToDelete,
       },
     })
   }
@@ -79,7 +126,12 @@ export const Labels = (props: Props) => {
   const renderLabels = () => {
     const list = Object.keys(trial.labels || {}).map(label => {
       return (
-        <button key={label} className={style.label}>
+        <button
+          key={label}
+          className={style.label}
+          onClick={deleteLabel(label)}
+          disabled={labels.postingNewLabel || labels.postingDelLabel}
+        >
           {label}
           <span className={`material-icons ${style.labelDel}`}>close</span>
         </button>
