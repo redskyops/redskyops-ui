@@ -29,8 +29,10 @@ export const Labels = (props: Props) => {
 
   /* eslint-disable indent */
   const postLabelFactory = () =>
-    labels.postingNewLabel === true && labels.newLabel
-      ? expService.postLabelToTrial({
+    labels.postingNewLabel === true &&
+    labels.postingDelLabel === false &&
+    labels.newLabel
+      ? expService.postLabelToTrialFactory({
           experimentId,
           trialId: trial.number,
           labels: {[labels.newLabel.trim().toLowerCase()]: DEFAULT_LABEL_VALUE},
@@ -77,8 +79,10 @@ export const Labels = (props: Props) => {
 
   /* eslint-disable indent */
   const deleteLabelFactory = () =>
-    labels.postingDelLabel === true && labels.labelToDelete
-      ? expService.postLabelToTrial({
+    labels.postingDelLabel === true &&
+    labels.postingNewLabel === false &&
+    labels.labelToDelete
+      ? expService.postLabelToTrialFactory({
           experimentId,
           trialId: trial.number,
           labels: {[labels.labelToDelete.trim().toLowerCase()]: ''},
