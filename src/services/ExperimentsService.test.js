@@ -130,4 +130,65 @@ describe('Service: ExperimentsService', () => {
       )
     })
   })
+
+  describe('postLabelToTrialFactory', () => {
+    it('should return array of 2 functions', () => {
+      http.post.mockImplementationOnce(() => [() => {}, () => {}])
+      const result = expService.postLabelToTrialFactory({
+        experimentId: 'postgres-experiment',
+        trialId: 4,
+        labels: {
+          test: 'true',
+        },
+      })
+      expect(Array.isArray(result)).toBe(true)
+      expect(result).toHaveLength(2)
+      expect(typeof result[0]).toBe('function')
+      expect(typeof result[1]).toBe('function')
+    })
+
+    it('should successfully get trials', async () => {
+      http.post.mockImplementationOnce(() => {
+        return [
+          () =>
+            Promise.resolve({
+              json: () =>
+                Promise.resolve({
+                  labels: {test: 'true'},
+                }),
+            }),
+          () => {},
+        ]
+      })
+      const [request] = expService.postLabelToTrialFactory({
+        experimentId: 'postgres-experiment',
+        trialId: 4,
+        labels: {
+          test: 'true',
+        },
+      })
+      const expData = await request()
+      expect(http.post).toHaveBeenCalledTimes(1)
+      expect(http.post.mock.calls[0][0]).toMatchObject({
+        url: '/api/experiments/postgres-experiment/trials/4/labels/',
+      })
+      expect(expData).toMatchObject({labels: {test: 'true'}})
+    })
+
+    it('should throw error if response undefined', async () => {
+      http.post.mockImplementationOnce(() => {
+        return [() => Promise.resolve(null), () => {}]
+      })
+      const [request] = expService.postLabelToTrialFactory({
+        experimentId: 'postgres-experiment',
+        trialId: 4,
+        labels: {
+          test: 'true',
+        },
+      })
+      await expect(request()).rejects.toThrow(
+        'Error in ExperimentsService.postLabelToTrialFactory',
+      )
+    })
+  })
 })

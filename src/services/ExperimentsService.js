@@ -65,7 +65,7 @@ export class ExperimentsService {
     const postLabel = () =>
       request().then(async response => {
         if (!response) {
-          throw new Error('Error in ExperimentsService.postLabel')
+          throw new Error('Error in ExperimentsService.postLabelToTrialFactory')
         }
         return await response.json()
       })
