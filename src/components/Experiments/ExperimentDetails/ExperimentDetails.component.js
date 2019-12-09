@@ -7,6 +7,7 @@ import {
   TypeExperiments,
   TypeTrials,
   TypeActiveTrial,
+  TypeLabels,
 } from '../../../context/DefaultState'
 import Trials from '../Trials/Trials.component'
 import {TrialDetails} from '../TrialDetails/TrialDetails.component'
@@ -19,6 +20,7 @@ type Props = {
   experiments: TypeExperiments,
   trials: TypeTrials,
   activeTrial: TypeActiveTrial,
+  labels: TypeLabels,
   updateState: () => any,
 }
 
@@ -29,6 +31,7 @@ export const ExperimentDetails = (props: Props) => {
     updateState,
     trials,
     activeTrial,
+    labels,
   } = props
   const expService = new ExperimentsService()
 
@@ -64,6 +67,13 @@ export const ExperimentDetails = (props: Props) => {
         ...activeTrial,
         index,
         trial,
+      },
+      labels: {
+        ...labels,
+        postingNewLabel: false,
+        postingDelLabel: false,
+        newLabel: '',
+        labelToDelete: '',
       },
     })
   }
