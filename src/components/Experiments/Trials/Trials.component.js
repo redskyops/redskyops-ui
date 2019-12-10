@@ -11,6 +11,7 @@ type Props = {
   xAxisMetricName: string,
   yAxisMetricName: string,
   selectTrialHandler: Function,
+  labelsFilter?: Array<string>,
 }
 
 export class Trials extends React.Component<Props> {
@@ -34,6 +35,11 @@ export class Trials extends React.Component<Props> {
     const completedTrials = this.props.trials
       .map((t, index) => ({...t, index}))
       .filter(t => t.status === 'completed')
+      .filter(
+        ({labels}) =>
+          this.props.labelsFilter.length === 0 ||
+          this.props.labelsFilter.reduce((acc, l) => acc || l in labels, false),
+      )
 
     const [minCost, maxCost] = d3.extent(
       completedTrials.map(

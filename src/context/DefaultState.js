@@ -4,6 +4,7 @@ export type TypeExperiments = {
   list: TypeExperimentsList,
   loading: boolean,
   error: string,
+  labelsFilter: Array<string>,
 }
 
 export type TypeActiveExperiment = {
@@ -33,6 +34,7 @@ const experiments: TypeExperiments = {
   list: experimentsList,
   loading: false,
   error: '',
+  labelsFilter: [],
 }
 
 const activeExperiment: TypeActiveExperiment = null

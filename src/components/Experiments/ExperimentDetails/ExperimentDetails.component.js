@@ -78,6 +78,32 @@ export const ExperimentDetails = (props: Props) => {
     })
   }
 
+  const labelClick = label => e => {
+    e.preventDefault()
+    if (label === 'ALL') {
+      updateState({
+        experiments: {
+          ...experiments,
+          labelsFilter: [],
+        },
+      })
+      return
+    }
+    const newFilter = [...experiments.labelsFilter]
+    const targetIndex = newFilter.indexOf(label)
+    if (targetIndex < 0) {
+      newFilter.push(label)
+    } else {
+      newFilter.splice(targetIndex, 1)
+    }
+    updateState({
+      experiments: {
+        ...experiments,
+        labelsFilter: newFilter,
+      },
+    })
+  }
+
   if (!activeExperiment) {
     return (
       <div className={style.expDetails} data-dom-id="exp-details-select">
@@ -114,6 +140,7 @@ export const ExperimentDetails = (props: Props) => {
         xAxisMetricName={experiment.metrics[0].name}
         yAxisMetricName={experiment.metrics[1].name}
         selectTrialHandler={selectTrial}
+        labelsFilter={experiments.labelsFilter}
       />
     )
   }
@@ -174,12 +201,52 @@ export const ExperimentDetails = (props: Props) => {
     )
   }
 
+  const renderLabels = () => {
+    if (!trials || trials.length < 1) {
+      return null
+    }
+    const allLabels = trials.reduce((acc, {labels}) => {
+      return labels
+        ? [...acc, ...Object.keys(labels).filter(l => acc.indexOf(l) < 0)]
+        : acc
+    }, [])
+
+    return (
+      <div className={style.labels}>
+        <h2>Filter by label:</h2>
+        <div className={style.labelInner}>
+          {allLabels.map(l => {
+            return (
+              <button className={style.label} key={l} onClick={labelClick(l)}>
+                <span className={`material-icons ${style.checkbox}`}>
+                  {experiments.labelsFilter.indexOf(l) < 0
+                    ? 'check_box_outline_blank'
+                    : 'check_box'}
+                </span>{' '}
+                {l}
+              </button>
+            )
+          })}
+          <button className={style.label} onClick={labelClick('ALL')}>
+            <span className={`material-icons ${style.checkbox}`}>
+              {experiments.labelsFilter.length > 0
+                ? 'check_box_outline_blank'
+                : 'check_box'}
+            </span>{' '}
+            All
+          </button>
+        </div>
+      </div>
+    )
+  }
+
   return (
     <div className={style.expDetails}>
       <h1 className={style.h1}>
         {experiment.displayName} / {experiment.id}
       </h1>
       {renderStatus()}
+      {renderLabels()}
       {renderTrials()}
       {renderTrialDetails()}
     </div>
