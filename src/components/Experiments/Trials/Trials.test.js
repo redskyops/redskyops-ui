@@ -12,6 +12,7 @@ describe('Component: Trials', () => {
     xAxisMetricName: 'cost',
     yAxisMetricName: 'duration',
     selectTrialHandler: jest.fn(),
+    labelsFilter: [],
   }
 
   beforeEach(() => {

@@ -217,7 +217,12 @@ export const ExperimentDetails = (props: Props) => {
         <div className={style.labelInner}>
           {allLabels.map(l => {
             return (
-              <button className={style.label} key={l} onClick={labelClick(l)}>
+              <button
+                data-dome-id="exp-details-label"
+                className={style.label}
+                key={l}
+                onClick={labelClick(l)}
+              >
                 <span className={`material-icons ${style.checkbox}`}>
                   {experiments.labelsFilter.indexOf(l) < 0
                     ? 'check_box_outline_blank'
@@ -228,7 +233,11 @@ export const ExperimentDetails = (props: Props) => {
             )
           })}
           {experiments.labelsFilter.length > 0 && (
-            <button className={style.label} onClick={labelClick('ALL')}>
+            <button
+              data-dome-id="exp-details-show-all"
+              className={style.label}
+              onClick={labelClick('ALL')}
+            >
               Show all labels
             </button>
           )}
