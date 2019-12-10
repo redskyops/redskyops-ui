@@ -12,6 +12,11 @@
   margin-bottom: $size-4x;
 }
 
+.h2 {
+  font-size: 16px;
+  margin-bottom: $size-2x;
+}
+
 .status {
   margin-bottom: $size-4x;
 }
@@ -29,7 +34,7 @@
   display: flex;
   outline: 0;
   padding: $size-1x $size-2x;
-  margin: $size-1x;
+  margin: 0 $size-1x $size-2x 0;
 }
 
 .checkbox {

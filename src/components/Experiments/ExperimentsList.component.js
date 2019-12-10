@@ -65,6 +65,10 @@ export const ExperimentsList = (props: Props) => {
         ...activeExperiment,
         index,
       },
+      experiments: {
+        ...experiments,
+        labelsFilter: [],
+      },
       trials: null,
       activeTrial: null,
     })
