@@ -14,6 +14,7 @@ import {TrialDetails} from '../TrialDetails/TrialDetails.component'
 import {ExperimentsService} from '../../../services/ExperimentsService'
 
 import style from './ExperimentDetails.module.scss'
+import getAllLabelsFromTrials from '../../../utilities/getAllLabelsFromTrials'
 
 type Props = {
   activeExperiment: TypeActiveExperiment,
@@ -205,11 +206,7 @@ export const ExperimentDetails = (props: Props) => {
     if (!trials || trials.length < 1) {
       return null
     }
-    const allLabels = trials.reduce((acc, {labels}) => {
-      return labels
-        ? [...acc, ...Object.keys(labels).filter(l => acc.indexOf(l) < 0)]
-        : acc
-    }, [])
+    const allLabels = getAllLabelsFromTrials(trials)
 
     return (
       <div className={style.labels}>
