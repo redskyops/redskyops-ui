@@ -2,7 +2,27 @@
 @import '../../../styles/vars';
 
 .labels {
-  display: block;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.section {
+  flex: 1;
+  padding: 0 $size-2x;
+
+  &:first-child {
+    padding-left: 0;
+  }
+
+  &:last-child {
+    flex: 0;
+    width: 200px;
+  }
+}
+
+.h4 {
+  margin-bottom: $size-2x;
 }
 
 .labelInput {
@@ -24,12 +44,26 @@
   cursor: pointer;
   display: inline-block;
   line-height: $size-4x;
+  margin-bottom: $size-1x;
   margin-right: $size-1x;
   outline: 0;
   padding: 0 $size-4x 0 $size-2x;
   position: relative;
   width: auto;
+}
 
+.labelAssign {
+  &:hover {
+    border-color: $cr-green;
+    color: $cr-green;
+
+    .labelDel {
+      color: $cr-green;
+    }
+  }
+}
+
+.labelRemove {
   &:hover {
     border-color: $cr-pink;
     color: $cr-pink;

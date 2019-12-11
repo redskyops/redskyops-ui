@@ -8,6 +8,7 @@ import {
   TypeActiveTrial,
   TypeLabels,
 } from '../../../context/DefaultState'
+import getAllLabelsFromTrials from '../../../utilities/getAllLabelsFromTrials'
 
 import style from './Labels.module.scss'
 
@@ -67,14 +68,24 @@ export const Labels = (props: Props) => {
     labels.postingNewLabel,
   ])
 
-  const addLabel = e => {
-    e.preventDefault()
+  const addLabel = newLabel => {
     updateState({
       labels: {
         ...labels,
         postingNewLabel: true,
+        ...(newLabel ? {newLabel} : null),
       },
     })
+  }
+
+  const onAddFormSubmit = e => {
+    e.preventDefault()
+    addLabel()
+  }
+
+  const onAddLabelClick = label => e => {
+    e.preventDefault()
+    addLabel(label)
   }
 
   /* eslint-disable indent */
@@ -132,7 +143,7 @@ export const Labels = (props: Props) => {
       return (
         <button
           key={label}
-          className={style.label}
+          className={`${style.label} ${style.labelRemove}`}
           onClick={deleteLabel(label)}
           disabled={labels.postingNewLabel || labels.postingDelLabel}
         >
@@ -141,27 +152,59 @@ export const Labels = (props: Props) => {
         </button>
       )
     })
-    return list.length > 0 ? <div className={style.list}>{list}</div> : null
+    return list.length > 0 ? (
+      <div className={style.list}>{list}</div>
+    ) : (
+      <span>No labels assigned</span>
+    )
+  }
+
+  const renderLabelsToAdd = () => {
+    const existingLabels = Object.keys(trial.labels || {})
+    return getAllLabelsFromTrials(trials)
+      .filter(l => existingLabels.indexOf(l) < 0)
+      .map(label => {
+        return (
+          <button
+            key={label}
+            className={`${style.label} ${style.labelAssign}`}
+            onClick={onAddLabelClick(label)}
+          >
+            {label}
+            <span className={`material-icons ${style.labelDel}`}>add</span>
+          </button>
+        )
+      })
   }
 
   return (
     <div className={style.labels}>
-      {renderLabels()}
-      <form onSubmit={addLabel}>
-        <input
-          type="text"
-          className={style.labelInput}
-          value={labels.newLabel}
-          onChange={e =>
-            updateState({
-              labels: {
-                ...labels,
-                newLabel: e.target.value,
-              },
-            })
-          }
-        />
-      </form>
+      <div className={style.section}>
+        <h4 className={style.h4}>Assigned labels</h4>
+        {renderLabels()}
+      </div>
+      <div className={style.section}>
+        <h4 className={style.h4}>Assign label</h4>
+        {renderLabelsToAdd()}
+      </div>
+      <div className={style.section}>
+        <h4 className={style.h4}>Create new label</h4>
+        <form onSubmit={onAddFormSubmit}>
+          <input
+            type="text"
+            className={style.labelInput}
+            value={labels.newLabel}
+            onChange={e =>
+              updateState({
+                labels: {
+                  ...labels,
+                  newLabel: e.target.value,
+                },
+              })
+            }
+          />
+        </form>
+      </div>
     </div>
   )
 }
