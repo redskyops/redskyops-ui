@@ -179,11 +179,11 @@ export const Labels = (props: Props) => {
 
   return (
     <div className={style.labels}>
-      <div className={style.section}>
+      <div className={style.section} data-dom-id="labels-assigned">
         <h4 className={style.h4}>Assigned labels</h4>
         {renderLabels()}
       </div>
-      <div className={style.section}>
+      <div className={style.section} data-dom-id="labels-new">
         <h4 className={style.h4}>Assign label</h4>
         {renderLabelsToAdd()}
       </div>

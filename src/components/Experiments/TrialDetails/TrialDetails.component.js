@@ -41,7 +41,7 @@ export const TrialDetails = (props: Props) => {
             <RangeIndicator
               {...parametersMap[para.parameterName].bounds}
               value={para.value}
-              {...(isBest ? {indecatorClass: style.indicatorPink} : null)}
+              {...(isBest ? {indicatorClass: style.indicatorPink} : null)}
             />
           )}
         </div>

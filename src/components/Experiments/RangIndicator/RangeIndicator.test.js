@@ -10,7 +10,7 @@ describe('Component: RangeIndicator', () => {
     max: 100,
     value: 30,
     width: 100,
-    indecatorClass: '',
+    indicatorCalss: '',
   }
 
   it('should render RangeIndicator component', () => {
@@ -62,5 +62,28 @@ describe('Component: RangeIndicator', () => {
     expect(
       wrapper.find('[data-dom-id="range-indicator"]').props().style,
     ).toHaveProperty('left', `${expectedLeft}px`)
+  })
+
+  it('should default width 200 if not passed with props', () => {
+    const localProps = {...props}
+    delete localProps.width
+    wrapper = shallow(<RangeIndicator {...localProps} />)
+
+    expect(
+      wrapper
+        .find('div')
+        .first()
+        .props().style,
+    ).toHaveProperty('width', 200)
+  })
+
+  it('should not render extra class if indicatorClass is not set with props', () => {
+    const localProps = {...props}
+    delete localProps.indicatorCalss
+    wrapper = shallow(<RangeIndicator {...localProps} />)
+
+    expect(
+      wrapper.find('[data-dom-id="range-indicator"]').props(),
+    ).toHaveProperty('className', 'material-icons icon ')
   })
 })

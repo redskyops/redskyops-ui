@@ -78,4 +78,10 @@ describe('Component: TrialDetails', () => {
     })
     wrapper.unmount()
   })
+
+  it('should render nothing if trial is not sent with props', () => {
+    wrapper = shallow(<TrialDetails {...props} trial={null} />)
+    expect(wrapper.html()).toBe(null)
+    wrapper.unmount()
+  })
 })

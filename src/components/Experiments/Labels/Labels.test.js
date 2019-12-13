@@ -145,7 +145,7 @@ describe('Component: Lables', () => {
     expect(abort).toHaveBeenCalledTimes(1)
   })
 
-  it('render a list of labels', () => {
+  it('render a list of assigned labels', () => {
     const localProps = {
       ...props,
       trials: [...props.trials],
@@ -159,7 +159,9 @@ describe('Component: Lables', () => {
       },
     }
     wrapper = shallow(<Labels {...localProps} />)
-    expect(wrapper.find('button')).toHaveLength(3)
+    expect(wrapper.find('[data-dom-id="labels-assigned"] button')).toHaveLength(
+      3,
+    )
     wrapper.unmount()
   })
 
@@ -178,7 +180,7 @@ describe('Component: Lables', () => {
     }
     wrapper = mount(<Labels {...localProps} />)
     wrapper
-      .find('button')
+      .find('[data-dom-id="labels-assigned"] button')
       .at(1)
       .simulate('click', {preventDefault: () => {}})
     expect(props.updateState).toHaveBeenCalledTimes(1)
@@ -217,7 +219,7 @@ describe('Component: Lables', () => {
     }
     wrapper = mount(<Labels {...localProps} />)
     wrapper
-      .find('button')
+      .find('[data-dom-id="labels-assigned"] button')
       .at(1)
       .simulate('click', {preventDefault: () => {}})
     expect(expService.postLabelToTrialFactory).toHaveBeenCalledTimes(1)
@@ -258,7 +260,7 @@ describe('Component: Lables', () => {
     }
     wrapper = mount(<Labels {...localProps} />)
     wrapper
-      .find('button')
+      .find('[data-dom-id="labels-assigned"] button')
       .at(1)
       .simulate('click', {preventDefault: () => {}})
     setImmediate(() => {
@@ -284,7 +286,7 @@ describe('Component: Lables', () => {
     expect(abort).toHaveBeenCalledTimes(1)
   })
 
-  it('should disable remove labels if in posting state and not call backend', done => {
+  it('should disable remove labels if in posting state', done => {
     const request = jest.fn(() => {
       return Promise.resolve({labels: {some_label: 'true'}})
     })
@@ -310,25 +312,88 @@ describe('Component: Lables', () => {
       },
     }
     wrapper = mount(<Labels {...localProps} />)
-    wrapper.find('button').forEach(btn => {
+    wrapper.find('[data-dom-id="labels-assigned"] button').forEach(btn => {
       expect(btn.props()).toHaveProperty('disabled', true)
     })
     wrapper
-      .find('button')
+      .find('[data-dom-id="labels-assigned"] button')
       .at(1)
       .simulate('click', {preventDefault: () => {}})
     wrapper
-      .find('button')
+      .find('[data-dom-id="labels-assigned"] button')
       .at(1)
       .simulate('click', {preventDefault: () => {}})
     wrapper
-      .find('button')
+      .find('[data-dom-id="labels-assigned"] button')
       .at(1)
       .simulate('click', {preventDefault: () => {}})
     setImmediate(() => {
       expect(request).toHaveBeenCalledTimes(1)
       done()
     })
+    wrapper.unmount()
+  })
+
+  it('render a list of unassigned labels', () => {
+    const localProps = {
+      ...props,
+      trials: [...props.trials],
+    }
+    localProps.trials[props.activeTrial.index] = {
+      ...localProps.trials[props.activeTrial.index],
+      labels: {
+        one: 'true',
+        two: 'true',
+        three: 'true',
+      },
+    }
+    wrapper = shallow(<Labels {...localProps} />)
+    expect(wrapper.find('[data-dom-id="labels-new"] button')).toHaveLength(1)
+    wrapper.unmount()
+  })
+
+  it('upate state if user clicked on anassigned label', () => {
+    const localProps = {
+      ...props,
+      trials: [...props.trials],
+    }
+    localProps.trials[props.activeTrial.index] = {
+      ...localProps.trials[props.activeTrial.index],
+      labels: {
+        one: 'true',
+        two: 'true',
+        three: 'true',
+      },
+    }
+    wrapper = shallow(<Labels {...localProps} />)
+    const unassigned = wrapper.find('[data-dom-id="labels-new"] button')
+    expect(unassigned).toHaveLength(1)
+    unassigned.simulate('click', {preventDefault: () => {}})
+    expect(props.updateState).toHaveBeenCalledTimes(1)
+    expect(props.updateState).toHaveBeenCalledWith({
+      labels: {
+        ...props.labels,
+        postingNewLabel: true,
+        newLabel: 'best',
+      },
+    })
+    wrapper.unmount()
+  })
+
+  it('should render nothing if trail has not label object', () => {
+    const localProps = {
+      ...props,
+      trials: [...props.trials],
+    }
+    localProps.trials[props.activeTrial.index] = {
+      ...localProps.trials[props.activeTrial.index],
+      labels: null,
+    }
+    wrapper = mount(<Labels {...localProps} />)
+    expect(wrapper.find('[data-dom-id="labels-assigned"] button')).toHaveLength(
+      0,
+    )
+
     wrapper.unmount()
   })
 })
