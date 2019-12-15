@@ -2,12 +2,8 @@ import {useEffect} from 'react'
 
 const FAKE_RESPONSE = 'FAKE_RESPONSE'
 
-const useApiCallEffect = (
-  requestFactory,
-  success,
-  fail = () => {},
-  runOn = [],
-) => {
+const useApiCallEffect = (requestFactory, success, _fail, runOn = []) => {
+  const fail = typeof _fail === 'function' ? _fail : () => {}
   let factoryResult = requestFactory() || [() => FAKE_RESPONSE, () => {}]
   const [request, abort] = factoryResult
 
