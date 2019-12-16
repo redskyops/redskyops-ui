@@ -83,7 +83,7 @@ export const ExperimentDetails = (props: Props) => {
         activeExperiment &&
         experiment &&
         experiment.metrics &&
-        experiment.metrics.length >= 1
+        experiment.metrics.length > 0
       )
     ) {
       return (
@@ -99,7 +99,7 @@ export const ExperimentDetails = (props: Props) => {
 
     return (
       <Trials
-        numOfMertics={1}
+        numOfMertics={experiment.metrics.length}
         trials={trials}
         activeTrial={activeTrial}
         xAxisMetricName={experiment.metrics[0].name}
