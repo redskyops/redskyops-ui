@@ -96,6 +96,29 @@ describe('ListSearch component', () => {
     wrapper.unmount()
   })
 
+  it('should do nothing if menu open and clicked again', () => {
+    const event = {
+      preventDefault: () => {},
+      nativeEvent: {
+        stopImmediatePropagation: () => {},
+      },
+    }
+    wrapper = mount(<ListSearch {...props} />)
+    wrapper
+      .find('button.icon')
+      .first()
+      .simulate('click', event)
+    expect(wrapper.find('button.item')).toHaveLength(3)
+
+    wrapper
+      .find('button.icon')
+      .first()
+      .simulate('click', event)
+    expect(wrapper.find('button.item')).toHaveLength(3)
+
+    wrapper.unmount()
+  })
+
   it('should call onSelect on item click', () => {
     const event = {
       preventDefault: () => {},
@@ -120,7 +143,7 @@ describe('ListSearch component', () => {
     wrapper.unmount()
   })
 
-  it('should call onSelect down arrow navigation and enter', () => {
+  it('should call onSelect with down arrow navigation and enter', () => {
     const event = {
       preventDefault: () => {},
       nativeEvent: {
@@ -148,7 +171,7 @@ describe('ListSearch component', () => {
     wrapper.unmount()
   })
 
-  it('should call onSelect down arrow navigation and enter', () => {
+  it('should call onSelect up arrow navigation and enter', () => {
     const event = {
       preventDefault: () => {},
       nativeEvent: {
