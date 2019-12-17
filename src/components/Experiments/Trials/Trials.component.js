@@ -2,7 +2,7 @@ import React from 'react'
 
 import DotsChart2D from '../../Charts/DotsChart2D/DotsChart2D.component'
 import DotsChart1D from '../../Charts/DotsChart1D/DotsChart1D.component'
-import ChartPropsType from '../../Charts/ChartProps.type'
+import {ChartPropsType} from '../../Charts/ChartProps.type'
 
 type Props = ChartPropsType & {numOfMertics: number}
 
