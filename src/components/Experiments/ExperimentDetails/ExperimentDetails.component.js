@@ -96,14 +96,15 @@ export const ExperimentDetails = (props: Props) => {
     if (activeExperiment && (!trials || trials.length < 1)) {
       return <div data-dom-id="exp-details-no-trials">No trials found</div>
     }
-
+    console.log(experiment.metrics)
     return (
       <Trials
-        numOfMertics={experiment.metrics.length}
+        numOfMertics={3}
         trials={trials}
         activeTrial={activeTrial}
         xAxisMetricName={experiment.metrics[0].name}
         yAxisMetricName={experiment.metrics[1].name}
+        zAxisMetricName={experiment.metrics[1].name}
         selectTrialHandler={selectTrial}
       />
     )
