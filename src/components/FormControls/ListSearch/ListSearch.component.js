@@ -118,6 +118,9 @@ export const ListSearch = (props: Props) => {
     if (nextIndex < 0) nextIndex = 0
     if (nextIndex > filteredList.length - 1) nextIndex = filteredList.length - 1
     setTempIndex(nextIndex)
+
+    const targetItem = document.querySelector(`#listSearch-${nextIndex}`)
+    if (targetItem) targetItem.scrollIntoView()
   }
 
   useEffect(
@@ -164,21 +167,24 @@ export const ListSearch = (props: Props) => {
       </button>
       {isOpen && (
         <div className={style.list}>
-          {filteredList.length > 0 &&
-            filteredList.map((item, index) => {
-              let css = style.item
-              css += index === tempIndex ? ` ${style.active}` : ''
-              css += item.index === selectedIndex ? ` ${style.selected}` : ''
-              return (
-                <button
-                  className={css}
-                  key={`${item.index}-${item.value}`}
-                  onClick={itemClick(item.index)}
-                >
-                  {item.label}
-                </button>
-              )
-            })}
+          <div className={style.listInner}>
+            {filteredList.length > 0 &&
+              filteredList.map((item, index) => {
+                let css = style.item
+                css += index === tempIndex ? ` ${style.active}` : ''
+                css += item.index === selectedIndex ? ` ${style.selected}` : ''
+                return (
+                  <button
+                    className={css}
+                    id={`listSearch-${index}`}
+                    key={`${item.index}-${item.value}`}
+                    onClick={itemClick(item.index)}
+                  >
+                    {item.label}
+                  </button>
+                )
+              })}
+          </div>
         </div>
       )}
     </div>

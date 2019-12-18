@@ -39,9 +39,11 @@
 .list {
   @include default-shadow;
   display: block;
+  max-height: 400px;
+  overflow-y: scroll;
   position: absolute;
   top: $size-5x;
-  width: 100%;
+  width: auto;
   z-index: 100;
 }
 
