@@ -1,7 +1,7 @@
 import React from 'react'
 import * as d3 from 'd3'
 
-import ChartPropsType from '../ChartProps.type'
+import {ChartPropsType} from '../ChartProps.type'
 import style from '../Charts.module.scss'
 
 export class DotsChart2D extends React.Component<ChartPropsType> {
