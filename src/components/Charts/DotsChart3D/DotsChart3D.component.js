@@ -234,7 +234,7 @@ export class DotsChart3D extends React.Component<ChartPropsType> {
   render() {
     return (
       <div className={style.trials}>
-        <h1>Blah blah</h1>
+        <h1>3d</h1>
         <div id="chart" />
         <div className={style.svgFillter}>
           <svg>
