@@ -14,6 +14,9 @@ export class Trials extends React.Component<Props> {
     if (this.props.numOfMertics === 2) {
       return <DotsChart2D {...this.props} />
     }
+    if (this.props.numOfMertics > 2) {
+      return <DotsChart2D {...this.props} />
+    }
   }
 }
 
