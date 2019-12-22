@@ -1,5 +1,7 @@
 import React from 'react'
 import * as d3 from 'd3'
+// import * as aframe from 'aframe'
+// import {_3d} from 'd3-3d'
 
 import ChartPropsType from '../ChartProps.type'
 import style from '../Charts.module.scss'
@@ -11,12 +13,14 @@ export class DotsChart3D extends React.Component<ChartPropsType> {
     const margins = {top: 20, right: 20, bottom: 40, left: 70}
     const width = canvasWidth - margins.top - margins.left
     const height = canvasHeight - margins.top - margins.bottom
+    const depth = 100
 
     const popupWidth = 200
     const popupHeight = 50
 
     const xValueName = this.props.xAxisMetricName
     const yValueName = this.props.yAxisMetricName
+    const zValueName = this.props.zAxisMetricName
 
     const completedTrials = this.props.trials
       .map((t, index) => ({...t, index}))
@@ -32,6 +36,11 @@ export class DotsChart3D extends React.Component<ChartPropsType> {
         return v.values.filter(c => c.metricName === yValueName)[0].value
       }),
     )
+    const [minThroughput, maxThroughput] = d3.extent(
+      completedTrials.map(v => {
+        return v.values.filter(c => c.metricName === zValueName)[0].value
+      }),
+    )
 
     const xScale = d3
       .scaleLinear()
@@ -42,6 +51,12 @@ export class DotsChart3D extends React.Component<ChartPropsType> {
       .scaleLinear()
       .domain([minDuration, maxDuration])
       .range([height, 0])
+
+    // eslint-disable-next-line no-unused-vars
+    const zScale = d3
+      .scaleLinear()
+      .domain([minThroughput, maxThroughput])
+      .range([depth, 0])
 
     d3.select('#chart svg').remove()
 
@@ -181,9 +196,11 @@ export class DotsChart3D extends React.Component<ChartPropsType> {
       .enter()
       .append('g')
       .attr('transform', d => {
-        const [cost, duration] = d.values.reduce((acc, v) => {
+        // eslint-disable-next-line no-unused-vars
+        const [cost, duration, throughput] = d.values.reduce((acc, v) => {
           if (v.metricName === xValueName) acc[0] = v
           if (v.metricName === yValueName) acc[1] = v
+          if (v.metricName === zValueName) acc[2] = v
           return acc
         }, [])
         return `translate(${xScale(cost.value)}, ${yScale(duration.value)})`
@@ -236,6 +253,7 @@ export class DotsChart3D extends React.Component<ChartPropsType> {
       <div className={style.trials}>
         <h1>3d</h1>
         <div id="chart" />
+
         <div className={style.svgFillter}>
           <svg>
             <filter id="dropshadow" height="130%">
