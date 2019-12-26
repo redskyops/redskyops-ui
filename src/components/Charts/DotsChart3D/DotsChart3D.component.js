@@ -1,7 +1,6 @@
 import React from 'react'
 import * as d3 from 'd3'
-// import * as aframe from 'aframe'
-// import {_3d} from 'd3-3d'
+import * as aframe from 'aframe'
 
 import ChartPropsType from '../ChartProps.type'
 import style from '../Charts.module.scss'
@@ -45,157 +44,27 @@ export class DotsChart3D extends React.Component<ChartPropsType> {
     const xScale = d3
       .scaleLinear()
       .domain([minCost, maxCost])
-      .range([0, width])
+      .range([-2, 2])
 
     const yScale = d3
       .scaleLinear()
       .domain([minDuration, maxDuration])
-      .range([height, 0])
+      .range([0, 4])
 
     // eslint-disable-next-line no-unused-vars
     const zScale = d3
       .scaleLinear()
       .domain([minThroughput, maxThroughput])
-      .range([depth, 0])
+      .range([-4, -2])
 
-    d3.select('#chart svg').remove()
-
-    const svg = d3
-      .select('#chart')
-      .append('svg')
-      .attr('width', canvasWidth)
-      .attr('height', canvasHeight)
-      .append('g')
-      .attr('transform', `translate(${margins.left}, ${margins.top})`)
-
-    const yAxis = d3.axisLeft(yScale)
-    svg.call(yAxis)
+    const svg = d3.select('a-scene')
 
     svg
-      .append('text')
-      .attr(
-        'transform',
-        `translate(-${margins.left - 20}, ${height / 2}) rotate(-90)`,
-      )
-      .attr('font-size', '1.5em')
-      .style('text-anchor', 'middle')
-      .style('fill', '#000')
-      .text(yValueName)
-
-    const xAxis = d3.axisBottom(xScale).ticks(10)
-
-    svg
-      .append('g')
-      .attr('transform', `translate(0, ${height})`)
-      .call(xAxis)
-
-    svg
-      .append('text')
-      .attr('transform', `translate(${width / 2}, ${height + 40})`)
-      .attr('font-size', '1.5em')
-      .style('text-anchor', 'middle')
-      .style('fill', '#000')
-      .text(xValueName)
-
-    const makeXGridlines = () => {
-      return d3.axisBottom(xScale).ticks(10)
-    }
-
-    svg
-      .append('g')
-      .attr('class', style.grid)
-      .attr('transform', `translate(0, ${height})`)
-      .call(
-        makeXGridlines()
-          .tickSize(-height)
-          .tickFormat(''),
-      )
-
-    const makeYGridlines = () => {
-      return d3.axisLeft(yScale).ticks(10)
-    }
-
-    svg
-      .append('g')
-      .attr('class', style.grid)
-      .attr('transform', `translate(0, 0)`)
-      .call(
-        makeYGridlines()
-          .tickSize(-width)
-          .tickFormat(''),
-      )
-
-    const circleOver = () =>
-      function _circleOver(dataPoint) {
-        var xValue = dataPoint.values.filter(
-          v => v.metricName === xValueName,
-        )[0].value
-        var yValue = dataPoint.values.filter(
-          v => v.metricName === yValueName,
-        )[0].value
-
-        let xPos = xScale(xValue)
-        let yPos = yScale(yValue)
-        xPos -= xPos + popupWidth >= width ? popupWidth + 5 : 0
-        yPos -= yPos + popupHeight >= height ? popupHeight + 8 : 0
-
-        d3.select(this)
-          .classed(style.active, true)
-          .attr('r', 6)
-
-        const popup = d3
-          .select('#popup')
-          .attr('transform', `translate(${xPos}, ${yPos})`)
-          .classed(style.hidden, false)
-          .classed(style.fadeIn, true)
-          .classed(style.best, dataPoint.labels && 'best' in dataPoint.labels)
-
-        popup.selectAll('text').remove()
-        popup
-          .append('text')
-          .attr('font-size', '1.5em')
-          .attr('font-family', 'sans-serif')
-          .style('text-anchor', 'start')
-          .attr('transform', 'translate(10, 23)')
-          .attr('width', 100)
-          .text(`${xValueName}: ${xValue}`)
-        popup
-          .append('text')
-          .attr('font-size', '1.5em')
-          .attr('font-family', 'sans-serif')
-          .style('text-anchor', 'start')
-          .attr('transform', 'translate(10, 45)')
-          .attr('width', 100)
-          .text(`${yValueName}: ${yValue}`)
-      }
-
-    const circleOut = activeTrial =>
-      function _circleOut(dataPoint) {
-        d3.select(this)
-          .classed(style.active, false)
-          .attr(
-            'r',
-            activeTrial && dataPoint.index === activeTrial.index ? 6 : 3,
-          )
-        d3.select('#popup')
-          .classed(style.hidden, true)
-          .classed(style.fadeIn, false)
-      }
-
-    const circleClick = selectTrialHandler =>
-      function _circleClick(dataPoint) {
-        selectTrialHandler({
-          index: dataPoint.index,
-          trial: dataPoint,
-        })
-      }
-
-    svg
-      .selectAll('g.point')
+      .selectAll('a-sphere')
       .data(completedTrials)
       .enter()
-      .append('g')
-      .attr('transform', d => {
+      .append('a-sphere')
+      .attr('position', d => {
         // eslint-disable-next-line no-unused-vars
         const [cost, duration, throughput] = d.values.reduce((acc, v) => {
           if (v.metricName === xValueName) acc[0] = v
@@ -203,41 +72,24 @@ export class DotsChart3D extends React.Component<ChartPropsType> {
           if (v.metricName === zValueName) acc[2] = v
           return acc
         }, [])
-        return `translate(${xScale(cost.value)}, ${yScale(duration.value)})`
+        return `${xScale(cost.value)} ${yScale(duration.value)} ${zScale(
+          throughput.value,
+        )}`
       })
-      .append('circle')
-      .attr('class', 'point')
-      .attr('r', d =>
-        this.props.activeTrial && d.index === this.props.activeTrial.index
-          ? 6
-          : 3,
-      )
-      .attr('class', style.circle)
-      .classed(style.best, d => {
-        if ('best' in d.labels) {
-          return true
-        }
-        return false
-      })
-      .classed(
-        style.selected,
-        d => this.props.activeTrial && d.index === this.props.activeTrial.index,
-      )
-      .on('mouseover', circleOver())
-      .on('mouseout', circleOut(this.props.activeTrial))
-      .on('click', circleClick(this.props.selectTrialHandler))
+      .attr('radius', '0.08')
+      .attr('color', '#00f')
 
-    svg
-      .append('g')
-      .attr('id', 'popup')
-      .attr('class', style.popup)
-      .classed(style.hidden, true)
-      .append('rect')
-      .attr('transform', 'translate(5, 5)')
-      .style('filter', 'url(#dropshadow)')
-      .attr('class', style.popupRect)
-      .attr('width', popupWidth)
-      .attr('height', popupHeight)
+    // svg
+    //   .append('g')
+    //   .attr('id', 'popup')
+    //   .attr('class', style.popup)
+    //   .classed(style.hidden, true)
+    //   .append('rect')
+    //   .attr('transform', 'translate(5, 5)')
+    //   .style('filter', 'url(#dropshadow)')
+    //   .attr('class', style.popupRect)
+    //   .attr('width', popupWidth)
+    //   .attr('height', popupHeight)
   }
 
   componentDidMount() {
@@ -245,7 +97,7 @@ export class DotsChart3D extends React.Component<ChartPropsType> {
   }
 
   componentDidUpdate() {
-    this.buildChart()
+    // this.buildChart()
   }
 
   render() {
@@ -254,6 +106,33 @@ export class DotsChart3D extends React.Component<ChartPropsType> {
         <h1>3d</h1>
         <div id="chart" />
 
+        <a-scene embedded>
+          {/* <a-box position="-1 0.5 -3" rotation="0 45 0" color="#4CC3D9"></a-box> */}
+          {/* <a-sphere position="0 1.25 -5" radius="1.25" color="#EF2D5E"></a-sphere> */}
+          {/* <a-cylinder position="1 0.75 -3" radius="0.5" height="1.5" color="#FFC65D"></a-cylinder> */}
+          <a-plane
+            position="0 0 -4"
+            rotation="-90 0 0"
+            width="4"
+            height="4"
+            color="#7BC8A4"
+          ></a-plane>
+          <a-plane
+            position="0 2 -4"
+            rotation="0 0 0"
+            width="4"
+            height="4"
+            color="#ff0"
+          ></a-plane>
+          <a-plane
+            position="2 2 -4"
+            rotation="0 -90 0"
+            width="4"
+            height="4"
+            color="#f0f"
+          ></a-plane>
+          <a-sky color="#ECECEC"></a-sky>
+        </a-scene>
         <div className={style.svgFillter}>
           <svg>
             <filter id="dropshadow" height="130%">

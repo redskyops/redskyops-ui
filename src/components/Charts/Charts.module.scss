@@ -80,3 +80,8 @@
   position: absolute;
   z-index: -1;
 }
+
+:global(a-scene) {
+  height: 600px!important;
+  width: 1024px!important;
+}
