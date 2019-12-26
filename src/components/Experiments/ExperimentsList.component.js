@@ -18,10 +18,19 @@ export const ExperimentsList = (props: Props) => {
 
   const requestFactory = () => expService.getExperimentsFactory({limit: 500})
   const requestSuccess = expResponse => {
+    const threeMetricsExp = expResponse.experiments
+      .map((exp, index) => ({...exp, index}))
+      .filter(exp => {
+        return exp.metrics.length === 3
+      })
     updateState({
       experiments: {
         ...experiments,
         list: expResponse.experiments,
+      },
+      activeExperiment: {
+        ...activeExperiment,
+        index: threeMetricsExp[1].index,
       },
     })
   }

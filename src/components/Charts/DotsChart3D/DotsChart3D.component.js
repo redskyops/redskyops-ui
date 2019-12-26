@@ -1,21 +1,75 @@
 import React from 'react'
 import * as d3 from 'd3'
-import * as aframe from 'aframe'
+import * as THREE from 'three'
 
 import ChartPropsType from '../ChartProps.type'
 import style from '../Charts.module.scss'
 
 export class DotsChart3D extends React.Component<ChartPropsType> {
-  buildChart() {
-    const canvasWidth = 1024
-    const canvasHeight = 500
-    const margins = {top: 20, right: 20, bottom: 40, left: 70}
-    const width = canvasWidth - margins.top - margins.left
-    const height = canvasHeight - margins.top - margins.bottom
-    const depth = 100
+  renderer = null
+  scene = null
+  camera = null
+  cube = null
+  size = 1.8
 
-    const popupWidth = 200
-    const popupHeight = 50
+  initThree = () => {
+    const width = 1024
+    const height = 600
+    const {size} = this
+
+    this.scene = new THREE.Scene()
+    this.camera = new THREE.PerspectiveCamera(75, width / height, 0.1, 1000)
+
+    this.renderer = new THREE.WebGLRenderer()
+    this.renderer.setSize(width, height)
+    document.getElementById('chart').appendChild(this.renderer.domElement)
+
+    const xPlaneGeo = new THREE.PlaneGeometry(size, size, size)
+    const xPlane = new THREE.Mesh(xPlaneGeo, this.getMaterial(0xff0000))
+    this.scene.add(xPlane)
+    xPlane.position.x = 0
+    xPlane.position.y = size / 2
+    xPlane.position.z = -size / 2
+
+    const yPlaneGeo = new THREE.PlaneGeometry(size, size, size)
+    const yPlane = new THREE.Mesh(yPlaneGeo, this.getMaterial(0x00ff00))
+    this.scene.add(yPlane)
+    yPlane.rotation.y = Math.PI / 2
+    yPlane.position.x = -size / 2
+    yPlane.position.y = size / 2
+
+    const zPlaneGeo = new THREE.PlaneGeometry(size, size, size)
+    const zPlane = new THREE.Mesh(zPlaneGeo, this.getMaterial(0x0000ff))
+    this.scene.add(zPlane)
+    zPlane.rotation.x = Math.PI / 2
+
+    this.camera.position.z = 2
+    this.camera.position.y = 1.7
+    this.camera.rotation.x = -0.4
+
+    this.animate()
+  }
+
+  getMaterial = color => {
+    return new THREE.MeshBasicMaterial({
+      color,
+      transparent: true,
+      side: THREE.DoubleSide,
+      opacity: 0.4,
+    })
+  }
+
+  animate = () => {
+    requestAnimationFrame(this.animate)
+
+    // this.scene.rotation.y = Math.PI / 4
+    // this.scene.rotation.y -= 0.01
+
+    this.renderer.render(this.scene, this.camera)
+  }
+
+  buildChart() {
+    const {size} = this
 
     const xValueName = this.props.xAxisMetricName
     const yValueName = this.props.yAxisMetricName
@@ -44,55 +98,37 @@ export class DotsChart3D extends React.Component<ChartPropsType> {
     const xScale = d3
       .scaleLinear()
       .domain([minCost, maxCost])
-      .range([-2, 2])
+      .range([-size / 2, size / 2])
 
     const yScale = d3
       .scaleLinear()
       .domain([minDuration, maxDuration])
-      .range([0, 4])
+      .range([0, size])
 
     // eslint-disable-next-line no-unused-vars
     const zScale = d3
       .scaleLinear()
       .domain([minThroughput, maxThroughput])
-      .range([-4, -2])
+      .range([-size / 2, size / 2])
 
-    const svg = d3.select('a-scene')
-
-    svg
-      .selectAll('a-sphere')
-      .data(completedTrials)
-      .enter()
-      .append('a-sphere')
-      .attr('position', d => {
-        // eslint-disable-next-line no-unused-vars
-        const [cost, duration, throughput] = d.values.reduce((acc, v) => {
-          if (v.metricName === xValueName) acc[0] = v
-          if (v.metricName === yValueName) acc[1] = v
-          if (v.metricName === zValueName) acc[2] = v
-          return acc
-        }, [])
-        return `${xScale(cost.value)} ${yScale(duration.value)} ${zScale(
-          throughput.value,
-        )}`
-      })
-      .attr('radius', '0.08')
-      .attr('color', '#00f')
-
-    // svg
-    //   .append('g')
-    //   .attr('id', 'popup')
-    //   .attr('class', style.popup)
-    //   .classed(style.hidden, true)
-    //   .append('rect')
-    //   .attr('transform', 'translate(5, 5)')
-    //   .style('filter', 'url(#dropshadow)')
-    //   .attr('class', style.popupRect)
-    //   .attr('width', popupWidth)
-    //   .attr('height', popupHeight)
+    completedTrials.forEach(d => {
+      const [cost, duration, throughpout] = d.values.reduce((acc, v) => {
+        if (v.metricName === xValueName) acc[0] = v
+        if (v.metricName === yValueName) acc[1] = v
+        if (v.metricName === zValueName) acc[2] = v
+        return acc
+      }, [])
+      const geometry = new THREE.CircleGeometry(0.02, 32)
+      const dot = new THREE.Mesh(geometry, this.getMaterial(0xffff00))
+      dot.position.x = xScale(cost.value)
+      dot.position.y = yScale(duration.value)
+      dot.position.z = zScale(throughpout.value)
+      this.scene.add(dot)
+    })
   }
 
   componentDidMount() {
+    this.initThree()
     this.buildChart()
   }
 
@@ -103,51 +139,7 @@ export class DotsChart3D extends React.Component<ChartPropsType> {
   render() {
     return (
       <div className={style.trials}>
-        <h1>3d</h1>
         <div id="chart" />
-
-        <a-scene embedded>
-          {/* <a-box position="-1 0.5 -3" rotation="0 45 0" color="#4CC3D9"></a-box> */}
-          {/* <a-sphere position="0 1.25 -5" radius="1.25" color="#EF2D5E"></a-sphere> */}
-          {/* <a-cylinder position="1 0.75 -3" radius="0.5" height="1.5" color="#FFC65D"></a-cylinder> */}
-          <a-plane
-            position="0 0 -4"
-            rotation="-90 0 0"
-            width="4"
-            height="4"
-            color="#7BC8A4"
-          ></a-plane>
-          <a-plane
-            position="0 2 -4"
-            rotation="0 0 0"
-            width="4"
-            height="4"
-            color="#ff0"
-          ></a-plane>
-          <a-plane
-            position="2 2 -4"
-            rotation="0 -90 0"
-            width="4"
-            height="4"
-            color="#f0f"
-          ></a-plane>
-          <a-sky color="#ECECEC"></a-sky>
-        </a-scene>
-        <div className={style.svgFillter}>
-          <svg>
-            <filter id="dropshadow" height="130%">
-              <feGaussianBlur in="SourceAlpha" stdDeviation="4" />
-              <feOffset dx="3" dy="3" result="offsetblur" />
-              <feComponentTransfer>
-                <feFuncA type="linear" slope="0.2" />
-              </feComponentTransfer>
-              <feMerge>
-                <feMergeNode />
-                <feMergeNode in="SourceGraphic" />
-              </feMerge>
-            </filter>
-          </svg>
-        </div>
       </div>
     )
   }
