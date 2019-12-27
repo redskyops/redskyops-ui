@@ -10,14 +10,18 @@ export class DotsChart3D extends React.Component<ChartPropsType> {
   scene = null
   camera = null
   cube = null
-  size = 1.8
+  size = 1.7
   scales = null
   filteredTrials = []
+  font = null
 
   initThree = () => {
     const width = 1024
     const height = 600
     const {size} = this
+
+    const loader = new THREE.FontLoader()
+    loader.load('/fonts/helvetiker_regular.typeface.json', this.fontLoaded)
 
     this.scene = new THREE.Scene()
     this.scene.background = new THREE.Color(0xffffff)
@@ -46,8 +50,6 @@ export class DotsChart3D extends React.Component<ChartPropsType> {
     this.scene.add(zPlane)
     zPlane.rotation.x = Math.PI / 2
 
-    this.addGridLines(10)
-
     this.camera.position.z = 2
     this.camera.position.y = 1.7
     this.camera.rotation.x = -0.4
@@ -68,23 +70,50 @@ export class DotsChart3D extends React.Component<ChartPropsType> {
     requestAnimationFrame(this.animate)
 
     // this.scene.rotation.y = -Math.PI / 4
-    this.scene.rotation.y -= 0.01
+    // this.scene.rotation.y -= 0.01
 
     this.renderer.render(this.scene, this.camera)
+  }
+
+  getText = (message, translate) => {
+    const textColor = 0x006699
+    const matDark = new THREE.LineBasicMaterial({
+      color: textColor,
+      side: THREE.DoubleSide,
+    })
+    // const matLite = new THREE.MeshBasicMaterial({
+    //   color: textColor,
+    //   transparent: true,
+    //   opacity: 1,
+    //   side: THREE.DoubleSide,
+    // })
+    const shapes = this.font.generateShapes(String(message), 0.05)
+    const geometry = new THREE.ShapeBufferGeometry(shapes)
+    geometry.computeBoundingBox()
+    if (translate === 'right') {
+      // const xMid = - 0.5 * (geometry.boundingBox.max.x - geometry.boundingBox.min.x)
+      const yMid =
+        -0.5 * (geometry.boundingBox.max.y - geometry.boundingBox.min.y)
+      geometry.translate(-geometry.boundingBox.max.x, yMid, 0)
+    }
+
+    const text = new THREE.Mesh(geometry, matDark)
+    return text
   }
 
   addGridLines(ticks) {
     const {size} = this
     const mid = size / 2
-    var material = new THREE.LineBasicMaterial({
+    const lineMaterial = new THREE.LineBasicMaterial({
       color: 0,
       transparent: true,
       opacity: 0.3,
     })
 
     const step = size / ticks
+    const numFormat = d3.format('.1f')
 
-    for (let x = 0; x < ticks; x += 1) {
+    for (let x = 1; x <= ticks; x += 1) {
       const geometry = new THREE.Geometry()
       const xPos = -mid + x * step
       geometry.vertices.push(
@@ -92,11 +121,21 @@ export class DotsChart3D extends React.Component<ChartPropsType> {
         new THREE.Vector3(xPos, 0, -mid),
         new THREE.Vector3(xPos, size, -mid),
       )
-      const line = new THREE.Line(geometry, material)
+      const line = new THREE.Line(geometry, lineMaterial)
       this.scene.add(line)
+      const xVal = this.scales[0].scale.invert(xPos)
+      const label = this.getText(numFormat(xVal), 'right')
+
+      label.position.x = xPos
+      label.position.y = 0
+      label.position.z = mid + 0.02
+      label.rotation.x = -Math.PI / 2
+      label.rotation.z = Math.PI / 2
+
+      this.scene.add(label)
     }
 
-    for (let x = 0; x < ticks; x += 1) {
+    for (let x = 1; x <= ticks; x += 1) {
       const geometry = new THREE.Geometry()
       const zPos = -mid + x * step
       geometry.vertices.push(
@@ -104,11 +143,21 @@ export class DotsChart3D extends React.Component<ChartPropsType> {
         new THREE.Vector3(-mid, 0, zPos),
         new THREE.Vector3(-mid, size, zPos),
       )
-      const line = new THREE.Line(geometry, material)
+      const line = new THREE.Line(geometry, lineMaterial)
       this.scene.add(line)
+
+      const zVal = this.scales[2].scale.invert(zPos)
+      const label = this.getText(numFormat(zVal))
+
+      label.position.x = mid + 0.02
+      label.position.y = 0
+      label.position.z = zPos
+      label.rotation.x = -Math.PI / 2
+
+      this.scene.add(label)
     }
 
-    for (let x = 0; x < ticks; x += 1) {
+    for (let x = 1; x <= ticks; x += 1) {
       const geometry = new THREE.Geometry()
       const yPos = 0 + x * step
       geometry.vertices.push(
@@ -116,8 +165,18 @@ export class DotsChart3D extends React.Component<ChartPropsType> {
         new THREE.Vector3(-mid, yPos, -mid),
         new THREE.Vector3(-mid, yPos, mid),
       )
-      const line = new THREE.Line(geometry, material)
+      const line = new THREE.Line(geometry, lineMaterial)
       this.scene.add(line)
+
+      const yVal = this.scales[1].scale.invert(yPos)
+      const label = this.getText(numFormat(yVal), 'right')
+
+      label.position.x = -mid
+      label.position.y = yPos
+      label.position.z = mid + 0.02
+      label.rotation.y = Math.PI / 2
+
+      this.scene.add(label)
     }
   }
 
@@ -193,13 +252,20 @@ export class DotsChart3D extends React.Component<ChartPropsType> {
         if (v.metricName === this.scales[2].name) acc[2] = v
         return acc
       }, [])
-      const geometry = new THREE.CircleGeometry(0.02, 32)
-      const dot = new THREE.Mesh(geometry, this.getMaterial(0xffff00))
+
+      const geometry = new THREE.SphereGeometry(0.015, 32, 32)
+      const material = new THREE.MeshBasicMaterial({color: 0xffff00})
+      const dot = new THREE.Mesh(geometry, material)
       dot.position.x = this.scales[0].scale(xPoint.value)
       dot.position.y = this.scales[1].scale(yPoint.value)
       dot.position.z = this.scales[2].scale(zPoint.value)
       this.scene.add(dot)
     })
+  }
+
+  fontLoaded = font => {
+    this.font = font
+    this.addGridLines(10)
   }
 
   componentDidMount() {
