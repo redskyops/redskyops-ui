@@ -11,6 +11,8 @@ export class DotsChart3D extends React.Component<ChartPropsType> {
   camera = null
   cube = null
   size = 1.8
+  scales = null
+  filteredTrials = []
 
   initThree = () => {
     const width = 1024
@@ -18,6 +20,7 @@ export class DotsChart3D extends React.Component<ChartPropsType> {
     const {size} = this
 
     this.scene = new THREE.Scene()
+    this.scene.background = new THREE.Color(0xffffff)
     this.camera = new THREE.PerspectiveCamera(75, width / height, 0.1, 1000)
 
     this.renderer = new THREE.WebGLRenderer()
@@ -43,6 +46,8 @@ export class DotsChart3D extends React.Component<ChartPropsType> {
     this.scene.add(zPlane)
     zPlane.rotation.x = Math.PI / 2
 
+    this.addGridLines(10)
+
     this.camera.position.z = 2
     this.camera.position.y = 1.7
     this.camera.rotation.x = -0.4
@@ -55,42 +60,90 @@ export class DotsChart3D extends React.Component<ChartPropsType> {
       color,
       transparent: true,
       side: THREE.DoubleSide,
-      opacity: 0.4,
+      opacity: 0.6,
     })
   }
 
   animate = () => {
     requestAnimationFrame(this.animate)
 
-    // this.scene.rotation.y = Math.PI / 4
-    // this.scene.rotation.y -= 0.01
+    // this.scene.rotation.y = -Math.PI / 4
+    this.scene.rotation.y -= 0.01
 
     this.renderer.render(this.scene, this.camera)
   }
 
-  buildChart() {
+  addGridLines(ticks) {
+    const {size} = this
+    const mid = size / 2
+    var material = new THREE.LineBasicMaterial({
+      color: 0,
+      transparent: true,
+      opacity: 0.3,
+    })
+
+    const step = size / ticks
+
+    for (let x = 0; x < ticks; x += 1) {
+      const geometry = new THREE.Geometry()
+      const xPos = -mid + x * step
+      geometry.vertices.push(
+        new THREE.Vector3(xPos, 0, mid),
+        new THREE.Vector3(xPos, 0, -mid),
+        new THREE.Vector3(xPos, size, -mid),
+      )
+      const line = new THREE.Line(geometry, material)
+      this.scene.add(line)
+    }
+
+    for (let x = 0; x < ticks; x += 1) {
+      const geometry = new THREE.Geometry()
+      const zPos = -mid + x * step
+      geometry.vertices.push(
+        new THREE.Vector3(mid, 0, zPos),
+        new THREE.Vector3(-mid, 0, zPos),
+        new THREE.Vector3(-mid, size, zPos),
+      )
+      const line = new THREE.Line(geometry, material)
+      this.scene.add(line)
+    }
+
+    for (let x = 0; x < ticks; x += 1) {
+      const geometry = new THREE.Geometry()
+      const yPos = 0 + x * step
+      geometry.vertices.push(
+        new THREE.Vector3(mid, yPos, -mid),
+        new THREE.Vector3(-mid, yPos, -mid),
+        new THREE.Vector3(-mid, yPos, mid),
+      )
+      const line = new THREE.Line(geometry, material)
+      this.scene.add(line)
+    }
+  }
+
+  setScales = () => {
     const {size} = this
 
     const xValueName = this.props.xAxisMetricName
     const yValueName = this.props.yAxisMetricName
     const zValueName = this.props.zAxisMetricName
 
-    const completedTrials = this.props.trials
+    this.filteredTrials = this.props.trials
       .map((t, index) => ({...t, index}))
       .filter(t => t.status === 'completed')
 
     const [minCost, maxCost] = d3.extent(
-      completedTrials.map(
+      this.filteredTrials.map(
         v => v.values.filter(c => c.metricName === xValueName)[0].value,
       ),
     )
     const [minDuration, maxDuration] = d3.extent(
-      completedTrials.map(v => {
+      this.filteredTrials.map(v => {
         return v.values.filter(c => c.metricName === yValueName)[0].value
       }),
     )
     const [minThroughput, maxThroughput] = d3.extent(
-      completedTrials.map(v => {
+      this.filteredTrials.map(v => {
         return v.values.filter(c => c.metricName === zValueName)[0].value
       }),
     )
@@ -105,29 +158,52 @@ export class DotsChart3D extends React.Component<ChartPropsType> {
       .domain([minDuration, maxDuration])
       .range([0, size])
 
-    // eslint-disable-next-line no-unused-vars
     const zScale = d3
       .scaleLinear()
       .domain([minThroughput, maxThroughput])
       .range([-size / 2, size / 2])
 
-    completedTrials.forEach(d => {
-      const [cost, duration, throughpout] = d.values.reduce((acc, v) => {
-        if (v.metricName === xValueName) acc[0] = v
-        if (v.metricName === yValueName) acc[1] = v
-        if (v.metricName === zValueName) acc[2] = v
+    this.scales = [
+      {
+        name: xValueName,
+        min: minCost,
+        max: maxCost,
+        scale: xScale,
+      },
+      {
+        name: yValueName,
+        min: minDuration,
+        max: maxDuration,
+        scale: yScale,
+      },
+      {
+        name: zValueName,
+        min: minThroughput,
+        max: maxThroughput,
+        scale: zScale,
+      },
+    ]
+  }
+
+  buildChart = () => {
+    this.filteredTrials.forEach(d => {
+      const [xPoint, yPoint, zPoint] = d.values.reduce((acc, v) => {
+        if (v.metricName === this.scales[0].name) acc[0] = v
+        if (v.metricName === this.scales[1].name) acc[1] = v
+        if (v.metricName === this.scales[2].name) acc[2] = v
         return acc
       }, [])
       const geometry = new THREE.CircleGeometry(0.02, 32)
       const dot = new THREE.Mesh(geometry, this.getMaterial(0xffff00))
-      dot.position.x = xScale(cost.value)
-      dot.position.y = yScale(duration.value)
-      dot.position.z = zScale(throughpout.value)
+      dot.position.x = this.scales[0].scale(xPoint.value)
+      dot.position.y = this.scales[1].scale(yPoint.value)
+      dot.position.z = this.scales[2].scale(zPoint.value)
       this.scene.add(dot)
     })
   }
 
   componentDidMount() {
+    this.setScales()
     this.initThree()
     this.buildChart()
   }
