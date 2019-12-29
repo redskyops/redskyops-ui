@@ -51,8 +51,12 @@ export class DotsChart3D extends React.Component<ChartPropsType> {
     zPlane.rotation.x = Math.PI / 2
 
     this.camera.position.z = 2
-    this.camera.position.y = 1.7
+    this.camera.position.y = 1.5
     this.camera.rotation.x = -0.4
+
+    var light = new THREE.AmbientLight(0x404040) // soft white light
+    light.position.y = 1
+    this.scene.add(light)
 
     this.animate()
   }
@@ -70,7 +74,7 @@ export class DotsChart3D extends React.Component<ChartPropsType> {
     requestAnimationFrame(this.animate)
 
     // this.scene.rotation.y = -Math.PI / 4
-    // this.scene.rotation.y -= 0.01
+    this.scene.rotation.y -= 0.008
 
     this.renderer.render(this.scene, this.camera)
   }
@@ -81,12 +85,7 @@ export class DotsChart3D extends React.Component<ChartPropsType> {
       color: textColor,
       side: THREE.DoubleSide,
     })
-    // const matLite = new THREE.MeshBasicMaterial({
-    //   color: textColor,
-    //   transparent: true,
-    //   opacity: 1,
-    //   side: THREE.DoubleSide,
-    // })
+
     const shapes = this.font.generateShapes(String(message), 0.05)
     const geometry = new THREE.ShapeBufferGeometry(shapes)
     geometry.computeBoundingBox()
@@ -95,6 +94,14 @@ export class DotsChart3D extends React.Component<ChartPropsType> {
       const yMid =
         -0.5 * (geometry.boundingBox.max.y - geometry.boundingBox.min.y)
       geometry.translate(-geometry.boundingBox.max.x, yMid, 0)
+    }
+
+    if (translate === 'center') {
+      const xMid =
+        -0.5 * (geometry.boundingBox.max.x - geometry.boundingBox.min.x)
+      const yMid =
+        -0.5 * (geometry.boundingBox.max.y - geometry.boundingBox.min.y)
+      geometry.translate(xMid, yMid, 0)
     }
 
     const text = new THREE.Mesh(geometry, matDark)
@@ -178,6 +185,25 @@ export class DotsChart3D extends React.Component<ChartPropsType> {
 
       this.scene.add(label)
     }
+
+    const xLabel = this.getText(this.scales[0].name, 'center')
+    xLabel.position.z = mid + 0.25
+    xLabel.rotation.x = -Math.PI / 2
+    this.scene.add(xLabel)
+
+    const yLabel = this.getText(this.scales[1].name, 'center')
+    yLabel.position.x = -mid
+    yLabel.position.y = mid
+    yLabel.position.z = mid + 0.3
+    yLabel.rotation.y = Math.PI / 2
+    yLabel.rotation.z = Math.PI / 2
+    this.scene.add(yLabel)
+
+    const zLabel = this.getText(this.scales[2].name, 'center')
+    zLabel.position.x = mid + 0.35
+    zLabel.rotation.z = Math.PI / 2
+    zLabel.rotation.x = -Math.PI / 2
+    this.scene.add(zLabel)
   }
 
   setScales = () => {
@@ -254,7 +280,17 @@ export class DotsChart3D extends React.Component<ChartPropsType> {
       }, [])
 
       const geometry = new THREE.SphereGeometry(0.015, 32, 32)
-      const material = new THREE.MeshBasicMaterial({color: 0xffff00})
+      // const material = new THREE.MeshBasicMaterial({color: 0xffff00})
+      const material = new THREE.MeshStandardMaterial({
+        color: 0xffff00,
+        roughness: 0.5,
+      })
+      //   const material = new THREE.MeshPhongMaterial({
+      //     color: 0x996633,
+      // // envMap: envMap, // optional environment map
+      // specular: 0x050505,
+      // shininess: 100
+      //   })
       const dot = new THREE.Mesh(geometry, material)
       dot.position.x = this.scales[0].scale(xPoint.value)
       dot.position.y = this.scales[1].scale(yPoint.value)
