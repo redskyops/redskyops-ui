@@ -54,9 +54,19 @@ export class DotsChart3D extends React.Component<ChartPropsType> {
     this.camera.position.y = 1.5
     this.camera.rotation.x = -0.4
 
-    var light = new THREE.AmbientLight(0x404040) // soft white light
-    light.position.y = 1
-    this.scene.add(light)
+    // var light = new THREE.SpotLight(0x404040, 2) // soft white light
+    // light.position.x = size / 2
+    // light.position.y = size
+    // light.position.z = size / 2
+    // light.angle = 1
+    // light.decay = 1
+    // this.scene.add(light)
+
+    const hemiLight = new THREE.HemisphereLight(0xffffff, 0xffffff, 1)
+    hemiLight.color.setHSL(0.6, 1, 0.6)
+    hemiLight.groundColor.setHSL(0.095, 1, 0.75)
+    hemiLight.position.set(0, -size * 3, 0)
+    this.scene.add(hemiLight)
 
     this.animate()
   }
@@ -271,6 +281,11 @@ export class DotsChart3D extends React.Component<ChartPropsType> {
   }
 
   buildChart = () => {
+    const material = new THREE.MeshLambertMaterial({
+      color: 0xff0000,
+      emissive: 0x3a3a3a,
+    })
+
     this.filteredTrials.forEach(d => {
       const [xPoint, yPoint, zPoint] = d.values.reduce((acc, v) => {
         if (v.metricName === this.scales[0].name) acc[0] = v
@@ -280,17 +295,7 @@ export class DotsChart3D extends React.Component<ChartPropsType> {
       }, [])
 
       const geometry = new THREE.SphereGeometry(0.015, 32, 32)
-      // const material = new THREE.MeshBasicMaterial({color: 0xffff00})
-      const material = new THREE.MeshStandardMaterial({
-        color: 0xffff00,
-        roughness: 0.5,
-      })
-      //   const material = new THREE.MeshPhongMaterial({
-      //     color: 0x996633,
-      // // envMap: envMap, // optional environment map
-      // specular: 0x050505,
-      // shininess: 100
-      //   })
+
       const dot = new THREE.Mesh(geometry, material)
       dot.position.x = this.scales[0].scale(xPoint.value)
       dot.position.y = this.scales[1].scale(yPoint.value)
