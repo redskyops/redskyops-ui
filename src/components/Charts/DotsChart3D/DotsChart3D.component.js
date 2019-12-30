@@ -14,6 +14,10 @@ export class DotsChart3D extends React.Component<ChartPropsType> {
   scales = null
   filteredTrials = []
   font = null
+  isDragging = false
+  prevMouse = null
+  deltaX = 1
+  deltaY = 1
 
   initThree = () => {
     const width = 1024
@@ -54,19 +58,13 @@ export class DotsChart3D extends React.Component<ChartPropsType> {
     this.camera.position.y = 1.5
     this.camera.rotation.x = -0.4
 
-    // var light = new THREE.SpotLight(0x404040, 2) // soft white light
-    // light.position.x = size / 2
-    // light.position.y = size
-    // light.position.z = size / 2
-    // light.angle = 1
-    // light.decay = 1
-    // this.scene.add(light)
-
     const hemiLight = new THREE.HemisphereLight(0xffffff, 0xffffff, 1)
     hemiLight.color.setHSL(0.6, 1, 0.6)
     hemiLight.groundColor.setHSL(0.095, 1, 0.75)
     hemiLight.position.set(0, -size * 3, 0)
     this.scene.add(hemiLight)
+
+    this.scene.rotation.y = -Math.PI / 4
 
     this.animate()
   }
@@ -83,8 +81,14 @@ export class DotsChart3D extends React.Component<ChartPropsType> {
   animate = () => {
     requestAnimationFrame(this.animate)
 
-    // this.scene.rotation.y = -Math.PI / 4
-    this.scene.rotation.y -= 0.008
+    // let rotationY = this.scene.rotation.y + (
+    //   this.isDragging && this.deltaX
+    //     ? this.deltaX * 0.05
+    //     : 0
+    // )
+
+    // this.scene.rotation.y = rotationY
+    // this.scene.rotation.y -= 0.008
 
     this.renderer.render(this.scene, this.camera)
   }
@@ -316,13 +320,74 @@ export class DotsChart3D extends React.Component<ChartPropsType> {
   }
 
   componentDidUpdate() {
-    // this.buildChart()
+    this.buildChart()
+  }
+
+  mouseDown = () => {
+    this.isDragging = true
+    const chart = document.getElementById('chart')
+    chart.classList.remove(style.grab)
+    chart.classList.add(style.grabbing)
+    document.removeEventListener('mouseup', this.mouseUp)
+    document.addEventListener('mouseup', this.mouseUp)
+  }
+
+  mouseUp = () => {
+    this.isDragging = false
+    const chart = document.getElementById('chart')
+    chart.classList.remove(style.grabbing)
+    chart.classList.add(style.grab)
+    document.removeEventListener('mouseup', this.mouseUp)
+  }
+
+  mouseMove = e => {
+    if (!this.isDragging) {
+      return
+    }
+
+    if (this.prevMouse) {
+      this.deltaX =
+        (e.clientX - this.prevMouse.x) / Math.abs(e.clientX - this.prevMouse.x)
+      this.deltaY =
+        (e.clientY - this.prevMouse.y) / Math.abs(e.clientY - this.prevMouse.y)
+
+      let rotationY =
+        this.scene.rotation.y +
+        (this.isDragging && this.deltaX ? this.deltaX * 0.03 : 0)
+      if (rotationY <= -Math.PI / 2) {
+        rotationY = -Math.PI / 2
+      }
+      if (rotationY >= 0) {
+        rotationY = 0
+      }
+
+      let rotationX =
+        this.scene.rotation.x +
+        (this.isDragging && this.deltaY ? this.deltaY * 0.03 : 0)
+      if (rotationX >= Math.PI / 2) {
+        rotationX = Math.PI / 2
+      }
+      if (rotationX <= 0) {
+        rotationX = 0
+      }
+
+      this.scene.rotation.x = rotationX
+      this.scene.rotation.y = rotationY
+    }
+    this.prevMouse = {x: e.clientX, y: e.clientY}
   }
 
   render() {
     return (
       <div className={style.trials}>
-        <div id="chart" />
+        <div
+          id="chart"
+          role="button"
+          tabIndex={-1}
+          className={`${style.chart3d} ${style.grab}`}
+          onMouseDown={this.mouseDown}
+          onMouseMove={this.mouseMove}
+        />
       </div>
     )
   }
