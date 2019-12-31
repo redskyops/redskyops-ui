@@ -11,6 +11,8 @@ export class DotsChart3D extends React.Component<ChartPropsType> {
   camera = null
   cube = null
   size = 1.7
+  width = 1024
+  height = 600
   scales = null
   filteredTrials = []
   font = null
@@ -18,10 +20,10 @@ export class DotsChart3D extends React.Component<ChartPropsType> {
   prevMouse = null
   deltaX = 1
   deltaY = 1
+  dots = []
+  raycaster = null
 
   initThree = () => {
-    const width = 1024
-    const height = 600
     const {size} = this
 
     const loader = new THREE.FontLoader()
@@ -29,10 +31,15 @@ export class DotsChart3D extends React.Component<ChartPropsType> {
 
     this.scene = new THREE.Scene()
     this.scene.background = new THREE.Color(0xffffff)
-    this.camera = new THREE.PerspectiveCamera(75, width / height, 0.1, 1000)
+    this.camera = new THREE.PerspectiveCamera(
+      75,
+      this.width / this.height,
+      0.1,
+      1000,
+    )
 
     this.renderer = new THREE.WebGLRenderer()
-    this.renderer.setSize(width, height)
+    this.renderer.setSize(this.width, this.height)
     document.getElementById('chart').appendChild(this.renderer.domElement)
 
     const xPlaneGeo = new THREE.PlaneGeometry(size, size, size)
@@ -66,7 +73,26 @@ export class DotsChart3D extends React.Component<ChartPropsType> {
 
     this.scene.rotation.y = -Math.PI / 4
 
+    document
+      .getElementsByTagName('canvas')[0]
+      .addEventListener('click', this.canvasClick)
+    this.raycaster = new THREE.Raycaster()
+
     this.animate()
+  }
+
+  canvasClick = event => {
+    // convert x, y to normalized coordinates -1 -> 1
+    var mouse = new THREE.Vector2()
+    mouse.x = (event.offsetX / this.width) * 2 - 1
+    mouse.y = -((event.offsetY / this.height) * 2) + 1
+    this.raycaster.setFromCamera(mouse, this.camera)
+    var intersects = this.raycaster.intersectObjects(this.dots)
+
+    if (intersects.length > 0) {
+      const selectedObject = intersects[0]
+      selectedObject.object.material.color.set(0x0000ff)
+    }
   }
 
   getMaterial = color => {
@@ -104,7 +130,6 @@ export class DotsChart3D extends React.Component<ChartPropsType> {
     const geometry = new THREE.ShapeBufferGeometry(shapes)
     geometry.computeBoundingBox()
     if (translate === 'right') {
-      // const xMid = - 0.5 * (geometry.boundingBox.max.x - geometry.boundingBox.min.x)
       const yMid =
         -0.5 * (geometry.boundingBox.max.y - geometry.boundingBox.min.y)
       geometry.translate(-geometry.boundingBox.max.x, yMid, 0)
@@ -285,12 +310,8 @@ export class DotsChart3D extends React.Component<ChartPropsType> {
   }
 
   buildChart = () => {
-    const material = new THREE.MeshLambertMaterial({
-      color: 0xff0000,
-      emissive: 0x3a3a3a,
-    })
-
-    this.filteredTrials.forEach(d => {
+    this.dots = []
+    this.filteredTrials.forEach((d, i) => {
       const [xPoint, yPoint, zPoint] = d.values.reduce((acc, v) => {
         if (v.metricName === this.scales[0].name) acc[0] = v
         if (v.metricName === this.scales[1].name) acc[1] = v
@@ -298,13 +319,20 @@ export class DotsChart3D extends React.Component<ChartPropsType> {
         return acc
       }, [])
 
+      const material = new THREE.MeshLambertMaterial({
+        color: 0xff0000,
+        emissive: 0x3a3a3a,
+      })
+
       const geometry = new THREE.SphereGeometry(0.015, 32, 32)
 
       const dot = new THREE.Mesh(geometry, material)
       dot.position.x = this.scales[0].scale(xPoint.value)
       dot.position.y = this.scales[1].scale(yPoint.value)
       dot.position.z = this.scales[2].scale(zPoint.value)
+      dot.__index = i
       this.scene.add(dot)
+      this.dots.push(dot)
     })
   }
 
@@ -325,18 +353,12 @@ export class DotsChart3D extends React.Component<ChartPropsType> {
 
   mouseDown = () => {
     this.isDragging = true
-    const chart = document.getElementById('chart')
-    chart.classList.remove(style.grab)
-    chart.classList.add(style.grabbing)
     document.removeEventListener('mouseup', this.mouseUp)
     document.addEventListener('mouseup', this.mouseUp)
   }
 
   mouseUp = () => {
     this.isDragging = false
-    const chart = document.getElementById('chart')
-    chart.classList.remove(style.grabbing)
-    chart.classList.add(style.grab)
     document.removeEventListener('mouseup', this.mouseUp)
   }
 
