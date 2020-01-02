@@ -259,7 +259,7 @@ export class DotsChart3D extends React.Component<ChartPropsType> {
       .map((t, index) => ({...t, index}))
       .filter(t => t.status === 'completed')
 
-    const [minCost, maxCost] = d3.extent(
+    const maxCost = d3.max(
       this.filteredTrials.map(
         v => v.values.filter(c => c.metricName === xValueName)[0].value,
       ),
@@ -277,7 +277,7 @@ export class DotsChart3D extends React.Component<ChartPropsType> {
 
     const xScale = d3
       .scaleLinear()
-      .domain([minCost, maxCost])
+      .domain([0, maxCost])
       .range([-size / 2, size / 2])
 
     const yScale = d3
@@ -293,7 +293,7 @@ export class DotsChart3D extends React.Component<ChartPropsType> {
     this.scales = [
       {
         name: xValueName,
-        min: minCost,
+        min: 0,
         max: maxCost,
         scale: xScale,
       },
