@@ -91,6 +91,11 @@ export class DotsChart3D extends React.Component<ChartPropsType> {
 
     if (intersects.length > 0) {
       const selectedObject = intersects[0]
+      const dataPoint = this.filteredTrials[selectedObject.object.__index]
+      this.props.selectTrialHandler({
+        index: dataPoint.index,
+        trial: dataPoint,
+      })
       selectedObject.object.material.color.set(0x0000ff)
     }
   }
@@ -324,7 +329,11 @@ export class DotsChart3D extends React.Component<ChartPropsType> {
         emissive: 0x3a3a3a,
       })
 
-      const geometry = new THREE.SphereGeometry(0.015, 32, 32)
+      const spherRadis =
+        this.props.activeTrial && d.index === this.props.activeTrial.index
+          ? 0.05
+          : 0.015
+      const geometry = new THREE.SphereGeometry(spherRadis, 32, 32)
 
       const dot = new THREE.Mesh(geometry, material)
       dot.position.x = this.scales[0].scale(xPoint.value)
@@ -341,6 +350,10 @@ export class DotsChart3D extends React.Component<ChartPropsType> {
     this.addGridLines(10)
   }
 
+  clearChart = () => {
+    document.getElementById('chart').innerHTML = ''
+  }
+
   componentDidMount() {
     this.setScales()
     this.initThree()
@@ -348,6 +361,9 @@ export class DotsChart3D extends React.Component<ChartPropsType> {
   }
 
   componentDidUpdate() {
+    this.clearChart()
+    this.setScales()
+    this.initThree()
     this.buildChart()
   }
 
