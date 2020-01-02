@@ -5,6 +5,9 @@ import * as THREE from 'three'
 import ChartPropsType from '../ChartProps.type'
 import style from '../Charts.module.scss'
 
+const NORMAL_COLOR = 0x7b8bde
+const BEST_COLOR = 0xfe6f9c
+
 export class DotsChart3D extends React.Component<ChartPropsType> {
   renderer = null
   scene = null
@@ -43,21 +46,21 @@ export class DotsChart3D extends React.Component<ChartPropsType> {
     document.getElementById('chart').appendChild(this.renderer.domElement)
 
     const xPlaneGeo = new THREE.PlaneGeometry(size, size, size)
-    const xPlane = new THREE.Mesh(xPlaneGeo, this.getMaterial(0xff0000))
+    const xPlane = new THREE.Mesh(xPlaneGeo, this.getMaterial(0xcccccc))
     this.scene.add(xPlane)
     xPlane.position.x = 0
     xPlane.position.y = size / 2
     xPlane.position.z = -size / 2
 
     const yPlaneGeo = new THREE.PlaneGeometry(size, size, size)
-    const yPlane = new THREE.Mesh(yPlaneGeo, this.getMaterial(0x00ff00))
+    const yPlane = new THREE.Mesh(yPlaneGeo, this.getMaterial(0xcccccc))
     this.scene.add(yPlane)
     yPlane.rotation.y = Math.PI / 2
     yPlane.position.x = -size / 2
     yPlane.position.y = size / 2
 
     const zPlaneGeo = new THREE.PlaneGeometry(size, size, size)
-    const zPlane = new THREE.Mesh(zPlaneGeo, this.getMaterial(0x0000ff))
+    const zPlane = new THREE.Mesh(zPlaneGeo, this.getMaterial(0xcccccc))
     this.scene.add(zPlane)
     zPlane.rotation.x = Math.PI / 2
 
@@ -91,12 +94,13 @@ export class DotsChart3D extends React.Component<ChartPropsType> {
 
     if (intersects.length > 0) {
       const selectedObject = intersects[0]
-      const dataPoint = this.filteredTrials[selectedObject.object.__index]
+      const dataPoint = this.filteredTrials.find(
+        t => t.index === selectedObject.object.dataIndex,
+      )
       this.props.selectTrialHandler({
         index: dataPoint.index,
         trial: dataPoint,
       })
-      selectedObject.object.material.color.set(0x0000ff)
     }
   }
 
@@ -111,12 +115,6 @@ export class DotsChart3D extends React.Component<ChartPropsType> {
 
   animate = () => {
     requestAnimationFrame(this.animate)
-
-    // let rotationY = this.scene.rotation.y + (
-    //   this.isDragging && this.deltaX
-    //     ? this.deltaX * 0.05
-    //     : 0
-    // )
 
     // this.scene.rotation.y = rotationY
     // this.scene.rotation.y -= 0.008
@@ -156,9 +154,9 @@ export class DotsChart3D extends React.Component<ChartPropsType> {
     const {size} = this
     const mid = size / 2
     const lineMaterial = new THREE.LineBasicMaterial({
-      color: 0,
+      color: 0xffffff,
       transparent: true,
-      opacity: 0.3,
+      opacity: 1,
     })
 
     const step = size / ticks
@@ -316,7 +314,7 @@ export class DotsChart3D extends React.Component<ChartPropsType> {
 
   buildChart = () => {
     this.dots = []
-    this.filteredTrials.forEach((d, i) => {
+    this.filteredTrials.forEach(d => {
       const [xPoint, yPoint, zPoint] = d.values.reduce((acc, v) => {
         if (v.metricName === this.scales[0].name) acc[0] = v
         if (v.metricName === this.scales[1].name) acc[1] = v
@@ -324,22 +322,20 @@ export class DotsChart3D extends React.Component<ChartPropsType> {
         return acc
       }, [])
 
+      const color = d.labels && d.labels.best ? BEST_COLOR : NORMAL_COLOR
       const material = new THREE.MeshLambertMaterial({
-        color: 0xff0000,
-        emissive: 0x3a3a3a,
+        color,
+        // emissive: color,
       })
 
-      const spherRadis =
-        this.props.activeTrial && d.index === this.props.activeTrial.index
-          ? 0.05
-          : 0.015
-      const geometry = new THREE.SphereGeometry(spherRadis, 32, 32)
+      const sphereRadis = 0.015
+      const geometry = new THREE.SphereGeometry(sphereRadis, 32, 32)
 
       const dot = new THREE.Mesh(geometry, material)
       dot.position.x = this.scales[0].scale(xPoint.value)
       dot.position.y = this.scales[1].scale(yPoint.value)
       dot.position.z = this.scales[2].scale(zPoint.value)
-      dot.__index = i
+      dot.dataIndex = d.index
       this.scene.add(dot)
       this.dots.push(dot)
     })
@@ -360,7 +356,19 @@ export class DotsChart3D extends React.Component<ChartPropsType> {
     this.buildChart()
   }
 
-  componentDidUpdate() {
+  componentDidUpdate(prevProps) {
+    if (prevProps.activeTrial !== this.props.activeTrial) {
+      this.dots.forEach(dot => {
+        const scale =
+          this.props.activeTrial &&
+          dot.dataIndex === this.props.activeTrial.index
+            ? 2
+            : 1
+
+        dot.scale.set(scale, scale, scale)
+      })
+      return
+    }
     this.clearChart()
     this.setScales()
     this.initThree()
