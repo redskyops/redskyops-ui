@@ -48,10 +48,16 @@ describe('Component: ExperimentsDetails', () => {
   it('should render no valid metrics statement', () => {
     const localProps = {
       ...props,
+      experiments: {
+        ...props.experiments,
+        list: [...props.experiments.list],
+      },
       activeExperiment: {
-        index: 3,
+        index: props.experiments.list.length,
       },
     }
+    localProps.experiments.list.push({...props.experiments.list[0]})
+    localProps.experiments.list[localProps.activeExperiment.index].metrics = []
     wrapper = mount(<ExperimentDetails {...localProps} />)
     expect(wrapper.find('[data-dom-id="exp-details-no-metrics"]')).toHaveLength(
       1,

@@ -80,3 +80,13 @@
   position: absolute;
   z-index: -1;
 }
+
+:global(canvas) {
+  width: 100%;
+  height: 100%;
+}
+
+.chart3d {
+  outline: 0;
+}
+
