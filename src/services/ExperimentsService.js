@@ -28,9 +28,10 @@ export class ExperimentsService {
     }
   }
 
-  getExperimentsFactory() {
+  getExperimentsFactory({limit = 20} = {}) {
     const [request, abort] = this.http.get({
       url: `${this.url}/`,
+      queryParams: {limit},
     })
     const getExperiments = () =>
       request().then(async response => {

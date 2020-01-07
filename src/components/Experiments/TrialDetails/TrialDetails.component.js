@@ -70,18 +70,16 @@ export const TrialDetails = (props: Props) => {
           <span className={`material-icons ${style.icon}`}>check_circle</span>
         )}
       </h3>
-      <div className={style.parameter} data-dom-id="trial-value-1">
-        <strong className={style.capitalize}>
-          {trial.values[0].metricName}:
-        </strong>{' '}
-        {trial.values[0].value}
-      </div>
-      <div className={style.parameter} data-dom-id="trial-value-2">
-        <strong className={style.capitalize}>
-          {trial.values[1].metricName}:
-        </strong>{' '}
-        {trial.values[1].value}
-      </div>
+      {trial.values.map((value, i) => (
+        <div
+          key={value.metricName}
+          className={style.parameter}
+          data-dom-id={`trial-value-${i + 1}`}
+        >
+          <strong className={style.capitalize}>{value.metricName}:</strong>{' '}
+          {value.value}
+        </div>
+      ))}
 
       <h3 className={style.h3}>Parameters</h3>
       {renderParameters()}

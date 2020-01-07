@@ -54,9 +54,7 @@ describe('Component: ExperimentList', () => {
     ])
     wrapper = mount(<ExperimentsList {...props} />)
     expect(http.get).toHaveBeenCalledTimes(1)
-    expect(http.get).toHaveBeenCalledWith({
-      url: '/api/experiments/',
-    })
+    expect(http.get.mock.calls[0][0]).toHaveProperty('url', '/api/experiments/')
   })
 
   it('should update state after loading speriments', async done => {

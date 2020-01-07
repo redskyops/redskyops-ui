@@ -16,7 +16,7 @@ export const ExperimentsList = (props: Props) => {
   const {experiments = [], activeExperiment = null, updateState} = props
   const expService = new ExperimentsService()
 
-  const requestFactory = () => expService.getExperimentsFactory()
+  const requestFactory = () => expService.getExperimentsFactory({limit: 500})
   const requestSuccess = expResponse => {
     updateState({
       experiments: {
@@ -35,29 +35,6 @@ export const ExperimentsList = (props: Props) => {
   }
 
   useApiCallEffect(requestFactory, requestSuccess, requestError, [])
-  //   useEffect(() => {
-  //   const [request, abort] = expService.getExperimentsFactory()
-  //   ;(async () => {
-  //     try {
-  //       const expResponse = await request()
-  //       updateState({
-  //         experiments: {
-  //           ...experiments,
-  //           list: expResponse.experiments,
-  //         },
-  //       })
-  //     } catch (e) {
-  //       updateState({
-  //         experiments: {
-  //           ...experiments,
-  //           error: 'Error loading experiments list',
-  //         },
-  //       })
-  //     }
-  //   })()
-
-  //   return () => abort()
-  // }, [])
 
   const setActiveExperiment = ({index}) => {
     updateState({

@@ -120,7 +120,7 @@ export const ExperimentDetails = (props: Props) => {
         activeExperiment &&
         experiment &&
         experiment.metrics &&
-        experiment.metrics.length > 1
+        experiment.metrics.length > 0
       )
     ) {
       return (
@@ -133,17 +133,22 @@ export const ExperimentDetails = (props: Props) => {
     if (activeExperiment && (!trials || trials.length < 1)) {
       return <div data-dom-id="exp-details-no-trials">No trials found</div>
     }
+    const trialProps = {
+      trials,
+      activeTrial,
+      selectTrialHandler: selectTrial,
+      numOfMertics: experiment.metrics.length,
+      labelsFilter: experiments.labelsFilter,
+      xAxisMetricName: experiment.metrics[0].name,
+      ...(experiment.metrics[1] && {
+        yAxisMetricName: experiment.metrics[1].name,
+      }),
+      ...(experiment.metrics[2] && {
+        zAxisMetricName: experiment.metrics[2].name,
+      }),
+    }
 
-    return (
-      <Trials
-        trials={trials}
-        activeTrial={activeTrial}
-        xAxisMetricName={experiment.metrics[0].name}
-        yAxisMetricName={experiment.metrics[1].name}
-        selectTrialHandler={selectTrial}
-        labelsFilter={experiments.labelsFilter}
-      />
-    )
+    return <Trials {...trialProps} />
   }
 
   const renderTrialDetails = () => {
@@ -245,9 +250,7 @@ export const ExperimentDetails = (props: Props) => {
 
   return (
     <div className={style.expDetails}>
-      <h1 className={style.h1}>
-        {experiment.displayName} / {experiment.id}
-      </h1>
+      <h1 className={style.h1}>{experiment.displayName}</h1>
       {renderStatus()}
       {renderLabels()}
       {renderTrials()}

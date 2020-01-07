@@ -40,7 +40,11 @@ fetch(`${REDSKY_ADDRESS}/auth/token/`, {
   })
 
 const proxyRequest = (req, res) => {
-  const url = process.env.DOCKER_ENV ? req.originalUrl : req.path
+  let url = process.env.DOCKER_ENV ? req.originalUrl : req.path
+  const queryStr = Object.keys(req.query).map(
+    param => `${param}=${req.query[param]}`,
+  )
+  url += queryStr.length > 0 ? `?${queryStr.join('&')}` : ''
 
   // mocking response for posting label while implemteing it in server api
   if (req.method === 'POST' && /\/labels\/?$/.test(url)) {
