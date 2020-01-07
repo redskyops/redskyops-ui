@@ -13,6 +13,7 @@ import {TrialDetails} from '../TrialDetails/TrialDetails.component'
 import {ExperimentsService} from '../../../services/ExperimentsService'
 
 import style from './ExperimentDetails.module.scss'
+import {MetricValueChart} from '../MetricValueChart/MetricValueChart.component'
 
 type Props = {
   activeExperiment: TypeActiveExperiment,
@@ -109,7 +110,17 @@ export const ExperimentDetails = (props: Props) => {
         zAxisMetricName: experiment.metrics[2].name,
       }),
     }
-    return <Trials {...trialProps} />
+    return (
+      <>
+        <Trials {...trialProps} />
+        <MetricValueChart
+          trials={trials}
+          activeTrial={activeTrial}
+          metricsList={experiment.metrics.map(({name}) => name)}
+          parametersList={experiment.parameters.map(({name}) => name)}
+        />
+      </>
+    )
   }
 
   const renderTrialDetails = () => {

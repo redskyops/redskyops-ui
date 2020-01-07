@@ -5,6 +5,10 @@ import {ChartPropsType} from '../ChartProps.type'
 import style from '../Charts.module.scss'
 
 export class DotsChart2D extends React.Component<ChartPropsType> {
+  constructor(props) {
+    super(props)
+    this.chartId = Math.round(10000 * Math.random())
+  }
   buildChart() {
     const canvasWidth = 1024
     const canvasHeight = 500
@@ -23,9 +27,16 @@ export class DotsChart2D extends React.Component<ChartPropsType> {
       .filter(t => t.status === 'completed')
 
     const maxCost = d3.max(
-      completedTrials.map(
-        v => v.values.filter(c => c.metricName === xValueName)[0].value,
-      ),
+      completedTrials.map(v => {
+        switch (this.props.xAxisValueType) {
+          case 'parameter':
+            return v.assignments.filter(p => p.parameterName === xValueName)[0]
+              .value
+          case 'metrics':
+          default:
+            return v.values.filter(c => c.metricName === xValueName)[0].value
+        }
+      }),
     )
     const [minDuration, maxDuration] = d3.extent(
       completedTrials.map(v => {
@@ -43,10 +54,10 @@ export class DotsChart2D extends React.Component<ChartPropsType> {
       .domain([minDuration, maxDuration])
       .range([height, 0])
 
-    d3.select('#chart svg').remove()
+    d3.select(`#chart-${this.chartId} svg`).remove()
 
     const svg = d3
-      .select('#chart')
+      .select(`#chart-${this.chartId}`)
       .append('svg')
       .attr('width', canvasWidth)
       .attr('height', canvasHeight)
@@ -181,11 +192,26 @@ export class DotsChart2D extends React.Component<ChartPropsType> {
       .enter()
       .append('g')
       .attr('transform', d => {
-        const [cost, duration] = d.values.reduce((acc, v) => {
-          if (v.metricName === xValueName) acc[0] = v
-          if (v.metricName === yValueName) acc[1] = v
+        const duration = d.values.reduce((acc, v) => {
+          if (v.metricName === yValueName) acc = v
           return acc
-        }, [])
+        }, 0)
+        let cost = {value: 0}
+        switch (this.props.xAxisValueType) {
+          case 'parameter':
+            cost = d.assignments.reduce((acc, v) => {
+              if (v.parameterName === xValueName) acc = v
+              return acc
+            }, 0)
+            break
+          case 'metric':
+          default:
+            cost = d.values.reduce((acc, v) => {
+              if (v.metricName === xValueName) acc = v
+              return acc
+            }, 0)
+            break
+        }
         return `translate(${xScale(cost.value)}, ${yScale(duration.value)})`
       })
       .append('circle')
@@ -234,7 +260,7 @@ export class DotsChart2D extends React.Component<ChartPropsType> {
   render() {
     return (
       <div className={style.trials}>
-        <div id="chart" />
+        <div id={`chart-${this.chartId}`} />
         <div className={style.svgFillter}>
           <svg>
             <filter id="dropshadow" height="130%">
