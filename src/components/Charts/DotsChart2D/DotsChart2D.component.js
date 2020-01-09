@@ -4,11 +4,21 @@ import * as d3 from 'd3'
 import {ChartPropsType} from '../ChartProps.type'
 import style from '../Charts.module.scss'
 
-export class DotsChart2D extends React.Component<ChartPropsType> {
+export const AXIS_TYPE = {
+  PARAMETER: 'parameter',
+  METRIC: 'metric',
+}
+
+type AxisType = AXIS_TYPE.METIC | AXIS_TYPE.PARAMETER
+
+export class DotsChart2D extends React.Component<
+  ChartPropsType & {xAxisValueType: AxisType},
+> {
   constructor(props) {
     super(props)
     this.chartId = Math.round(10000 * Math.random())
   }
+
   buildChart() {
     const canvasWidth = 1024
     const canvasHeight = 500
@@ -29,10 +39,10 @@ export class DotsChart2D extends React.Component<ChartPropsType> {
     const maxCost = d3.max(
       completedTrials.map(v => {
         switch (this.props.xAxisValueType) {
-          case 'parameter':
+          case AXIS_TYPE.PARAMETER:
             return v.assignments.filter(p => p.parameterName === xValueName)[0]
               .value
-          case 'metrics':
+          case AXIS_TYPE.METRIC:
           default:
             return v.values.filter(c => c.metricName === xValueName)[0].value
         }
@@ -198,13 +208,13 @@ export class DotsChart2D extends React.Component<ChartPropsType> {
         }, 0)
         let cost = {value: 0}
         switch (this.props.xAxisValueType) {
-          case 'parameter':
+          case AXIS_TYPE.PARAMETER:
             cost = d.assignments.reduce((acc, v) => {
               if (v.parameterName === xValueName) acc = v
               return acc
             }, 0)
             break
-          case 'metric':
+          case AXIS_TYPE.METRIC:
           default:
             cost = d.values.reduce((acc, v) => {
               if (v.metricName === xValueName) acc = v

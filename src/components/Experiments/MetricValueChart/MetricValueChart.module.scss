@@ -6,3 +6,20 @@
   margin-top: $size-2x;
   padding: $size-2x;
 }
+
+.optionsRow {
+  display: flex;
+  flex-direction: row;
+  padding: $size-2x;
+}
+
+.dropdown {
+  align-items: center;
+  display: flex;
+  flex-direction: row;
+  margin-right: $size-4x;
+
+  strong {
+    margin-right: $size-2x;
+  }
+}
