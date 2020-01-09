@@ -160,6 +160,7 @@ export const ExperimentDetails = (props: Props) => {
           }
           onMetricChange={onMetricChange}
           onParameterChange={onParameterChange}
+          selectTrialHandler={selectTrial}
         />
       </>
     )

@@ -5,6 +5,7 @@ import DotsChart2D, {
   AXIS_TYPE,
 } from '../../Charts/DotsChart2D/DotsChart2D.component'
 import {ListSearch} from '../../FormControls/ListSearch/ListSearch.component'
+import {TypeActiveTrial} from '../../../context/DefaultState'
 
 type Props = {
   trials: Array<Object>,
@@ -12,8 +13,10 @@ type Props = {
   metricsList: Array<string>,
   metric: string,
   parameter: string,
+  activeTrial: TypeActiveTrial,
   onMetricChange: () => {},
   onParameterChange: () => {},
+  selectTrialHandler: () => {},
 }
 
 export const MetricValueChart = (props: Props) => {
@@ -42,6 +45,8 @@ export const MetricValueChart = (props: Props) => {
         xAxisValueType={AXIS_TYPE.PARAMETER}
         xAxisMetricName={props.parameter}
         yAxisMetricName={props.metric}
+        selectTrialHandler={props.selectTrialHandler}
+        activeTrial={props.activeTrial}
       />
     </div>
   )

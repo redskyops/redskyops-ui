@@ -136,11 +136,23 @@ export class DotsChart2D extends React.Component<
           .tickFormat(''),
       )
 
-    const circleOver = () =>
+    const circleOver = (xAxisValueType, chartId) =>
       function _circleOver(dataPoint) {
-        var xValue = dataPoint.values.filter(
-          v => v.metricName === xValueName,
-        )[0].value
+        let xValue = 0
+        switch (xAxisValueType) {
+          case AXIS_TYPE.PARAMETER:
+            xValue = dataPoint.assignments.filter(
+              v => v.parameterName === xValueName,
+            )[0].value
+            break
+          case AXIS_TYPE.METRIC:
+          default:
+            xValue = dataPoint.values.filter(
+              v => v.metricName === xValueName,
+            )[0].value
+            break
+        }
+
         var yValue = dataPoint.values.filter(
           v => v.metricName === yValueName,
         )[0].value
@@ -155,7 +167,7 @@ export class DotsChart2D extends React.Component<
           .attr('r', 6)
 
         const popup = d3
-          .select('#popup')
+          .select(`#popup-${chartId}`)
           .attr('transform', `translate(${xPos}, ${yPos})`)
           .classed(style.hidden, false)
           .classed(style.fadeIn, true)
@@ -180,7 +192,7 @@ export class DotsChart2D extends React.Component<
           .text(`${yValueName}: ${yValue}`)
       }
 
-    const circleOut = activeTrial =>
+    const circleOut = (activeTrial, chartId) =>
       function _circleOut(dataPoint) {
         d3.select(this)
           .classed(style.active, false)
@@ -188,7 +200,7 @@ export class DotsChart2D extends React.Component<
             'r',
             activeTrial && dataPoint.index === activeTrial.index ? 6 : 3,
           )
-        d3.select('#popup')
+        d3.select(`#popup-${chartId}`)
           .classed(style.hidden, true)
           .classed(style.fadeIn, false)
       }
@@ -247,13 +259,13 @@ export class DotsChart2D extends React.Component<
         style.selected,
         d => this.props.activeTrial && d.index === this.props.activeTrial.index,
       )
-      .on('mouseover', circleOver())
-      .on('mouseout', circleOut(this.props.activeTrial))
+      .on('mouseover', circleOver(this.props.xAxisValueType, this.chartId))
+      .on('mouseout', circleOut(this.props.activeTrial, this.chartId))
       .on('click', circleClick(this.props.selectTrialHandler))
 
     svg
       .append('g')
-      .attr('id', 'popup')
+      .attr('id', `popup-${this.chartId}`)
       .attr('class', style.popup)
       .classed(style.hidden, true)
       .append('rect')
