@@ -20,6 +20,11 @@ export class DotsChart2D extends React.Component<
   }
 
   buildChart() {
+    if (!this.props.xAxisMetricName || !this.props.yAxisMetricName) {
+      d3.select(`#chart-${this.chartId} svg`).remove()
+      return
+    }
+
     const canvasWidth = 1024
     const canvasHeight = 500
     const margins = {top: 20, right: 20, bottom: 40, left: 70}
