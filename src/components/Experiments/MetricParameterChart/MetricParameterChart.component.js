@@ -1,6 +1,6 @@
 import React from 'react'
 
-import style from './MetricValueChart.module.scss'
+import style from './MetricParameterChart.module.scss'
 import DotsChart2D, {
   AXIS_TYPE,
 } from '../../Charts/DotsChart2D/DotsChart2D.component'
@@ -19,7 +19,7 @@ type Props = {
   selectTrialHandler: () => {},
 }
 
-export const MetricValueChart = (props: Props) => {
+export const MetricParameterChart = (props: Props) => {
   return (
     <div className={style.chart}>
       <div className={style.optionsRow}>
@@ -51,3 +51,5 @@ export const MetricValueChart = (props: Props) => {
     </div>
   )
 }
+
+export default MetricParameterChart
