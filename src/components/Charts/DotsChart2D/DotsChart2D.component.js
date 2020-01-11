@@ -102,7 +102,7 @@ export class DotsChart2D extends React.Component<
 
     svg
       .append('text')
-      .attr('transform', `translate(${width / 2}, ${height + 40})`)
+      .attr('transform', `translate(${width / 2}, ${height + 35})`)
       .attr('font-size', '1.5em')
       .style('text-anchor', 'middle')
       .style('fill', '#000')
