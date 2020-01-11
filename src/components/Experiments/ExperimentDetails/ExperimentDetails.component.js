@@ -35,6 +35,7 @@ export const ExperimentDetails = (props: Props) => {
 
   const requestFactory = () =>
     activeExperiment &&
+    activeExperiment.isLoading &&
     experiments.list[activeExperiment.index] &&
     experiments.list[activeExperiment.index].metrics &&
     experiments.list[activeExperiment.index].metrics.length > 1
@@ -44,6 +45,10 @@ export const ExperimentDetails = (props: Props) => {
       : null
   const requestSuccess = ({trials}) => {
     updateState({
+      activeExperiment: {
+        ...activeExperiment,
+        isLoading: false,
+      },
       trials,
     })
   }

@@ -128,6 +128,10 @@ describe('Component: ExperimentsDetails', () => {
     ])
     const localProps = {
       ...props,
+      activeExperiment: {
+        ...props.activeExperiment,
+        isLoading: true,
+      },
     }
     wrapper = mount(<ExperimentDetails {...localProps} />)
     expect(expService.getTrialsFactory).toHaveBeenCalledTimes(1)
@@ -144,11 +148,19 @@ describe('Component: ExperimentsDetails', () => {
     ])
     const localProps = {
       ...props,
+      activeExperiment: {
+        ...props.activeExperiment,
+        isLoading: true,
+      },
     }
     wrapper = await mount(<ExperimentDetails {...localProps} />)
     expect(localProps.updateState).toHaveBeenCalledTimes(1)
     expect(localProps.updateState.mock.calls[0][0]).toMatchObject({
       trials: trialsStub.trials,
+      activeExperiment: {
+        ...props.activeExperiment,
+        isLoading: false,
+      },
     })
     wrapper.unmount()
   })

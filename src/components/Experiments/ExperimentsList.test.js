@@ -94,6 +94,30 @@ describe('Component: ExperimentList', () => {
     expect(Array.isArray(listProps.itemsList)).toBe(true)
   })
 
+  it('should update state when experiment is selected', () => {
+    http.get.mockImplementationOnce(() => [
+      () =>
+        Promise.resolve({
+          status: 200,
+          json: () => Promise.resolve(expStub),
+        }),
+      () => {},
+    ])
+    wrapper = mount(<ExperimentsList {...props} />)
+    expect(wrapper.find('ListSearch')).toHaveLength(1)
+    wrapper.find('ListSearch').prop('onSelect')({index: 1})
+    expect(props.updateState).toHaveBeenCalledTimes(1)
+    expect(props.updateState.mock.calls[0][0]).toMatchObject({
+      activeExperiment: {
+        index: 1,
+        isLoading: true,
+        metricParameterChart: null,
+      },
+      trials: null,
+      activeTrial: null,
+    })
+  })
+
   it('should render number of experiments loaded', () => {
     http.get.mockImplementationOnce(() => [
       () =>
