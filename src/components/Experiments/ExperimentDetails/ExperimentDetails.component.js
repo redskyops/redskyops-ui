@@ -104,7 +104,7 @@ export const ExperimentDetails = (props: Props) => {
       </div>
     )
   }
-  const experiment = experiments.list[activeExperiment.index] || {}
+  const experiment = experiments.list[activeExperiment.index]
 
   const renderTrials = () => {
     if (
@@ -140,6 +140,7 @@ export const ExperimentDetails = (props: Props) => {
         zAxisMetricName: experiment.metrics[2].name,
       }),
     }
+
     return (
       <>
         <Trials {...trialProps} />
