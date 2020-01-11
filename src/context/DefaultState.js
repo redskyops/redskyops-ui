@@ -9,6 +9,10 @@ export type TypeExperiments = {
 export type TypeActiveExperiment = {
   index: number,
   isLoading: boolean,
+  metricParameterChart?: {
+    metric: string,
+    parameter: string,
+  },
 }
 
 export type TypeTrials = Array<Object>

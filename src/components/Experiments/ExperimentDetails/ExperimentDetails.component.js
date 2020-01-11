@@ -13,6 +13,7 @@ import {TrialDetails} from '../TrialDetails/TrialDetails.component'
 import {ExperimentsService} from '../../../services/ExperimentsService'
 
 import style from './ExperimentDetails.module.scss'
+import MetricParameterChart from '../MetricParameterChart/MetricParameterChart.component'
 
 type Props = {
   activeExperiment: TypeActiveExperiment,
@@ -34,6 +35,7 @@ export const ExperimentDetails = (props: Props) => {
 
   const requestFactory = () =>
     activeExperiment &&
+    activeExperiment.isLoading &&
     experiments.list[activeExperiment.index] &&
     experiments.list[activeExperiment.index].metrics &&
     experiments.list[activeExperiment.index].metrics.length > 1
@@ -43,6 +45,10 @@ export const ExperimentDetails = (props: Props) => {
       : null
   const requestSuccess = ({trials}) => {
     updateState({
+      activeExperiment: {
+        ...activeExperiment,
+        isLoading: false,
+      },
       trials,
     })
   }
@@ -68,6 +74,34 @@ export const ExperimentDetails = (props: Props) => {
     })
   }
 
+  const onMetricChange = ({item}) => {
+    updateState({
+      activeExperiment: {
+        ...activeExperiment,
+        metricParameterChart: {
+          ...(activeExperiment.metricParameterChart
+            ? activeExperiment.metricParameterChart
+            : null),
+          metric: item.value,
+        },
+      },
+    })
+  }
+
+  const onParameterChange = ({item}) => {
+    updateState({
+      activeExperiment: {
+        ...activeExperiment,
+        metricParameterChart: {
+          ...(activeExperiment.metricParameterChart
+            ? activeExperiment.metricParameterChart
+            : null),
+          parameter: item.value,
+        },
+      },
+    })
+  }
+
   if (!activeExperiment) {
     return (
       <div className={style.expDetails} data-dom-id="exp-details-select">
@@ -75,7 +109,7 @@ export const ExperimentDetails = (props: Props) => {
       </div>
     )
   }
-  const experiment = experiments.list[activeExperiment.index] || {}
+  const experiment = experiments.list[activeExperiment.index]
 
   const renderTrials = () => {
     if (
@@ -96,6 +130,8 @@ export const ExperimentDetails = (props: Props) => {
     if (activeExperiment && (!trials || trials.length < 1)) {
       return <div data-dom-id="exp-details-no-trials">No trials found</div>
     }
+
+    const {metricParameterChart} = activeExperiment
     const trialProps = {
       trials,
       activeTrial,
@@ -109,7 +145,31 @@ export const ExperimentDetails = (props: Props) => {
         zAxisMetricName: experiment.metrics[2].name,
       }),
     }
-    return <Trials {...trialProps} />
+
+    return (
+      <>
+        <Trials {...trialProps} />
+        <MetricParameterChart
+          trials={trials}
+          activeTrial={activeTrial}
+          metricsList={experiment.metrics.map(({name}) => name)}
+          parametersList={experiment.parameters.map(({name}) => name)}
+          metric={
+            metricParameterChart && metricParameterChart.metric
+              ? metricParameterChart.metric
+              : null
+          }
+          parameter={
+            metricParameterChart && metricParameterChart.parameter
+              ? metricParameterChart.parameter
+              : null
+          }
+          onMetricChange={onMetricChange}
+          onParameterChange={onParameterChange}
+          selectTrialHandler={selectTrial}
+        />
+      </>
+    )
   }
 
   const renderTrialDetails = () => {

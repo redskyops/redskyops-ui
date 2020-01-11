@@ -1,0 +1,25 @@
+@import '../../../styles/colors';
+@import '../../../styles/vars';
+
+.chart {
+  background-color: $white;
+  margin-top: $size-2x;
+  width: 1024px;
+}
+
+.optionsRow {
+  display: flex;
+  flex-direction: row;
+  padding: $size-2x;
+}
+
+.dropdown {
+  align-items: center;
+  display: flex;
+  flex-direction: row;
+  margin-right: $size-4x;
+
+  strong {
+    margin-right: $size-2x;
+  }
+}

@@ -4,8 +4,27 @@ import * as d3 from 'd3'
 import {ChartPropsType} from '../ChartProps.type'
 import style from '../Charts.module.scss'
 
-export class DotsChart2D extends React.Component<ChartPropsType> {
+export const AXIS_TYPE = {
+  PARAMETER: 'parameter',
+  METRIC: 'metric',
+}
+
+type AxisType = AXIS_TYPE.METIC | AXIS_TYPE.PARAMETER
+
+export class DotsChart2D extends React.Component<
+  ChartPropsType & {xAxisValueType: AxisType},
+> {
+  constructor(props) {
+    super(props)
+    this.chartId = Math.round(10000 * Math.random())
+  }
+
   buildChart() {
+    if (!this.props.xAxisMetricName || !this.props.yAxisMetricName) {
+      d3.select(`#chart-${this.chartId} svg`).remove()
+      return
+    }
+
     const canvasWidth = 1024
     const canvasHeight = 500
     const margins = {top: 20, right: 20, bottom: 40, left: 70}
@@ -23,9 +42,16 @@ export class DotsChart2D extends React.Component<ChartPropsType> {
       .filter(t => t.status === 'completed')
 
     const maxCost = d3.max(
-      completedTrials.map(
-        v => v.values.filter(c => c.metricName === xValueName)[0].value,
-      ),
+      completedTrials.map(v => {
+        switch (this.props.xAxisValueType) {
+          case AXIS_TYPE.PARAMETER:
+            return v.assignments.filter(p => p.parameterName === xValueName)[0]
+              .value
+          case AXIS_TYPE.METRIC:
+          default:
+            return v.values.filter(c => c.metricName === xValueName)[0].value
+        }
+      }),
     )
     const [minDuration, maxDuration] = d3.extent(
       completedTrials.map(v => {
@@ -43,10 +69,10 @@ export class DotsChart2D extends React.Component<ChartPropsType> {
       .domain([minDuration, maxDuration])
       .range([height, 0])
 
-    d3.select('#chart svg').remove()
+    d3.select(`#chart-${this.chartId} svg`).remove()
 
     const svg = d3
-      .select('#chart')
+      .select(`#chart-${this.chartId}`)
       .append('svg')
       .attr('width', canvasWidth)
       .attr('height', canvasHeight)
@@ -76,7 +102,7 @@ export class DotsChart2D extends React.Component<ChartPropsType> {
 
     svg
       .append('text')
-      .attr('transform', `translate(${width / 2}, ${height + 40})`)
+      .attr('transform', `translate(${width / 2}, ${height + 35})`)
       .attr('font-size', '1.5em')
       .style('text-anchor', 'middle')
       .style('fill', '#000')
@@ -110,11 +136,23 @@ export class DotsChart2D extends React.Component<ChartPropsType> {
           .tickFormat(''),
       )
 
-    const circleOver = () =>
+    const circleOver = (xAxisValueType, chartId) =>
       function _circleOver(dataPoint) {
-        var xValue = dataPoint.values.filter(
-          v => v.metricName === xValueName,
-        )[0].value
+        let xValue = 0
+        switch (xAxisValueType) {
+          case AXIS_TYPE.PARAMETER:
+            xValue = dataPoint.assignments.filter(
+              v => v.parameterName === xValueName,
+            )[0].value
+            break
+          case AXIS_TYPE.METRIC:
+          default:
+            xValue = dataPoint.values.filter(
+              v => v.metricName === xValueName,
+            )[0].value
+            break
+        }
+
         var yValue = dataPoint.values.filter(
           v => v.metricName === yValueName,
         )[0].value
@@ -129,7 +167,7 @@ export class DotsChart2D extends React.Component<ChartPropsType> {
           .attr('r', 6)
 
         const popup = d3
-          .select('#popup')
+          .select(`#popup-${chartId}`)
           .attr('transform', `translate(${xPos}, ${yPos})`)
           .classed(style.hidden, false)
           .classed(style.fadeIn, true)
@@ -154,7 +192,7 @@ export class DotsChart2D extends React.Component<ChartPropsType> {
           .text(`${yValueName}: ${yValue}`)
       }
 
-    const circleOut = activeTrial =>
+    const circleOut = (activeTrial, chartId) =>
       function _circleOut(dataPoint) {
         d3.select(this)
           .classed(style.active, false)
@@ -162,7 +200,7 @@ export class DotsChart2D extends React.Component<ChartPropsType> {
             'r',
             activeTrial && dataPoint.index === activeTrial.index ? 6 : 3,
           )
-        d3.select('#popup')
+        d3.select(`#popup-${chartId}`)
           .classed(style.hidden, true)
           .classed(style.fadeIn, false)
       }
@@ -181,11 +219,26 @@ export class DotsChart2D extends React.Component<ChartPropsType> {
       .enter()
       .append('g')
       .attr('transform', d => {
-        const [cost, duration] = d.values.reduce((acc, v) => {
-          if (v.metricName === xValueName) acc[0] = v
-          if (v.metricName === yValueName) acc[1] = v
+        const duration = d.values.reduce((acc, v) => {
+          if (v.metricName === yValueName) acc = v
           return acc
-        }, [])
+        }, 0)
+        let cost = {value: 0}
+        switch (this.props.xAxisValueType) {
+          case AXIS_TYPE.PARAMETER:
+            cost = d.assignments.reduce((acc, v) => {
+              if (v.parameterName === xValueName) acc = v
+              return acc
+            }, 0)
+            break
+          case AXIS_TYPE.METRIC:
+          default:
+            cost = d.values.reduce((acc, v) => {
+              if (v.metricName === xValueName) acc = v
+              return acc
+            }, 0)
+            break
+        }
         return `translate(${xScale(cost.value)}, ${yScale(duration.value)})`
       })
       .append('circle')
@@ -206,13 +259,13 @@ export class DotsChart2D extends React.Component<ChartPropsType> {
         style.selected,
         d => this.props.activeTrial && d.index === this.props.activeTrial.index,
       )
-      .on('mouseover', circleOver())
-      .on('mouseout', circleOut(this.props.activeTrial))
+      .on('mouseover', circleOver(this.props.xAxisValueType, this.chartId))
+      .on('mouseout', circleOut(this.props.activeTrial, this.chartId))
       .on('click', circleClick(this.props.selectTrialHandler))
 
     svg
       .append('g')
-      .attr('id', 'popup')
+      .attr('id', `popup-${this.chartId}`)
       .attr('class', style.popup)
       .classed(style.hidden, true)
       .append('rect')
@@ -234,7 +287,7 @@ export class DotsChart2D extends React.Component<ChartPropsType> {
   render() {
     return (
       <div className={style.trials}>
-        <div id="chart" />
+        <div id={`chart-${this.chartId}`} />
         <div className={style.svgFillter}>
           <svg>
             <filter id="dropshadow" height="130%">

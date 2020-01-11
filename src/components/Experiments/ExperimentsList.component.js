@@ -41,6 +41,8 @@ export const ExperimentsList = (props: Props) => {
       activeExperiment: {
         ...activeExperiment,
         index,
+        isLoading: true,
+        metricParameterChart: null,
       },
       trials: null,
       activeTrial: null,
