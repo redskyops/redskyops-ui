@@ -147,11 +147,12 @@ describe('Service: ExperimentsService', () => {
       expect(typeof result[1]).toBe('function')
     })
 
-    it('should successfully get trials', async () => {
+    it('should successfully post labels', async () => {
       http.post.mockImplementationOnce(() => {
         return [
           () =>
             Promise.resolve({
+              status: 201,
               json: () =>
                 Promise.resolve({
                   labels: {test: 'true'},
@@ -172,7 +173,7 @@ describe('Service: ExperimentsService', () => {
       expect(http.post.mock.calls[0][0]).toMatchObject({
         url: '/api/experiments/postgres-experiment/trials/4/labels',
       })
-      expect(expData).toMatchObject({labels: {test: 'true'}})
+      expect(expData).toBe(true)
     })
 
     it('should throw error if response undefined', async () => {

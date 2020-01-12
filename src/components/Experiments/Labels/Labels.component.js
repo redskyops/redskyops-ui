@@ -41,13 +41,13 @@ export const Labels = (props: Props) => {
       : null
   /* eslint-enable indent */
 
-  const postLabelSuccess = res => {
+  const postLabelSuccess = () => {
     const trialIndex = trials.findIndex(t => t.number === trial.number)
     const trialWithNewLables = {
       ...trials[trialIndex],
       labels: {
         ...trials[trialIndex].labels,
-        ...res.labels,
+        [labels.newLabel.trim().toLowerCase()]: DEFAULT_LABEL_VALUE,
       },
     }
     const updatedTrials = [...trials]

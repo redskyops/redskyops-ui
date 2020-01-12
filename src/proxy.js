@@ -82,10 +82,10 @@ const proxyRequest = (req, res) => {
       res.send({error: 'Token expired, restart development proxy'})
       return
     }
-    if (!error && response.statusCode === 200) {
-      res.send(body)
-      return
-    }
+    // if (!error && response.statusCode === 200) {
+    //   res.send(body)
+    //   return
+    // }
 
     res.status(response.statusCode)
     res.send(body)
