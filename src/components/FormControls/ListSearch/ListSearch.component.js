@@ -57,7 +57,7 @@ export const ListSearch = (props: Props) => {
     clearTimeout(blurInterval)
     blurInterval = setTimeout(() => {
       closeMenu()
-    }, 100)
+    }, 200)
   }
 
   const handelClick = e => {

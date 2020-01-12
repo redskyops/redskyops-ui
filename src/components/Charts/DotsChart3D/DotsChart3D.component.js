@@ -374,6 +374,10 @@ export class DotsChart3D extends React.Component<ChartPropsType> {
       })
       return
     }
+    console.log(this.props.trials === prevProps.trials)
+    if (prevProps.trials === this.props.trials) {
+      return
+    }
     this.clearChart()
     this.setScales()
     this.initThree()

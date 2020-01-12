@@ -223,6 +223,70 @@ describe('ListSearch component', () => {
     wrapper.unmount()
   })
 
+  it('should right css class on selected item', () => {
+    const event = {
+      preventDefault: () => {},
+      nativeEvent: {
+        stopImmediatePropagation: () => {},
+      },
+    }
+    wrapper = mount(<ListSearch {...props} value={3} />)
+    wrapper
+      .find('button.icon')
+      .first()
+      .simulate('click', event)
+    const menuItems = wrapper.find('button.item')
+    expect(menuItems.at(2).hasClass('selected')).toBe(true)
+    wrapper.unmount()
+  })
+
+  it('should set max limit while navigating with arrows', () => {
+    const event = {
+      preventDefault: () => {},
+      nativeEvent: {
+        stopImmediatePropagation: () => {},
+      },
+    }
+    wrapper = mount(<ListSearch {...props} value={3} />)
+    wrapper
+      .find('button.icon')
+      .first()
+      .simulate('click', event)
+    const menuItems = wrapper.find('button.item')
+    expect(menuItems).toHaveLength(3)
+
+    const input = wrapper.find('input[type="text"]')
+    input.simulate('keyUp', {key: 'ArrowDown'})
+    expect(
+      wrapper
+        .find('button.item')
+        .at(0)
+        .hasClass('active'),
+    ).toBe(true)
+    input.simulate('keyUp', {key: 'ArrowDown'})
+    expect(
+      wrapper
+        .find('button.item')
+        .at(1)
+        .hasClass('active'),
+    ).toBe(true)
+    input.simulate('keyUp', {key: 'ArrowDown'})
+    expect(
+      wrapper
+        .find('button.item')
+        .at(2)
+        .hasClass('active'),
+    ).toBe(true)
+    input.simulate('keyUp', {key: 'ArrowDown'})
+    expect(
+      wrapper
+        .find('button.item')
+        .at(2)
+        .hasClass('active'),
+    ).toBe(true)
+    wrapper.unmount()
+  })
+
   it('should add label div to show selected item', () => {
     wrapper = mount(<ListSearch {...props} value="three" />)
     expect(wrapper.find('[data-dom-id="label"]')).toHaveLength(1)
@@ -302,6 +366,173 @@ describe('ListSearch component', () => {
         .at(0)
         .text(),
     ).toBe('two')
+    wrapper.unmount()
+  })
+
+  it('should do nothing if menu is open and button clicked', () => {
+    const event = {
+      preventDefault: () => {},
+      nativeEvent: {
+        stopImmediatePropagation: () => {},
+      },
+    }
+    wrapper = mount(<ListSearch {...props} />)
+    wrapper
+      .find('button.icon')
+      .first()
+      .simulate('click', event)
+    const menuItems = wrapper.find('button.item')
+    expect(menuItems).toHaveLength(3)
+
+    wrapper
+      .find('button.icon')
+      .first()
+      .simulate('click', event)
+    expect(wrapper.find('button.item')).toHaveLength(3)
+
+    wrapper.unmount()
+  })
+
+  it('should not close menu if user click element inside it', done => {
+    const eventsMap = {}
+    const docAddEventSpy = jest.spyOn(document, 'addEventListener')
+    docAddEventSpy.mockImplementation((event, callback) => {
+      eventsMap[event] = callback
+    })
+    const clickEvent = {
+      preventDefault: () => {},
+      nativeEvent: {
+        stopImmediatePropagation: () => {},
+      },
+    }
+
+    wrapper = mount(<ListSearch {...props} />)
+    const containsSpy = jest
+      .spyOn(
+        wrapper
+          .find('div')
+          .first()
+          .getDOMNode(),
+        'contains',
+      )
+      .mockReturnValue(true)
+    wrapper
+      .find('button.icon')
+      .first()
+      .simulate('click', clickEvent)
+
+    expect(wrapper.find('button.item')).toHaveLength(3)
+
+    act(() => {
+      eventsMap.click({target: null})
+
+      setImmediate(() => {
+        wrapper.update()
+        expect(wrapper.find('button.item')).toHaveLength(3)
+
+        docAddEventSpy.mockRestore()
+        containsSpy.mockRestore()
+        wrapper.unmount()
+        done()
+      })
+    })
+  })
+
+  it('close menu if user click outside component', done => {
+    const eventsMap = {}
+    const docAddEventSpy = jest.spyOn(document, 'addEventListener')
+    docAddEventSpy.mockImplementation((event, callback) => {
+      eventsMap[event] = callback
+    })
+    const clickEvent = {
+      preventDefault: () => {},
+      nativeEvent: {
+        stopImmediatePropagation: () => {},
+      },
+    }
+    wrapper = mount(<ListSearch {...props} />)
+    wrapper
+      .find('button.icon')
+      .first()
+      .simulate('click', clickEvent)
+    expect(wrapper.find('.list')).toHaveLength(1)
+
+    const containsSpy = jest
+      .spyOn(
+        wrapper
+          .find('div')
+          .first()
+          .getDOMNode(),
+        'contains',
+      )
+      .mockReturnValue(false)
+    act(() => {
+      eventsMap.click({target: null})
+
+      setImmediate(() => {
+        wrapper.update()
+        expect(wrapper.find('.list')).toHaveLength(0)
+
+        docAddEventSpy.mockRestore()
+        containsSpy.mockRestore()
+        wrapper.unmount()
+        done()
+      })
+    })
+  })
+
+  it('should do nothing if key pressed and menu is closed', () => {
+    wrapper = mount(<ListSearch {...props} />)
+    const keyEvent = {
+      key: 'Enter',
+      preventDefault: () => {},
+    }
+    wrapper.find('input[type="text"]').simulate('keyup', keyEvent)
+    expect(props.onSelect).toHaveBeenCalledTimes(0)
+    wrapper.unmount()
+  })
+
+  it('should render ListSearch with default props values', () => {
+    const localProps = {...props}
+    delete localProps.value
+    delete localProps.onSelect
+    wrapper = mount(<ListSearch {...localProps} />)
+    expect(wrapper.find('[data-dom-id="label"]').text()).toBe('')
+    wrapper.unmount()
+  })
+
+  it('should scroll menu item into view if navigated by keys', () => {
+    const scrollIntoView = jest.fn()
+    const querySelectorSpy = jest.spyOn(document, 'querySelector')
+    querySelectorSpy.mockImplementation(() => ({
+      scrollIntoView,
+    }))
+    const event = {
+      preventDefault: () => {},
+      nativeEvent: {
+        stopImmediatePropagation: () => {},
+      },
+    }
+    wrapper = mount(<ListSearch {...props} value={3} />)
+    wrapper
+      .find('button.icon')
+      .first()
+      .simulate('click', event)
+    const menuItems = wrapper.find('button.item')
+    expect(menuItems).toHaveLength(3)
+
+    const input = wrapper.find('input[type="text"]')
+    input.simulate('keyUp', {key: 'ArrowDown'})
+    expect(
+      wrapper
+        .find('button.item')
+        .at(0)
+        .hasClass('active'),
+    ).toBe(true)
+
+    expect(scrollIntoView).toHaveBeenCalledTimes(1)
+
+    querySelectorSpy.mockRestore()
     wrapper.unmount()
   })
 })

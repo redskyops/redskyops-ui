@@ -4,7 +4,7 @@ import * as d3 from 'd3'
 import {ChartPropsType} from '../ChartProps.type'
 import style from '../Charts.module.scss'
 
-export class DotsChart2D extends React.Component<ChartPropsType> {
+export class DotsChart1D extends React.Component<ChartPropsType> {
   buildChart() {
     const canvasWidth = 1024
     const canvasHeight = 100
@@ -210,4 +210,4 @@ export class DotsChart2D extends React.Component<ChartPropsType> {
   }
 }
 
-export default DotsChart2D
+export default DotsChart1D

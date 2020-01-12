@@ -60,7 +60,7 @@ export class ExperimentsService {
 
   postLabelToTrialFactory({experimentId, trialId, labels}) {
     const [request, abort] = this.http.post({
-      url: `${this.url}/${experimentId}/trials/${trialId}/labels/`,
+      url: `${this.url}/${experimentId}/trials/${trialId}/labels`,
       body: {labels},
     })
     const postLabel = () =>
