@@ -170,7 +170,7 @@ describe('Service: ExperimentsService', () => {
       const expData = await request()
       expect(http.post).toHaveBeenCalledTimes(1)
       expect(http.post.mock.calls[0][0]).toMatchObject({
-        url: '/api/experiments/postgres-experiment/trials/4/labels/',
+        url: '/api/experiments/postgres-experiment/trials/4/labels',
       })
       expect(expData).toMatchObject({labels: {test: 'true'}})
     })

@@ -46,26 +46,37 @@ const proxyRequest = (req, res) => {
   )
   url += queryStr.length > 0 ? `?${queryStr.join('&')}` : ''
 
-  // mocking response for posting label while implemteing it in server api
-  if (req.method === 'POST' && /\/labels\/?$/.test(url)) {
-    res.status(201)
-    res.json(req.body)
-    return
-  }
+  const newHeaders = {...req.headers}
+  delete newHeaders.Authorization
+  delete newHeaders.authorization
+  delete newHeaders['content-length']
+  delete newHeaders['host']
 
   const options = {
     url: `${REDSKY_ADDRESS}${url.replace(/\/\//g, '/')}`,
+    method: req.method,
+    json: true,
+    ...(['POST', 'PATCH', 'PUT'].indexOf(req.method) > -1
+      ? {body: req.body}
+      : null),
     headers: {
+      ...newHeaders,
       Authorization: `${tokenType} ${token}`,
     },
   }
 
-  console.log(`[PROXY] Requesting ${url}`)
+  console.log(`[PROXY] Requesting ${req.method} ${url}`)
   request(options, function(error, response, body) {
-    console.log(`[PROXY] ${response.statusCode} ${url}`)
     if (error) {
-      console.log('[PROXY:ERROR]', response.statusCode, error)
+      console.log('[PROXY:ERROR]', error)
     }
+    if (!response) {
+      console.log('[PROXY:ERROR]', 'Error in backend')
+      res.status(400)
+      res.send({error: 'Error in response'})
+      return
+    }
+    console.log(`[PROXY] ${response.statusCode} ${url}`)
     if (response.statusCode === 401) {
       res.status(401)
       res.send({error: 'Token expired, restart development proxy'})
