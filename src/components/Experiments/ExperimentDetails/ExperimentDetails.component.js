@@ -111,7 +111,16 @@ export const ExperimentDetails = (props: Props) => {
     })
   }
 
-  const onMetricChange = ({item}) => {
+  const onMetricChange = ({item} = {}) => {
+    if (!item) {
+      updateState({
+        activeExperiment: {
+          ...activeExperiment,
+          metricParameterChart: null,
+        },
+      })
+      return
+    }
     updateState({
       activeExperiment: {
         ...activeExperiment,
@@ -125,7 +134,16 @@ export const ExperimentDetails = (props: Props) => {
     })
   }
 
-  const onParameterChange = ({item}) => {
+  const onParameterChange = ({item} = {}) => {
+    if (!item) {
+      updateState({
+        activeExperiment: {
+          ...activeExperiment,
+          metricParameterChart: null,
+        },
+      })
+      return
+    }
     updateState({
       activeExperiment: {
         ...activeExperiment,

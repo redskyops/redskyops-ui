@@ -23,6 +23,7 @@ type Props = {
 export const MetricParameterChart = (props: Props) => {
   return (
     <div className={style.chart}>
+      <h2 className={style.title}>Metirc / Parameter Chart</h2>
       <div className={style.optionsRow}>
         <div className={style.dropdown}>
           <strong>Metric: </strong>
@@ -40,16 +41,31 @@ export const MetricParameterChart = (props: Props) => {
             onSelect={props.onParameterChange}
           />
         </div>
+        {props.metric && props.parameter && (
+          <div className={style.dropdown}>
+            <button
+              className={style.button}
+              onClick={() => {
+                props.onMetricChange()
+                props.onParameterChange()
+              }}
+            >
+              Clear
+            </button>
+          </div>
+        )}
       </div>
-      <DotsChart2D
-        trials={props.trials}
-        xAxisValueType={AXIS_TYPE.PARAMETER}
-        xAxisMetricName={props.parameter}
-        yAxisMetricName={props.metric}
-        selectTrialHandler={props.selectTrialHandler}
-        activeTrial={props.activeTrial}
-        labelsFilter={props.labelsFilter}
-      />
+      {props.metric && props.parameter && (
+        <DotsChart2D
+          trials={props.trials}
+          xAxisValueType={AXIS_TYPE.PARAMETER}
+          xAxisMetricName={props.parameter}
+          yAxisMetricName={props.metric}
+          selectTrialHandler={props.selectTrialHandler}
+          activeTrial={props.activeTrial}
+          labelsFilter={props.labelsFilter}
+        />
+      )}
     </div>
   )
 }

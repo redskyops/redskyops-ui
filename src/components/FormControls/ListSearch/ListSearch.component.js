@@ -123,15 +123,15 @@ export const ListSearch = (props: Props) => {
     if (targetItem) targetItem.scrollIntoView()
   }
 
-  useEffect(
-    () => () => {
+  useEffect(() => {
+    setSelectedIndex(initialIndex)
+    return () => {
       // eslint-disable-next-line
       clearTimeout(blurInterval)
       // eslint-disable-next-line
       document.removeEventListener('click', documentClick)
-    },
-    [],
-  )
+    }
+  }, [value])
 
   let textToShow = selectedIndex >= 0 ? itemsList[selectedIndex].label : value
   if (isOpen) {
