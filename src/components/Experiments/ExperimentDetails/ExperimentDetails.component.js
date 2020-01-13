@@ -202,6 +202,7 @@ export const ExperimentDetails = (props: Props) => {
               ? metricParameterChart.parameter
               : null
           }
+          labelsFilter={experiments.labelsFilter}
           onMetricChange={onMetricChange}
           onParameterChange={onParameterChange}
           selectTrialHandler={selectTrial}

@@ -14,6 +14,7 @@ type Props = {
   metric: string,
   parameter: string,
   activeTrial: TypeActiveTrial,
+  labelsFilter: Array<string>,
   onMetricChange: () => {},
   onParameterChange: () => {},
   selectTrialHandler: () => {},
@@ -47,6 +48,7 @@ export const MetricParameterChart = (props: Props) => {
         yAxisMetricName={props.metric}
         selectTrialHandler={props.selectTrialHandler}
         activeTrial={props.activeTrial}
+        labelsFilter={props.labelsFilter}
       />
     </div>
   )
