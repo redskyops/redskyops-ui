@@ -94,6 +94,7 @@ describe('Component: ExperimentsDetails', () => {
     expect(trialsProps).toHaveProperty('trials', localProps.trials)
     expect(trialsProps).toHaveProperty('xAxisMetricName', 'cost')
     expect(trialsProps).toHaveProperty('yAxisMetricName', 'duration')
+    expect(trialsProps).toHaveProperty('xAxisMinValue', 0)
     expect(typeof trialsProps.selectTrialHandler).toBe('function')
     wrapper.unmount()
   })

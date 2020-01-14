@@ -194,6 +194,7 @@ export const ExperimentDetails = (props: Props) => {
       numOfMertics: experiment.metrics.length,
       labelsFilter: experiments.labelsFilter,
       xAxisMetricName: experiment.metrics[0].name,
+      xAxisMinValue: 0,
       ...(experiment.metrics[1] && {
         yAxisMetricName: experiment.metrics[1].name,
       }),

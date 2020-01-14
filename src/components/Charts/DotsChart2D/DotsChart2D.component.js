@@ -12,7 +12,7 @@ export const AXIS_TYPE = {
 type AxisType = AXIS_TYPE.METIC | AXIS_TYPE.PARAMETER
 
 export class DotsChart2D extends React.Component<
-  ChartPropsType & {xAxisValueType: AxisType},
+  ChartPropsType & {xAxisValueType: AxisType, xAxisMinValue: number},
 > {
   constructor(props) {
     super(props)
@@ -47,7 +47,7 @@ export class DotsChart2D extends React.Component<
         this.props.labelsFilter.reduce((acc, l) => acc || l in labels, false),
     )
 
-    const maxCost = d3.max(
+    const [minCost, maxCost] = d3.extent(
       completedTrials.map(v => {
         switch (this.props.xAxisValueType) {
           case AXIS_TYPE.PARAMETER:
@@ -65,9 +65,12 @@ export class DotsChart2D extends React.Component<
       }),
     )
 
+    const minXValue = (min => (!isNaN(min) ? min : minCost))(
+      parseInt(this.props.xAxisMinValue, 10),
+    )
     const xScale = d3
       .scaleLinear()
-      .domain([0, maxCost])
+      .domain([minXValue, maxCost])
       .range([0, width])
 
     const yScale = d3
