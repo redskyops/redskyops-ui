@@ -21,6 +21,12 @@ export class DotsChart1D extends React.Component<ChartPropsType> {
       .map((t, index) => ({...t, index}))
       .filter(t => t.status === 'completed')
 
+    const filteredTrials = completedTrials.filter(
+      ({labels}) =>
+        this.props.labelsFilter.length === 0 ||
+        this.props.labelsFilter.reduce((acc, l) => acc || l in labels, false),
+    )
+
     const maxCost = d3.max(
       completedTrials.map(
         v => v.values.filter(c => c.metricName === xValueName)[0].value,
@@ -127,7 +133,7 @@ export class DotsChart1D extends React.Component<ChartPropsType> {
 
     svg
       .selectAll('g.point')
-      .data(completedTrials)
+      .data(filteredTrials)
       .enter()
       .append('g')
       .attr('transform', d => {

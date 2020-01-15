@@ -107,4 +107,18 @@ describe('Hook: useApiCallEffect', () => {
     await wrapper.update()
     expect(request).toHaveBeenCalledTimes(2)
   })
+
+  it('should not require error hanlder function', async () => {
+    request.mockImplementationOnce(() =>
+      Promise.reject(new Error('test_message')),
+    )
+    // eslint-disable-next-line react/prop-types
+    const TestComponent = () => {
+      useApiCallEffect(requestFactory, successHandler, null)
+      return <div id="test" />
+    }
+    await mount(<TestComponent />)
+    expect(request).toHaveBeenCalledTimes(1)
+    expect(successHandler).toHaveBeenCalledTimes(0)
+  })
 })

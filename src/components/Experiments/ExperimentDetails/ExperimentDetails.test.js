@@ -10,7 +10,9 @@ jest.mock('../../../services/ExperimentsService', () =>
   jest.requireActual('../../../services/__mocks__/ExperimentsService'),
 )
 
-jest.mock('../Trials/Trials.component.js')
+jest.mock('../Trials/Trials.component')
+jest.mock('../MetricParameterChart/MetricParameterChart.component')
+jest.mock('../Labels/Labels.component')
 
 describe('Component: ExperimentsDetails', () => {
   const expService = new ExperimentsService()
@@ -21,6 +23,7 @@ describe('Component: ExperimentsDetails', () => {
     },
     experiments: {
       list: expService.addIdsToExperments(expStub).experiments,
+      labelsFilter: [],
     },
     trials: trialsStub.trials,
     activeTrial: null,
@@ -91,6 +94,7 @@ describe('Component: ExperimentsDetails', () => {
     expect(trialsProps).toHaveProperty('trials', localProps.trials)
     expect(trialsProps).toHaveProperty('xAxisMetricName', 'cost')
     expect(trialsProps).toHaveProperty('yAxisMetricName', 'duration')
+    expect(trialsProps).toHaveProperty('xAxisMinValue', 0)
     expect(typeof trialsProps.selectTrialHandler).toBe('function')
     wrapper.unmount()
   })
@@ -372,5 +376,180 @@ describe('Component: ExperimentsDetails', () => {
     expect(wrapper.find('Trials')).toHaveLength(1)
     expect(wrapper.find('Trials').prop('zAxisMetricName')).toBeTruthy()
     wrapper.unmount()
+  })
+
+  it('should render list of available labels', async () => {
+    expService.getTrialsFactory.mockImplementationOnce(() => [
+      () => Promise.resolve(trialsStub),
+      () => {},
+    ])
+    const localProps = {
+      ...props,
+      trials: [...props.trials],
+    }
+    localProps.trials[4] = {
+      ...localProps.trials[4],
+      labels: {test_label: 'true'},
+    }
+    wrapper = await mount(<ExperimentDetails {...localProps} />)
+    const labelsBtns = wrapper.find('button[data-dome-id="exp-details-label"]')
+    expect(labelsBtns).toHaveLength(2)
+    expect(labelsBtns.first().text()).toContain('test_label')
+    expect(labelsBtns.last().text()).toContain('best')
+  })
+
+  it('should render label checked if selected', async () => {
+    expService.getTrialsFactory.mockImplementationOnce(() => [
+      () => Promise.resolve(trialsStub),
+      () => {},
+    ])
+    const localProps = {
+      ...props,
+      trials: [...props.trials],
+      experiments: {
+        ...props.experiments,
+        labelsFilter: ['test_label'],
+      },
+    }
+    localProps.trials[4] = {
+      ...localProps.trials[4],
+      labels: {test_label: 'true'},
+    }
+    wrapper = await mount(<ExperimentDetails {...localProps} />)
+    const labelsBtns = wrapper.find('button[data-dome-id="exp-details-label"]')
+    expect(labelsBtns).toHaveLength(2)
+    expect(labelsBtns.first().text()).toContain('check_box')
+    expect(labelsBtns.first().text()).not.toContain('check_box_outline_blank')
+    expect(labelsBtns.last().text()).toContain('check_box_outline_blank')
+  })
+
+  it('should update state on label click and add filter', async () => {
+    expService.getTrialsFactory.mockImplementationOnce(() => [
+      () => Promise.resolve(trialsStub),
+      () => {},
+    ])
+    const localProps = {
+      ...props,
+      trials: [...props.trials],
+      experiments: {
+        ...props.experiments,
+      },
+    }
+    localProps.trials[4] = {
+      ...localProps.trials[4],
+      labels: {test_label: 'true'},
+    }
+    wrapper = await mount(<ExperimentDetails {...localProps} />)
+    const labelsBtns = wrapper.find('button[data-dome-id="exp-details-label"]')
+    expect(labelsBtns).toHaveLength(2)
+    labelsBtns.first().simulate('click', {preventDefault: () => {}})
+    expect(props.updateState).toHaveBeenCalledTimes(1)
+    expect(props.updateState.mock.calls[0][0]).toMatchObject({
+      experiments: {
+        ...props.experiments,
+        labelsFilter: ['test_label'],
+      },
+    })
+  })
+
+  it('should update state on label click and remove filter', async () => {
+    expService.getTrialsFactory.mockImplementationOnce(() => [
+      () => Promise.resolve(trialsStub),
+      () => {},
+    ])
+    const localProps = {
+      ...props,
+      trials: [...props.trials],
+      experiments: {
+        ...props.experiments,
+        labelsFilter: ['test_label'],
+      },
+    }
+    localProps.trials[4] = {
+      ...localProps.trials[4],
+      labels: {test_label: 'true'},
+    }
+    wrapper = await mount(<ExperimentDetails {...localProps} />)
+    const labelsBtns = wrapper.find('button[data-dome-id="exp-details-label"]')
+
+    labelsBtns.first().simulate('click', {preventDefault: () => {}})
+    expect(props.updateState).toHaveBeenCalledTimes(1)
+    expect(props.updateState.mock.calls[0][0]).toMatchObject({
+      experiments: {
+        ...props.experiments,
+        labelsFilter: [],
+      },
+    })
+  })
+
+  it('should render show all button if any filter is active', async () => {
+    expService.getTrialsFactory.mockImplementationOnce(() => [
+      () => Promise.resolve(trialsStub),
+      () => {},
+    ])
+    const localProps = {
+      ...props,
+      trials: [...props.trials],
+      experiments: {
+        ...props.experiments,
+        labelsFilter: ['test_label'],
+      },
+    }
+    localProps.trials[4] = {
+      ...localProps.trials[4],
+      labels: {test_label: 'true'},
+    }
+    wrapper = await mount(<ExperimentDetails {...localProps} />)
+    const showAll = wrapper.find('button[data-dome-id="exp-details-show-all"]')
+    expect(showAll).toHaveLength(1)
+  })
+
+  it('should update state and clear labels filters when show all clicked', async () => {
+    expService.getTrialsFactory.mockImplementationOnce(() => [
+      () => Promise.resolve(trialsStub),
+      () => {},
+    ])
+    const localProps = {
+      ...props,
+      trials: [...props.trials],
+      experiments: {
+        ...props.experiments,
+        labelsFilter: ['test_label'],
+      },
+    }
+    localProps.trials[4] = {
+      ...localProps.trials[4],
+      labels: {test_label: 'true'},
+    }
+    wrapper = await mount(<ExperimentDetails {...localProps} />)
+    const showAll = wrapper.find('button[data-dome-id="exp-details-show-all"]')
+    showAll.simulate('click', {preventDefault: () => {}})
+    expect(props.updateState.mock.calls[0][0]).toMatchObject({
+      experiments: {
+        ...props.experiments,
+        labelsFilter: [],
+      },
+    })
+  })
+
+  it('should pass labels filter to Trial component', async () => {
+    expService.getTrialsFactory.mockImplementationOnce(() => [
+      () => Promise.resolve(trialsStub),
+      () => {},
+    ])
+    const localProps = {
+      ...props,
+      trials: [...props.trials],
+      experiments: {
+        ...props.experiments,
+        labelsFilter: ['test_label'],
+      },
+    }
+
+    wrapper = await mount(<ExperimentDetails {...localProps} />)
+    expect(wrapper.find('Trials').props()).toHaveProperty(
+      'labelsFilter',
+      localProps.experiments.labelsFilter,
+    )
   })
 })

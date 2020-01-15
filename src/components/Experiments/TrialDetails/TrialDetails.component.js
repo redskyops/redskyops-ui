@@ -2,15 +2,18 @@ import React from 'react'
 
 import style from './TrialDetails.module.scss'
 import RangeIndicator from '../RangIndicator/RangeIndicator.component'
+import Labels from '../Labels/Labels.component'
 
 type Props = {
   trial?: Object,
+  experimentId: string,
   parameters?: Array<Object>,
   closeHandler: () => any,
 }
 
 export const TrialDetails = (props: Props) => {
-  const {trial, parameters = [], closeHandler} = props
+  const {trial, parameters = [], closeHandler, experimentId} = props
+
   if (!trial) {
     return null
   }
@@ -38,7 +41,7 @@ export const TrialDetails = (props: Props) => {
             <RangeIndicator
               {...parametersMap[para.parameterName].bounds}
               value={para.value}
-              {...(isBest ? {indecatorClass: style.indicatorPink} : null)}
+              {...(isBest ? {indicatorClass: style.indicatorPink} : null)}
             />
           )}
         </div>
@@ -55,6 +58,12 @@ export const TrialDetails = (props: Props) => {
       >
         <span className="material-icons">close</span>
       </button>
+
+      <h3 className={style.h3}>Labels</h3>
+      <div className={style.labels}>
+        <Labels trial={trial} experimentId={experimentId} />
+      </div>
+
       <h3 className={style.h3}>
         Values
         {isBest && (

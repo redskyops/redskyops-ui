@@ -105,8 +105,10 @@ describe('Component: MetricParameterChart', () => {
     wrapper.unmount()
   })
 
-  it('should render DotsChart2D', () => {
+  it('should render DotsChart2D only if metric and parameter props are set', () => {
     wrapper = shallow(<MetricParameterChart {...props} />)
+    expect(wrapper.find('DotsChart2D')).toHaveLength(0)
+    wrapper.setProps({metric: 'cost', parameter: 'cpu'})
     expect(wrapper.find('DotsChart2D')).toHaveLength(1)
     wrapper.unmount()
   })

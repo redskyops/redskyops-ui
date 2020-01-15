@@ -17,6 +17,7 @@ export class ExperimentsService {
           }),
         }
       })
+      this.postLabelToTrialFactory = jest.fn()
       instance = this
     }
     return instance

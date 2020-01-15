@@ -12,7 +12,7 @@ export const AXIS_TYPE = {
 type AxisType = AXIS_TYPE.METIC | AXIS_TYPE.PARAMETER
 
 export class DotsChart2D extends React.Component<
-  ChartPropsType & {xAxisValueType: AxisType},
+  ChartPropsType & {xAxisValueType: AxisType, xAxisMinValue: number},
 > {
   constructor(props) {
     super(props)
@@ -41,7 +41,13 @@ export class DotsChart2D extends React.Component<
       .map((t, index) => ({...t, index}))
       .filter(t => t.status === 'completed')
 
-    const maxCost = d3.max(
+    const filteredTrials = completedTrials.filter(
+      ({labels}) =>
+        this.props.labelsFilter.length === 0 ||
+        this.props.labelsFilter.reduce((acc, l) => acc || l in labels, false),
+    )
+
+    const [minCost, maxCost] = d3.extent(
       completedTrials.map(v => {
         switch (this.props.xAxisValueType) {
           case AXIS_TYPE.PARAMETER:
@@ -59,9 +65,12 @@ export class DotsChart2D extends React.Component<
       }),
     )
 
+    const minXValue = (min => (!isNaN(min) ? min : minCost))(
+      parseInt(this.props.xAxisMinValue, 10),
+    )
     const xScale = d3
       .scaleLinear()
-      .domain([0, maxCost])
+      .domain([minXValue, maxCost])
       .range([0, width])
 
     const yScale = d3
@@ -215,7 +224,7 @@ export class DotsChart2D extends React.Component<
 
     svg
       .selectAll('g.point')
-      .data(completedTrials)
+      .data(filteredTrials)
       .enter()
       .append('g')
       .attr('transform', d => {

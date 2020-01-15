@@ -5,6 +5,7 @@
   color: $cr-navy;
   display: block;
   padding: $size-6x;
+  padding-bottom: 200px;
 }
 
 .h1 {
@@ -12,6 +13,32 @@
   margin-bottom: $size-4x;
 }
 
+.h2 {
+  font-size: 16px;
+  margin-bottom: $size-2x;
+}
+
 .status {
   margin-bottom: $size-4x;
+}
+
+.labelInner {
+  display: flex;
+  flex-direction: row;
+}
+
+.label {
+  align-items: center;
+  background-color: $white;
+  border: 1px solid $gray;
+  border-radius: 20px;
+  display: flex;
+  outline: 0;
+  padding: $size-1x $size-2x;
+  margin: 0 $size-1x $size-2x 0;
+}
+
+.checkbox {
+  font-size: 16px;
+  margin-right: $size-1x;
 }

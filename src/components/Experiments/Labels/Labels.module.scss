@@ -1,0 +1,84 @@
+@import '../../../styles/colors';
+@import '../../../styles/vars';
+
+.labels {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.section {
+  flex: 1;
+  padding: 0 $size-2x;
+
+  &:first-child {
+    padding-left: 0;
+  }
+
+  &:last-child {
+    flex: 0;
+    width: 200px;
+  }
+}
+
+.h4 {
+  margin-bottom: $size-2x;
+}
+
+.labelInput {
+  background-color: $white;
+  border: 0;
+  outline: 0;
+  padding: $size-1x $size-2x;
+}
+
+.list {
+  margin-bottom: $size-2x;
+}
+
+.label {
+  align-items: center;
+  background-color: $white;
+  border: 1px solid $gray;
+  border-radius: $size-4x / 2;
+  cursor: pointer;
+  display: inline-block;
+  line-height: $size-4x;
+  margin-bottom: $size-1x;
+  margin-right: $size-1x;
+  outline: 0;
+  padding: 0 $size-4x 0 $size-2x;
+  position: relative;
+  width: auto;
+}
+
+.labelAssign {
+  &:hover {
+    border-color: $cr-green;
+    color: $cr-green;
+
+    .labelDel {
+      color: $cr-green;
+    }
+  }
+}
+
+.labelRemove {
+  &:hover {
+    border-color: $cr-pink;
+    color: $cr-pink;
+
+    .labelDel {
+      color: $cr-pink;
+    }
+  }
+}
+
+.labelDel {
+  font-size: 14px;
+  margin-left: $size-1x;
+  position: absolute;
+  right: 5px;
+  top: 50%;
+  transform: translateY(-50%);
+}

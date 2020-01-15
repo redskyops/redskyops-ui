@@ -4,7 +4,14 @@
 .chart {
   background-color: $white;
   margin-top: $size-2x;
+  padding-top: $size-2x;
   width: 1024px;
+}
+
+.title {
+  font-weight: 600;
+  font-size: 18px;
+  padding-left: $size-2x;
 }
 
 .optionsRow {
@@ -22,4 +29,13 @@
   strong {
     margin-right: $size-2x;
   }
+}
+
+.button {
+  border: 0;
+  background-color: $bg-light;
+  border-radius: 14px;
+  cursor: pointer;
+  line-height: 28px;
+  padding: 0 $size-4x;
 }

@@ -88,7 +88,7 @@ describe('Component: TrialDetails', () => {
     wrapper.unmount()
   })
 
-  it('should set right CSS class if trial is optimal', () => {
+  fit('should set right CSS class if trial is optimal', () => {
     const localProps = {
       ...props,
       trial: {
@@ -97,8 +97,9 @@ describe('Component: TrialDetails', () => {
       },
     }
     wrapper = shallow(<TrialDetails {...localProps} />)
+
     wrapper.find('RangeIndicator').forEach(indicator => {
-      expect(indicator.props()).toHaveProperty('indecatorClass')
+      expect(indicator.props()).toHaveProperty('indicatorClass')
     })
     wrapper.unmount()
   })

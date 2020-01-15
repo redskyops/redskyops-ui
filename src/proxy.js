@@ -4,6 +4,7 @@ const express = require('express')
 const request = require('request')
 const app = express()
 const dotenv = require('dotenv')
+const bodyParser = require('body-parser')
 
 dotenv.config()
 
@@ -14,6 +15,8 @@ if (
 ) {
   throw new Error('Proxy cannot run without required environment variables')
 }
+
+app.use(bodyParser.json())
 
 const REDSKY_ADDRESS = process.env.REDSKY_ADDRESS
 const REDSKY_OAUTH2_CLIENT_ID = process.env.REDSKY_OAUTH2_CLIENT_ID
@@ -42,28 +45,47 @@ const proxyRequest = (req, res) => {
     param => `${param}=${req.query[param]}`,
   )
   url += queryStr.length > 0 ? `?${queryStr.join('&')}` : ''
+
+  const newHeaders = {...req.headers}
+  delete newHeaders.Authorization
+  delete newHeaders.authorization
+  delete newHeaders['content-length']
+  delete newHeaders['host']
+
   const options = {
     url: `${REDSKY_ADDRESS}${url.replace(/\/\//g, '/')}`,
+    method: req.method,
+    json: true,
+    ...(['POST', 'PATCH', 'PUT'].indexOf(req.method) > -1
+      ? {body: req.body}
+      : null),
     headers: {
+      ...newHeaders,
       Authorization: `${tokenType} ${token}`,
     },
   }
 
-  console.log(`[PROXY] Requesting ${url}`)
+  console.log(`[PROXY] Requesting ${req.method} ${url}`)
   request(options, function(error, response, body) {
-    console.log(`[PROXY] ${response.statusCode} ${url}`)
     if (error) {
-      console.log('[PROXY:ERROR]', response.statusCode, error)
+      console.log('[PROXY:ERROR]', error)
     }
+    if (!response) {
+      console.log('[PROXY:ERROR]', 'Error in backend')
+      res.status(400)
+      res.send({error: 'Error in response'})
+      return
+    }
+    console.log(`[PROXY] ${response.statusCode} ${url}`)
     if (response.statusCode === 401) {
       res.status(401)
       res.send({error: 'Token expired, restart development proxy'})
       return
     }
-    if (!error && response.statusCode === 200) {
-      res.send(body)
-      return
-    }
+    // if (!error && response.statusCode === 200) {
+    //   res.send(body)
+    //   return
+    // }
 
     res.status(response.statusCode)
     res.send(body)
@@ -71,7 +93,7 @@ const proxyRequest = (req, res) => {
 }
 
 app.use('/api/experiments', proxyRequest)
-app.use('/api/experiments/:name/trials', proxyRequest)
+// app.use('/api/experiments/:name/trials', proxyRequest)
 
 app.listen(8000)
 

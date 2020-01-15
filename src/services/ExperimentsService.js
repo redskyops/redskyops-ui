@@ -57,4 +57,22 @@ export class ExperimentsService {
       })
     return [getTrials, abort]
   }
+
+  postLabelToTrialFactory({experimentId, trialId, labels}) {
+    const [request, abort] = this.http.post({
+      url: `${this.url}/${experimentId}/trials/${trialId}/labels`,
+      body: {labels},
+    })
+    const postLabel = () =>
+      request().then(async response => {
+        if (!response) {
+          throw new Error('Error in ExperimentsService.postLabelToTrialFactory')
+        }
+        if (response.status >= 200 && response.status < 300) {
+          return true
+        }
+        throw new Error('Error creating/deleting label')
+      })
+    return [postLabel, abort]
+  }
 }

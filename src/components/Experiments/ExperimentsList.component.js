@@ -44,6 +44,10 @@ export const ExperimentsList = (props: Props) => {
         isLoading: true,
         metricParameterChart: null,
       },
+      experiments: {
+        ...experiments,
+        labelsFilter: [],
+      },
       trials: null,
       activeTrial: null,
     })

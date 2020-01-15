@@ -17,6 +17,7 @@ export class DotsChart3D extends React.Component<ChartPropsType> {
   width = 1024
   height = 600
   scales = null
+  completedTrials = []
   filteredTrials = []
   font = null
   isDragging = false
@@ -94,7 +95,7 @@ export class DotsChart3D extends React.Component<ChartPropsType> {
 
     if (intersects.length > 0) {
       const selectedObject = intersects[0]
-      const dataPoint = this.filteredTrials.find(
+      const dataPoint = this.completedTrials.find(
         t => t.index === selectedObject.object.dataIndex,
       )
       this.props.selectTrialHandler({
@@ -255,22 +256,28 @@ export class DotsChart3D extends React.Component<ChartPropsType> {
     const yValueName = this.props.yAxisMetricName
     const zValueName = this.props.zAxisMetricName
 
-    this.filteredTrials = this.props.trials
+    this.completedTrials = this.props.trials
       .map((t, index) => ({...t, index}))
       .filter(t => t.status === 'completed')
 
+    this.filteredTrials = this.completedTrials.filter(
+      ({labels}) =>
+        this.props.labelsFilter.length === 0 ||
+        this.props.labelsFilter.reduce((acc, l) => acc || l in labels, false),
+    )
+
     const maxCost = d3.max(
-      this.filteredTrials.map(
+      this.completedTrials.map(
         v => v.values.filter(c => c.metricName === xValueName)[0].value,
       ),
     )
     const [minDuration, maxDuration] = d3.extent(
-      this.filteredTrials.map(v => {
+      this.completedTrials.map(v => {
         return v.values.filter(c => c.metricName === yValueName)[0].value
       }),
     )
     const [minThroughput, maxThroughput] = d3.extent(
-      this.filteredTrials.map(v => {
+      this.completedTrials.map(v => {
         return v.values.filter(c => c.metricName === zValueName)[0].value
       }),
     )
@@ -369,14 +376,15 @@ export class DotsChart3D extends React.Component<ChartPropsType> {
       })
       return
     }
-    console.log(this.props.trials === prevProps.trials)
-    if (prevProps.trials === this.props.trials) {
-      return
+    if (
+      prevProps.trials !== this.props.trials ||
+      prevProps.labelsFilter !== this.props.labelsFilter
+    ) {
+      this.clearChart()
+      this.setScales()
+      this.initThree()
+      this.buildChart()
     }
-    this.clearChart()
-    this.setScales()
-    this.initThree()
-    this.buildChart()
   }
 
   mouseDown = () => {

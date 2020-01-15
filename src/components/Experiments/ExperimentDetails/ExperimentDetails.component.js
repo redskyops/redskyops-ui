@@ -7,10 +7,12 @@ import {
   TypeExperiments,
   TypeTrials,
   TypeActiveTrial,
+  TypeLabels,
 } from '../../../context/DefaultState'
 import Trials from '../Trials/Trials.component'
 import {TrialDetails} from '../TrialDetails/TrialDetails.component'
 import {ExperimentsService} from '../../../services/ExperimentsService'
+import getAllLabelsFromTrials from '../../../utilities/getAllLabelsFromTrials'
 
 import style from './ExperimentDetails.module.scss'
 import MetricParameterChart from '../MetricParameterChart/MetricParameterChart.component'
@@ -20,6 +22,7 @@ type Props = {
   experiments: TypeExperiments,
   trials: TypeTrials,
   activeTrial: TypeActiveTrial,
+  labels: TypeLabels,
   updateState: () => any,
 }
 
@@ -30,6 +33,7 @@ export const ExperimentDetails = (props: Props) => {
     updateState,
     trials,
     activeTrial,
+    labels,
   } = props
   const expService = new ExperimentsService()
 
@@ -71,10 +75,52 @@ export const ExperimentDetails = (props: Props) => {
         index,
         trial,
       },
+      labels: {
+        ...labels,
+        postingNewLabel: false,
+        postingDelLabel: false,
+        newLabel: '',
+        labelToDelete: '',
+      },
     })
   }
 
-  const onMetricChange = ({item}) => {
+  const labelClick = label => e => {
+    e.preventDefault()
+    if (label === 'ALL') {
+      updateState({
+        experiments: {
+          ...experiments,
+          labelsFilter: [],
+        },
+      })
+      return
+    }
+    const newFilter = [...experiments.labelsFilter]
+    const targetIndex = newFilter.indexOf(label)
+    if (targetIndex < 0) {
+      newFilter.push(label)
+    } else {
+      newFilter.splice(targetIndex, 1)
+    }
+    updateState({
+      experiments: {
+        ...experiments,
+        labelsFilter: newFilter,
+      },
+    })
+  }
+
+  const onMetricChange = ({item} = {}) => {
+    if (!item) {
+      updateState({
+        activeExperiment: {
+          ...activeExperiment,
+          metricParameterChart: null,
+        },
+      })
+      return
+    }
     updateState({
       activeExperiment: {
         ...activeExperiment,
@@ -88,7 +134,16 @@ export const ExperimentDetails = (props: Props) => {
     })
   }
 
-  const onParameterChange = ({item}) => {
+  const onParameterChange = ({item} = {}) => {
+    if (!item) {
+      updateState({
+        activeExperiment: {
+          ...activeExperiment,
+          metricParameterChart: null,
+        },
+      })
+      return
+    }
     updateState({
       activeExperiment: {
         ...activeExperiment,
@@ -137,7 +192,9 @@ export const ExperimentDetails = (props: Props) => {
       activeTrial,
       selectTrialHandler: selectTrial,
       numOfMertics: experiment.metrics.length,
+      labelsFilter: experiments.labelsFilter,
       xAxisMetricName: experiment.metrics[0].name,
+      xAxisMinValue: 0,
       ...(experiment.metrics[1] && {
         yAxisMetricName: experiment.metrics[1].name,
       }),
@@ -164,6 +221,7 @@ export const ExperimentDetails = (props: Props) => {
               ? metricParameterChart.parameter
               : null
           }
+          labelsFilter={experiments.labelsFilter}
           onMetricChange={onMetricChange}
           onParameterChange={onParameterChange}
           selectTrialHandler={selectTrial}
@@ -180,6 +238,7 @@ export const ExperimentDetails = (props: Props) => {
     return (
       <TrialDetails
         trial={activeTrial.trial}
+        experimentId={experiments.list[activeExperiment.index].id}
         parameters={experiment.parameters}
         closeHandler={() =>
           updateState({
@@ -227,10 +286,52 @@ export const ExperimentDetails = (props: Props) => {
     )
   }
 
+  const renderLabels = () => {
+    if (!trials || trials.length < 1) {
+      return null
+    }
+    const allLabels = getAllLabelsFromTrials(trials)
+
+    return (
+      <div className={style.labels}>
+        <h2 className={style.h2}>Filter by label:</h2>
+        <div className={style.labelInner}>
+          {allLabels.map(l => {
+            return (
+              <button
+                data-dome-id="exp-details-label"
+                className={style.label}
+                key={l}
+                onClick={labelClick(l)}
+              >
+                <span className={`material-icons ${style.checkbox}`}>
+                  {experiments.labelsFilter.indexOf(l) < 0
+                    ? 'check_box_outline_blank'
+                    : 'check_box'}
+                </span>{' '}
+                {l}
+              </button>
+            )
+          })}
+          {experiments.labelsFilter.length > 0 && (
+            <button
+              data-dome-id="exp-details-show-all"
+              className={style.label}
+              onClick={labelClick('ALL')}
+            >
+              Show all labels
+            </button>
+          )}
+        </div>
+      </div>
+    )
+  }
+
   return (
     <div className={style.expDetails}>
       <h1 className={style.h1}>{experiment.displayName}</h1>
       {renderStatus()}
+      {renderLabels()}
       {renderTrials()}
       {renderTrialDetails()}
     </div>
