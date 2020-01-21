@@ -71,12 +71,11 @@ export const ExperimentsList = (props: Props) => {
               key={e.id}
               onClick={setActiveExperiment(i)}
             >
-              {e.id}
+              {e.displayName}
             </button>
           )
         })}
       </div>
-      <div className={style.bold}>test</div>
     </div>
   )
 }

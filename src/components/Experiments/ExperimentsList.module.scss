@@ -20,15 +20,21 @@
 .btn {
   background-color: transparent;
   border: 0;
-  color: $white;
+  color: $color-2;
   cursor: pointer;
-  font-size: 16px;
-  margin: $size-1x 0;
+  font-size: 18px;
+  margin: $size-2x 0;
   outline: 0;
   text-align: left;
   width: 100%;
 
-  .active {
-    $font-weight: bold;
+  &:first-child {
+    margin-top: 0;
+  }
+
+  &.active {
+    color: $white;
+    font-size: 20;
+    font-weight: bold;
   }
 }
