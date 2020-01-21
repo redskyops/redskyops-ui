@@ -1,4 +1,28 @@
+@import '../../styles/colors';
+@import '../../styles/vars';
 
 .layout {
-  display: block;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+
+.header {
+  width: 100%;
+}
+
+.grid {
+  align-items: stretch;
+  display: flex;
+  flex-direction: row;
+}
+
+.panel {
+  background-color: $color-4;
+  width: $left-panel-width;
+}
+
+.content {
+  flex: 1;
+  min-height: calc(100vh - #{$header-height});
 }

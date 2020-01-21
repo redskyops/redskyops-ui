@@ -1,0 +1,16 @@
+@import '../../styles/colors';
+@import '../../styles/vars';
+
+.leftPanel {
+  background-color: $color-4;
+  color: $white;
+  height: calc(100vh - #{$header-height});
+  padding: $size-5x $size-4x;
+  width: $left-panel-width;
+}
+
+.title {
+  font-size: 36px;
+  font-weight: normal;
+  text-align: center;
+}

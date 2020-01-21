@@ -2,7 +2,6 @@ import React from 'react'
 
 import style from './ExperimentsList.module.scss'
 import {ExperimentsService} from '../../services/ExperimentsService'
-import ListSearch from '../FormControls/ListSearch/ListSearch.component'
 import {connectWithState} from '../../context/StateContext'
 import useApiCallEffect from '../../hooks/useApiCallEffect'
 
@@ -36,7 +35,7 @@ export const ExperimentsList = (props: Props) => {
 
   useApiCallEffect(requestFactory, requestSuccess, requestError, [])
 
-  const setActiveExperiment = ({index}) => {
+  const setActiveExperiment = index => () => {
     updateState({
       activeExperiment: {
         ...activeExperiment,
@@ -55,16 +54,29 @@ export const ExperimentsList = (props: Props) => {
 
   return (
     <div className={style.expList}>
-      <div>
+      <div className={style.details}>
         <strong data-dom-id="experiments-num">{experiments.list.length}</strong>{' '}
         experiments loaded
       </div>
       <div className={style.list}>
-        <ListSearch
-          itemsList={experiments.list.map(e => ({label: e.id, value: e.id}))}
-          onSelect={setActiveExperiment}
-        />
+        {experiments.list.map((e, i) => {
+          let classes = style.btn
+          classes +=
+            activeExperiment && i === activeExperiment.index
+              ? ` ${style.active}`
+              : ''
+          return (
+            <button
+              className={classes}
+              key={e.id}
+              onClick={setActiveExperiment(i)}
+            >
+              {e.id}
+            </button>
+          )
+        })}
       </div>
+      <div className={style.bold}>test</div>
     </div>
   )
 }
