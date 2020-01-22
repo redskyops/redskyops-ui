@@ -13,6 +13,7 @@ type Props = {
 
 export const ExperimentsList = (props: Props) => {
   const {experiments = [], activeExperiment = null, updateState} = props
+  const {filter} = experiments
   const expService = new ExperimentsService()
 
   const requestFactory = () => expService.getExperimentsFactory({limit: 500})
@@ -59,25 +60,36 @@ export const ExperimentsList = (props: Props) => {
         experiments loaded
       </div>
       <div className={style.list}>
-        {experiments.list.map((e, i) => {
-          let classes = style.btn
-          classes +=
-            activeExperiment && i === activeExperiment.index
-              ? ` ${style.active}`
-              : ''
-          return (
-            <button
-              className={classes}
-              key={e.id}
-              onClick={setActiveExperiment(i)}
-            >
-              {e.displayName}
-            </button>
-          )
-        })}
+        {experiments.list
+          .filter(ex => {
+            return (
+              !filter.name.length ||
+              (filter.name.length > 0 &&
+                new RegExp(filter.name, 'ig').test(ex.displayName))
+            )
+          })
+          .map((e, i) => {
+            let classes = style.btn
+            classes +=
+              activeExperiment && i === activeExperiment.index
+                ? ` ${style.active}`
+                : ''
+            return (
+              <button
+                className={classes}
+                key={e.id}
+                onClick={setActiveExperiment(i)}
+              >
+                {e.displayName}
+              </button>
+            )
+          })}
       </div>
     </div>
   )
 }
 
-export default connectWithState(ExperimentsList)
+export default connectWithState(ExperimentsList, [
+  'experiments',
+  'activeExperiment',
+])

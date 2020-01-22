@@ -1,7 +1,7 @@
 import React from 'react'
 
 import style from './Header.module.scss'
-import logo from '../../images/carbon-rlay-logo-dark.png'
+import logo from '../../assets/images/carbon-rlay-logo-dark.png'
 
 export const Header = () => {
   return (

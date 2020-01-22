@@ -1,0 +1,23 @@
+@import '../../styles/colors';
+@import '../../styles/vars';
+
+$case-pink: #c09;
+
+.icon {
+  --icon-color: #{$color-2};
+  width: $size-5x;
+}
+
+.fillColor {
+  path,
+  rect {
+    fill: var(--icon-color);
+  }
+}
+
+.strokeColor {
+  path,
+  rect {
+    stroke: var(--icon-color);
+  }
+}
