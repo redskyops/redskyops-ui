@@ -4,6 +4,7 @@
 .expList {
   display: flex;
   flex-direction: column;
+  position: relative;
 }
 
 .details {
@@ -11,10 +12,22 @@
 }
 
 .list {
-  height: 500px;
+  height: calc(100vh - 250px);
   margin-top: $size-4x;
   overflow: scroll;
-  width: 100;
+  padding-bottom: 100px;
+  width: 100%;
+
+  &::after {
+    background-image: linear-gradient(-0, $color-4, transparent);
+    content: ' ';
+    display: block;
+    height: 100px;
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    z-index: 1;
+  }
 }
 
 .btn {
@@ -22,11 +35,17 @@
   border: 0;
   color: $color-2;
   cursor: pointer;
-  font-size: 18px;
-  margin: $size-2x 0;
+  font-size: 16px;
+  line-height: 20px;
+  margin: $size-1x 0;
   outline: 0;
   text-align: left;
+  text-transform: uppercase;
   width: 100%;
+
+  &:hover {
+    color: $white;
+  }
 
   &:first-child {
     margin-top: 0;
