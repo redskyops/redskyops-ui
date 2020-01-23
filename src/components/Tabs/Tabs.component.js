@@ -32,3 +32,5 @@ export const Tabs = (props: TypeProps) => {
     </div>
   )
 }
+
+export default Tabs

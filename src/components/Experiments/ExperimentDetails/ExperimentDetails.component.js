@@ -16,7 +16,7 @@ import getAllLabelsFromTrials from '../../../utilities/getAllLabelsFromTrials'
 
 import style from './ExperimentDetails.module.scss'
 import MetricParameterChart from '../MetricParameterChart/MetricParameterChart.component'
-import {Tabs} from '../../Tabs/Tabs.component'
+import Tabs from '../../Tabs/Tabs.component'
 
 type Props = {
   activeExperiment: TypeActiveExperiment,
