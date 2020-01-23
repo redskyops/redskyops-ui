@@ -1,0 +1,40 @@
+@import '../../styles/colors';
+@import '../../styles/vars';
+
+.tabs {
+  display: block;
+  width: 100%;
+}
+
+.content {
+  background-color: $white;
+  min-height: 100px;
+  width: 100%;
+}
+
+.buttons {
+  display: flex;
+  flex-direction: row;
+  list-style: none;
+  margin: 0;
+  margin-left: $size-2x;
+  padding: 0;
+}
+
+.button {
+  background-color: $color-2;
+  border: 0;
+  border-left: 1px solid $white;
+  color: $color-3;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 36px;
+  outline: 0;
+  padding: 0 $size-4x;
+
+  &.active {
+    background-color: $white;
+    color: $color-4;
+  }
+}

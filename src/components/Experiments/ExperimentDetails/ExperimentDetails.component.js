@@ -16,6 +16,7 @@ import getAllLabelsFromTrials from '../../../utilities/getAllLabelsFromTrials'
 
 import style from './ExperimentDetails.module.scss'
 import MetricParameterChart from '../MetricParameterChart/MetricParameterChart.component'
+import {Tabs} from '../../Tabs/Tabs.component'
 
 type Props = {
   activeExperiment: TypeActiveExperiment,
@@ -204,29 +205,33 @@ export const ExperimentDetails = (props: Props) => {
     }
 
     return (
-      <>
-        <Trials {...trialProps} />
-        <MetricParameterChart
-          trials={trials}
-          activeTrial={activeTrial}
-          metricsList={experiment.metrics.map(({name}) => name)}
-          parametersList={experiment.parameters.map(({name}) => name)}
-          metric={
-            metricParameterChart && metricParameterChart.metric
-              ? metricParameterChart.metric
-              : null
-          }
-          parameter={
-            metricParameterChart && metricParameterChart.parameter
-              ? metricParameterChart.parameter
-              : null
-          }
-          labelsFilter={experiments.labelsFilter}
-          onMetricChange={onMetricChange}
-          onParameterChange={onParameterChange}
-          selectTrialHandler={selectTrial}
-        />
-      </>
+      <Tabs>
+        <div title="EXPERIMENT RESULTS">
+          <Trials {...trialProps} />
+        </div>
+        <div title="PARAMETER DRILLDOWN">
+          <MetricParameterChart
+            trials={trials}
+            activeTrial={activeTrial}
+            metricsList={experiment.metrics.map(({name}) => name)}
+            parametersList={experiment.parameters.map(({name}) => name)}
+            metric={
+              metricParameterChart && metricParameterChart.metric
+                ? metricParameterChart.metric
+                : null
+            }
+            parameter={
+              metricParameterChart && metricParameterChart.parameter
+                ? metricParameterChart.parameter
+                : null
+            }
+            labelsFilter={experiments.labelsFilter}
+            onMetricChange={onMetricChange}
+            onParameterChange={onParameterChange}
+            selectTrialHandler={selectTrial}
+          />
+        </div>
+      </Tabs>
     )
   }
 
