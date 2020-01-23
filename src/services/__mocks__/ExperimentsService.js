@@ -4,7 +4,7 @@ export class ExperimentsService {
     if (!instance) {
       this.getExperimentsFactory = jest.fn()
       this.getTrialsFactory = jest.fn()
-      this.addIdsToExperments = jest.fn(expData => {
+      this.addIdsToExperiments = jest.fn(expData => {
         return {
           experiments: expData.experiments.map(exp => {
             const id = exp._metadata.Link[0].match(

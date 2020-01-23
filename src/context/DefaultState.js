@@ -45,7 +45,7 @@ const experimentsFilter: TypeExperimentsFilter = {
 
 const experiments: TypeExperiments = {
   list: experimentsList,
-  loading: false,
+  loading: true,
   error: '',
   labelsFilter: [],
   filter: experimentsFilter,

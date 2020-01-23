@@ -3,7 +3,7 @@ import {mount} from 'enzyme'
 
 import {Icon} from './Icon.component'
 
-describe('Icon component', () => {
+xdescribe('Icon component', () => {
   let wrapper
   const props = {
     icon: 'menu',

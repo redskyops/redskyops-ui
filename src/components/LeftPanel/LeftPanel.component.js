@@ -19,6 +19,7 @@ export const LeftPanel = (props: TypeProps) => {
       <h4 className={style.h4}>VERSION 2.0</h4>
       <div className={style.search}>
         <input
+          type="text"
           className={style.searchInput}
           placeholder="Filter experiments"
           value={experiments.filter.name}

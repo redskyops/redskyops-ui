@@ -6,35 +6,42 @@ import {connectWithState} from '../../context/StateContext'
 import useApiCallEffect from '../../hooks/useApiCallEffect'
 
 type Props = {
-  experiments: Array<Object>,
+  experiments: Object,
   activeExperiment: Object,
   updateState: () => any,
 }
 
 export const ExperimentsList = (props: Props) => {
-  const {experiments = [], activeExperiment = null, updateState} = props
+  const {experiments = {}, activeExperiment = null, updateState} = props
   const {filter} = experiments
   const expService = new ExperimentsService()
 
-  const requestFactory = () => expService.getExperimentsFactory({limit: 500})
+  const requestFactory = () =>
+    experiments.loading ? expService.getExperimentsFactory({limit: 500}) : null
+
   const requestSuccess = expResponse => {
     updateState({
       experiments: {
         ...experiments,
         list: expResponse.experiments,
+        loading: false,
       },
     })
   }
+
   const requestError = () => {
     updateState({
       experiments: {
         ...experiments,
         error: 'Error loading experiments list',
+        loading: false,
       },
     })
   }
 
-  useApiCallEffect(requestFactory, requestSuccess, requestError, [])
+  useApiCallEffect(requestFactory, requestSuccess, requestError, [
+    experiments.loading,
+  ])
 
   const setActiveExperiment = index => () => {
     updateState({
@@ -63,7 +70,8 @@ export const ExperimentsList = (props: Props) => {
         {experiments.list
           .filter(ex => {
             return (
-              !filter.name.length ||
+              !filter ||
+              !filter.name ||
               (filter.name.length > 0 &&
                 new RegExp(filter.name, 'ig').test(ex.displayName))
             )

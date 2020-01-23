@@ -47,17 +47,20 @@ describe('Hook: useApiCallEffect', () => {
     expect(request).toHaveBeenCalledTimes(0)
   })
 
-  it('should call success handler if no errors', async () => {
+  it('should call success handler if no errors', async done => {
     const TestComponent = () => {
       useApiCallEffect(requestFactory, successHandler, errorHandler)
       return <div id="test" />
     }
     await mount(<TestComponent />)
-    expect(successHandler).toHaveBeenCalledTimes(1)
-    expect(successHandler.mock.calls[0][0]).toMatchObject(response)
+    setImmediate(() => {
+      expect(successHandler).toHaveBeenCalledTimes(1)
+      expect(successHandler.mock.calls[0][0]).toMatchObject(response)
+      done()
+    })
   })
 
-  it('should call error handler in case of error', async () => {
+  it('should call error handler in case of error', async done => {
     request.mockImplementationOnce(() =>
       Promise.reject(new Error('test_message')),
     )
@@ -66,9 +69,12 @@ describe('Hook: useApiCallEffect', () => {
       return <div id="test" />
     }
     await mount(<TestComponent />)
-    expect(successHandler).toHaveBeenCalledTimes(0)
-    expect(errorHandler).toHaveBeenCalledTimes(1)
-    expect(errorHandler.mock.calls[0][0].message).toBe('test_message')
+    setImmediate(() => {
+      expect(successHandler).toHaveBeenCalledTimes(0)
+      expect(errorHandler).toHaveBeenCalledTimes(1)
+      expect(errorHandler.mock.calls[0][0].message).toBe('test_message')
+      done()
+    })
   })
 
   it('should call abort when component unmount', () => {
