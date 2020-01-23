@@ -15,8 +15,8 @@ export const LeftPanel = (props: TypeProps) => {
   const {experiments, updateState} = props
   return (
     <div className={style.leftPanel}>
-      <h1 className={style.title}>Red Sky</h1>
-
+      <h1 className={style.h1}>RED SKY OPS</h1>
+      <h4 className={style.h4}>VERSION 2.0</h4>
       <div className={style.search}>
         <input
           className={style.searchInput}
