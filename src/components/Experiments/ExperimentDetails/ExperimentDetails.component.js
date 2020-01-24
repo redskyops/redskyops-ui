@@ -10,7 +10,8 @@ import {
   TypeLabels,
 } from '../../../context/DefaultState'
 import Trials from '../Trials/Trials.component'
-import {TrialDetails} from '../TrialDetails/TrialDetails.component'
+import TrialDetails from '../TrialDetails/TrialDetails.component'
+import TrialsStatistics from '../TrialsStatistics/TrialsStatistics.component'
 import {ExperimentsService} from '../../../services/ExperimentsService'
 import getAllLabelsFromTrials from '../../../utilities/getAllLabelsFromTrials'
 
@@ -208,6 +209,7 @@ export const ExperimentDetails = (props: Props) => {
       <Tabs>
         <div title="EXPERIMENT RESULTS">
           <Trials {...trialProps} />
+          <TrialsStatistics trials={trials} />
         </div>
         <div title="PARAMETER DRILLDOWN">
           <MetricParameterChart
@@ -251,43 +253,6 @@ export const ExperimentDetails = (props: Props) => {
           })
         }
       />
-    )
-  }
-
-  const renderStatus = () => {
-    if (!(activeExperiment && trials && trials.length > 0)) {
-      return null
-    }
-
-    const trialsStatusMap = trials.reduce((acc, t) => {
-      if (t.status in acc) {
-        acc[t.status].push(t)
-        return acc
-      }
-      return {...acc, ...{[t.status]: [t]}}
-    }, {})
-
-    const order = ['completed', 'failed']
-
-    return (
-      <div className={style.status}>
-        <p>
-          <strong data-dom-id="exp-details-trials-total">
-            {trials.length}
-          </strong>{' '}
-          total trials
-        </p>
-        {Object.keys(trialsStatusMap)
-          .sort((s1, s2) => order.indexOf(s1) - order.indexOf(s2))
-          .map(status => (
-            <p key={status}>
-              <strong data-dom-id={`exp-details-trials-${status}`}>
-                {trialsStatusMap[status].length}
-              </strong>{' '}
-              {status} {status === 'completed' ? '(showing)' : ''}
-            </p>
-          ))}
-      </div>
     )
   }
 
@@ -335,7 +300,6 @@ export const ExperimentDetails = (props: Props) => {
   return (
     <div className={style.expDetails}>
       <h1 className={style.h1}>{experiment.displayName}</h1>
-      {renderStatus()}
       {renderLabels()}
       {renderTrials()}
       {renderTrialDetails()}

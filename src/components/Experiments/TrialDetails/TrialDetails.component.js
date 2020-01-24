@@ -86,3 +86,5 @@ export const TrialDetails = (props: Props) => {
     </div>
   )
 }
+
+export default TrialDetails
