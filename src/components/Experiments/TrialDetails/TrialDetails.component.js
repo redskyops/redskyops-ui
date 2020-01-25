@@ -1,8 +1,9 @@
 import React from 'react'
 
 import style from './TrialDetails.module.scss'
-import RangeIndicator from '../RangIndicator/RangeIndicator.component'
-import Labels from '../Labels/Labels.component'
+// import RangeIndicator from '../RangIndicator/RangeIndicator.component'
+// import Labels from '../Labels/Labels.component'
+import ValueDisplay from '../ValueDisplay/ValueDisplay.component'
 
 type Props = {
   trial?: Object,
@@ -12,7 +13,7 @@ type Props = {
 }
 
 export const TrialDetails = (props: Props) => {
-  const {trial, parameters = [], closeHandler, experimentId} = props
+  const {trial, parameters = []} = props
 
   if (!trial) {
     return null
@@ -23,35 +24,63 @@ export const TrialDetails = (props: Props) => {
     {},
   )
 
-  const isBest = trial.labels && 'best' in trial.labels
+  // const isBest = trial.labels && 'best' in trial.labels
 
-  const renderParameters = () => {
-    return trial.assignments.map(para => {
-      return (
-        <div
-          className={style.parameter}
-          key={para.parameterName}
-          data-dom-id={`trial-para-${para.parameterName}`}
-        >
-          <span className={style.capitalize}>
-            <strong>{para.parameterName.replace(/_/g, ' ')}: </strong>
-            {para.value}
-          </span>
-          {para.parameterName in parametersMap && (
-            <RangeIndicator
-              {...parametersMap[para.parameterName].bounds}
-              value={para.value}
-              {...(isBest ? {indicatorClass: style.indicatorPink} : null)}
-            />
-          )}
-        </div>
-      )
-    })
-  }
+  // const renderParameters = () => {
+  //   return trial.assignments.map(para => {
+  //     return (
+  //       <div
+  //         className={style.parameter}
+  //         key={para.parameterName}
+  //         data-dom-id={`trial-para-${para.parameterName}`}
+  //       >
+  //         <span className={style.capitalize}>
+  //           <strong>{para.parameterName.replace(/_/g, ' ')}: </strong>
+  //           {para.value}
+  //         </span>
+  //         {para.parameterName in parametersMap && (
+  //           <RangeIndicator
+  //             {...parametersMap[para.parameterName].bounds}
+  //             value={para.value}
+  //             {...(isBest ? {indicatorClass: style.indicatorPink} : null)}
+  //           />
+  //         )}
+  //       </div>
+  //     )
+  //   })
+  // }
 
   return (
     <div className={style.trial}>
-      <button
+      <div className={`${style.column} ${style.metrics}`}>
+        <h3 className={style.h3}>METRICS</h3>
+        {trial.values.map(metric => (
+          <ValueDisplay
+            key={metric.metricName}
+            name={metric.metricName}
+            value={metric.value}
+          />
+        ))}
+      </div>
+      <div className={`${style.column} ${style.parameters}`}>
+        <h3 className={style.h3}>PARAMETERS</h3>
+        <div className={style.paramList}>
+          {trial.assignments.map(para => {
+            return (
+              <div className={style.parameterWrapper} key={para.parameterName}>
+                <ValueDisplay
+                  name={para.parameterName.replace(/_/g, ' ')}
+                  value={para.value}
+                  {...(para.parameterName in parametersMap
+                    ? parametersMap[para.parameterName].bounds
+                    : null)}
+                />
+              </div>
+            )
+          })}
+        </div>
+      </div>
+      {/* <button
         className={style.close}
         onClick={closeHandler}
         data-dom-id="trial-close"
@@ -82,7 +111,7 @@ export const TrialDetails = (props: Props) => {
       ))}
 
       <h3 className={style.h3}>Parameters</h3>
-      {renderParameters()}
+      {renderParameters()} */}
     </div>
   )
 }

@@ -5,7 +5,7 @@
 }
 
 @mixin default-shadow {
-  @include shadow(2px, 4px, 10px, 1px, rgba($gray, .3));
+  @include shadow(2px, 3px, 3px, 0, rgba($gray, .4));
 }
 
 @mixin no-shadow {

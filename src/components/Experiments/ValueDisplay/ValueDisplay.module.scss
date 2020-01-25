@@ -1,0 +1,29 @@
+@import '../../../styles/colors';
+@import '../../../styles/vars';
+@import '../../../styles/mixins';
+
+.valueDisplay {
+  @include default-shadow;
+  background-color: $white;
+  margin-top: $size-2x;
+  padding: $size-1x;
+}
+
+.data {
+  display: flex;
+  width: 100%;
+}
+
+.name {
+  text-transform: uppercase;
+  margin-right: $size-2x;
+}
+
+.value {
+  font-weight: 800;
+  letter-spacing: 1px;
+}
+
+.indicator {
+  margin-top: $size-1x;
+}

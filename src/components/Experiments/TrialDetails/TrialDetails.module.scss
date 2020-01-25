@@ -2,37 +2,45 @@
 @import '../../../styles/vars';
 
 .trial {
-  background-color: $white;
   display: flex;
   flex-direction: row;
-  flex-wrap: wrap;
   font-size: 14px;
-  margin-top: $size-2x;
-  max-width: 1024px;
-  padding: $size-2x;
-  position: relative;
+  margin-top: $size-6x;
   width: 100%;
-}
-
-.parameter {
-  align-items: center;
-  background-color: $bg-light;
-  display: flex;
-  height: 50px;
-  justify-content: space-between;
-  margin: $size-1x $size-2x;
-  padding: 0 $size-2x;
-  width: calc(50% - #{$size-2x * 2});
 }
 
 .h3 {
-  align-items: center;
-  color: $cr-navy;
-  display: flex;
+  color: $color-4;
   font-size: 18px;
-  margin-top: $size-4x;
-  padding-left: $size-2x;
   width: 100%;
+}
+
+.metrics {
+  width: 250px;
+}
+
+.parameters {
+  flex: 1;
+  // justify-content: space-between;
+  padding-left: $size-4x;
+}
+
+.paramList {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+
+.parameterWrapper {
+  width: 32%;
+
+  &:nth-child(3n - 1) {
+    margin-left: 2%;
+  }
+
+  &:nth-child(3n) {
+    margin-left: 2%;
+  }
 }
 
 .capitalize {
