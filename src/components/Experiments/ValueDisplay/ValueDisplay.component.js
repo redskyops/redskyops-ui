@@ -31,7 +31,12 @@ export const ValueDisplay = ({
       </div>
       {!isNaN(minValue) && !isNaN(maxValue) && (
         <div className={style.indicator}>
-          <RangeIndicator min={minValue} max={maxValue} value={value} />
+          <RangeIndicator
+            min={minValue}
+            max={maxValue}
+            value={value}
+            width="100%"
+          />
         </div>
       )}
     </div>

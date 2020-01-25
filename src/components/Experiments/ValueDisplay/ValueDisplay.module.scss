@@ -6,7 +6,7 @@
   @include default-shadow;
   background-color: $white;
   margin-top: $size-2x;
-  padding: $size-1x;
+  padding: $size-1x $size-2x;
 }
 
 .data {
@@ -21,7 +21,7 @@
 
 .value {
   font-weight: 800;
-  letter-spacing: 1px;
+  letter-spacing: 1.2px;
 }
 
 .indicator {

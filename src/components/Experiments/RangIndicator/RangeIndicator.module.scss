@@ -9,10 +9,17 @@
 }
 
 .bar {
-  background-color: $gray;
+  background-color: $color-2;
   display: block;
-  height: 3px;
+  height: 10px;
   width: 100%;
+}
+
+.indicator {
+  background-color: $color-3;
+  display: block;
+  height: 10px;
+  width: 0;
 }
 
 .labels {
@@ -22,11 +29,4 @@
   font-weight: bold;
   justify-content: space-between;
   margin-top: 4px;
-}
-
-.icon {
-  color: $cr-green;
-  font-size: 32px;
-  position: absolute;
-  top: -10px;
 }

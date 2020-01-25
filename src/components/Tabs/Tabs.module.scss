@@ -1,5 +1,6 @@
 @import '../../styles/colors';
 @import '../../styles/vars';
+@import '../../styles/mixins';
 
 .tabs {
   display: block;
@@ -7,6 +8,7 @@
 }
 
 .content {
+  @include default-shadow;
   background-color: $white;
   min-height: 100px;
   padding: $size-2x;
