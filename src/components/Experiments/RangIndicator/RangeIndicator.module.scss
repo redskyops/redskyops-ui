@@ -1,5 +1,6 @@
 @import '../../../styles/colors';
 @import '../../../styles/vars';
+@import '../../../styles/mixins';
 
 .rangeIndicator {
   display: block;
@@ -16,6 +17,7 @@
 }
 
 .indicator {
+  @include transition('width');
   background-color: $color-3;
   display: block;
   height: 10px;

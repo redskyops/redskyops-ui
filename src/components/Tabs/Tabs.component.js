@@ -22,7 +22,7 @@ export const Tabs = (props: TypeProps) => {
           return (
             <li key={`${i}-${child.props.title}`}>
               <button className={classes} onClick={btnClick(i)}>
-                {child.props.title || <span>&sbsp;</span>}
+                {child.props['data-title'] || <span>&sbsp;</span>}
               </button>
             </li>
           )

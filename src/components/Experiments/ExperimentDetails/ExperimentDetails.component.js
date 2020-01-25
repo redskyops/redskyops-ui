@@ -207,11 +207,11 @@ export const ExperimentDetails = (props: Props) => {
 
     return (
       <Tabs>
-        <div title="EXPERIMENT RESULTS">
+        <div data-title="EXPERIMENT RESULTS">
           <Trials {...trialProps} />
           <TrialsStatistics trials={trials} />
         </div>
-        <div title="PARAMETER DRILLDOWN">
+        <div data-title="PARAMETER DRILLDOWN">
           <MetricParameterChart
             trials={trials}
             activeTrial={activeTrial}

@@ -9,8 +9,8 @@ describe('Component: Tabs', () => {
   it('should render Tabs', () => {
     wrapper = shallow(
       <Tabs>
-        <div id="one" title="one" />
-        <div id="two" title="two" />
+        <div id="one" data-title="one" />
+        <div id="two" data-title="two" />
       </Tabs>,
     )
     expect(wrapper).toHaveLength(1)
@@ -19,8 +19,8 @@ describe('Component: Tabs', () => {
   it('should render first tab by default', () => {
     wrapper = shallow(
       <Tabs>
-        <div id="one" title="one" />
-        <div id="two" title="two" />
+        <div id="one" data-title="one" />
+        <div id="two" data-title="two" />
       </Tabs>,
     )
     expect(wrapper.find('div#one')).toHaveLength(1)
@@ -30,8 +30,8 @@ describe('Component: Tabs', () => {
   it('should render list of buttons to switch tabs', () => {
     wrapper = shallow(
       <Tabs>
-        <div id="one" title="one" />
-        <div id="two" title="two" />
+        <div id="one" data-title="one" />
+        <div id="two" data-title="two" />
       </Tabs>,
     )
     expect(wrapper.find('button.button')).toHaveLength(2)
@@ -43,8 +43,8 @@ describe('Component: Tabs', () => {
   it('should set right css class to active button', () => {
     wrapper = shallow(
       <Tabs>
-        <div id="one" title="one" />
-        <div id="two" title="two" />
+        <div id="one" data-title="one" />
+        <div id="two" data-title="two" />
       </Tabs>,
     )
     expect(
@@ -76,8 +76,8 @@ describe('Component: Tabs', () => {
   it('should render right tab content', () => {
     wrapper = shallow(
       <Tabs>
-        <div id="one" title="one" />
-        <div id="two" title="two" />
+        <div id="one" data-title="one" />
+        <div id="two" data-title="two" />
       </Tabs>,
     )
     wrapper
@@ -91,7 +91,7 @@ describe('Component: Tabs', () => {
   it('should render empty span in button if title is missing', () => {
     wrapper = shallow(
       <Tabs>
-        <div id="one" title="one" />
+        <div id="one" data-title="one" />
         <div id="two" />
       </Tabs>,
     )
