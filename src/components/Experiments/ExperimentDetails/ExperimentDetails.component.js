@@ -299,7 +299,7 @@ export const ExperimentDetails = (props: Props) => {
 
   return (
     <div className={style.expDetails}>
-      <h1 className={style.h1}>{experiment.displayName}</h1>
+      <h1 className={style.h1}>{experiment.displayName.replace(/-/g, ' ')}</h1>
       {renderLabels()}
       {renderTrials()}
       {renderTrialDetails()}

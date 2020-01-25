@@ -88,7 +88,7 @@ export const ExperimentsList = (props: Props) => {
                 key={e.id}
                 onClick={setActiveExperiment(i)}
               >
-                {e.displayName}
+                {e.displayName.replace(/-/g, ' ')}
               </button>
             )
           })}

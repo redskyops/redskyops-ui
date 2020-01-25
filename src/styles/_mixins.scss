@@ -12,7 +12,7 @@
   @include shadow(0, 0, 0, 0, rgba($white, 0));
 }
 
-@mixin transition($p: all, $t: .5s, $ease: ease-out) {
+@mixin transition($p: all, $t: .5s, $ease: ease-in-out) {
   transition-duration: $t;
   transition-property: $p;
   transition-timing-function: $ease;

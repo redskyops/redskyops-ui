@@ -9,8 +9,10 @@
 }
 
 .h1 {
-  font-size: 18px;
+  color: $color-4;
+  font-size: 20px;
   margin-bottom: $size-4x;
+  text-transform: uppercase;
 }
 
 .h2 {
