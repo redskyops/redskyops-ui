@@ -8,7 +8,6 @@ type Props = {
   max: number,
   value: number,
   width?: number,
-  indicatorClass?: string,
 }
 
 export const RangeIndicator = ({min, max, value, width = 200}: Props) => {
@@ -18,13 +17,16 @@ export const RangeIndicator = ({min, max, value, width = 200}: Props) => {
     .range([0, 1])
     .clamp(true)
 
-  const indicatorWidth = xScale(value) * 100
+  let indicatorWidth = xScale(value) * 100
+  if (indicatorWidth > 100) indicatorWidth = 100
+  if (indicatorWidth < 0) indicatorWidth = 0
   return (
     <div className={style.rangeIndicator} style={{width}}>
       <div className={style.bar} data-dom-id="range-bar">
         <div
           className={style.indicator}
           style={{width: `${indicatorWidth}%`}}
+          data-dom-id="range-indicator"
         />
       </div>
       <div className={style.labels}>

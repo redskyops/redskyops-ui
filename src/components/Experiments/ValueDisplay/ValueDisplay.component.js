@@ -7,9 +7,9 @@ import style from './ValueDisplay.module.scss'
 type TypeProps = {
   name: string,
   value: string | number,
-  valueFormater: () => {},
-  min: string | number,
-  max: string | number,
+  valueFormater?: () => {},
+  min?: string | number,
+  max?: string | number,
 }
 
 export const ValueDisplay = ({
@@ -24,8 +24,10 @@ export const ValueDisplay = ({
   return (
     <div className={style.valueDisplay}>
       <div className={style.data}>
-        <div className={style.name}>{name}</div>
-        <div className={style.value}>
+        <div className={style.name} data-dom-id="value-display-name">
+          {name}
+        </div>
+        <div className={style.value} data-dom-id="value-display-value">
           {'function' === typeof valueFormater ? valueFormater(value) : value}
         </div>
       </div>
