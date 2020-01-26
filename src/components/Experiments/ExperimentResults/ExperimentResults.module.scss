@@ -1,0 +1,32 @@
+@import '../../../styles/colors';
+@import '../../../styles/vars';
+
+.expResults {
+  display: block;
+}
+
+.metrics {
+  display: flex;
+  flex-direction: row;
+}
+
+.metric {
+  align-items: center;
+  display: flex;
+  flex-direction: row;
+  margin-right: $size-4x;
+}
+
+.metricIcon {
+  margin-right: $size-1x;
+
+  circle,
+  path {
+    fill: $color-3;
+  }
+}
+
+.dropdown {
+  margin-left: $size-1x;
+  width: 120px;
+}

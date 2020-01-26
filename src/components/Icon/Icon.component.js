@@ -5,6 +5,10 @@ import {ReactComponent as SearchIcon} from '../../assets/icons/Search.svg'
 import {ReactComponent as ExperimentsIcon} from '../../assets/icons/Experiment.svg'
 import {ReactComponent as CheckIcon} from '../../assets/icons/Check.svg'
 import {ReactComponent as ExIcon} from '../../assets/icons/Ex.svg'
+import {ReactComponent as XAxisIcon} from '../../assets/icons/X-axis.svg'
+import {ReactComponent as YAxisIcon} from '../../assets/icons/Y-axis.svg'
+import {ReactComponent as ZAxisIcon} from '../../assets/icons/Z-axis.svg'
+import {ReactComponent as DownArrowIcon} from '../../assets/icons/DownArrow.svg'
 
 import style from './icon.module.scss'
 
@@ -13,6 +17,10 @@ const iconsMap = {
   experiments: ExperimentsIcon,
   circleCheck: CheckIcon,
   circleX: ExIcon,
+  xAxis: XAxisIcon,
+  yAxis: YAxisIcon,
+  zAxis: ZAxisIcon,
+  arrowDown: DownArrowIcon,
 }
 
 const strokeOrFill = {}

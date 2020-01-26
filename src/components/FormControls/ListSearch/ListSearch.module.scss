@@ -3,15 +3,15 @@
 @import '../../../styles/vars';
 @import '../../../styles/mixins';
 
+$min-width: 100px;
+
 @mixin input-shared {
-  background-color: $bg-light;
-  border: 0;
-  border-radius: $size-5x / 2;
+  background-color: transparent;
   font-size: 12px;
-  line-height: $size-5x;
-  min-width: 200px;
+  line-height: $size-4x;
+  min-width: $min-width;
   outline: 0;
-  padding: 0 $size-5x 0 $size-5x / 2;
+  padding: 0 $size-5x 0 $size-2x;
   width: 100%;
   @content
 }
@@ -22,7 +22,9 @@
 }
 
 .input {
-  @include input-shared;
+  @include input-shared {
+    border: 1px solid $color-1;
+  };
 }
 
 .icon {
@@ -31,24 +33,30 @@
   cursor: pointer;
   outline: 0;
   position: absolute;
-  top: 4px;
+  top: 6px;
   right: 5px;
+
+  path {
+    fill: $color-3;
+  }
 }
 
 
 .list {
-  @include default-shadow;
+  border: 1px solid $color-1;
+  border-top: 0;
   display: block;
   max-height: 400px;
+  min-width: 100%;
   overflow-y: scroll;
   position: absolute;
-  top: $size-5x;
+  top: $size-4x;
   width: auto;
   z-index: 100;
 }
 
 .item {
-  background-color: $bg-light;
+  background-color: $white;
   border: 0;
   color: $black;
   cursor: pointer;
@@ -59,28 +67,32 @@
   text-align: left;
   width: 100%;
 
-  &.active,
+  &.active {
+    color: $color-4;
+    font-weight: bold;
+  }
+
   &:hover {
-    background-color: $white;
-    color: $cr-navy;
+    color: $color-4;
   }
 
   &.selected {
-    background-color: $cr-navy;
-    color: $white;
+    color: $color-4;
+    font-weight: bold;
   }
 }
 
 .valuePlacehoder {
   @include input-shared {
-    width: calc(100% - 40px);
-    min-width: calc(200px - 40px);
+    width: calc(100% - 45px);
+    padding: 0 0 0 $size-2x;
   }
-  cursor: text;
-  position: absolute;
   overflow: hidden;
+  color: $color-4;
+  cursor: text;
+  font-weight: bold;
+  position: absolute;
   white-space: nowrap;
-  top: 0;
+  top: 1px;
   left: 0;
-
 }

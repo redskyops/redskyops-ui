@@ -11,6 +11,14 @@ type Props = {
   updateState: () => any,
 }
 
+const getMetricsList = experiment => {
+  return (experiment.metrics || []).map(({name}) => name)
+}
+
+const getParametersList = experiment => {
+  return (experiment.parameters || []).map(({name}) => name)
+}
+
 export const ExperimentsList = (props: Props) => {
   const {experiments = {}, activeExperiment = null, updateState} = props
   const {filter} = experiments
@@ -44,10 +52,14 @@ export const ExperimentsList = (props: Props) => {
   ])
 
   const setActiveExperiment = index => () => {
+    const metricsList = getMetricsList(experiments.list[index])
+    const parametersList = getParametersList(experiments.list[index])
     updateState({
       activeExperiment: {
         ...activeExperiment,
         index,
+        metricsList,
+        parametersList,
         isLoading: true,
         metricParameterChart: null,
       },

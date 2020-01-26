@@ -15,6 +15,8 @@ export type TypeExperiments = {
 export type TypeActiveExperiment = {
   index: number,
   isLoading: boolean,
+  metricsList: Array<string>,
+  parametersList: Array<string>,
   metricParameterChart?: {
     metric: string,
     parameter: string,

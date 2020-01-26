@@ -1,6 +1,7 @@
 import React, {useState, useEffect, useRef} from 'react'
 
 import style from './ListSearch.module.scss'
+import Icon from '../../Icon/Icon.component'
 
 type Props = {
   value: string,
@@ -72,6 +73,7 @@ export const ListSearch = (props: Props) => {
   const setValue = index => {
     setTempSearch('')
     setSelectedIndex(index)
+    inputRef.current.value = ''
 
     onSelect({
       index,
@@ -162,8 +164,8 @@ export const ListSearch = (props: Props) => {
         onClick={handelClick}
         onKeyUp={handelPress}
       />
-      <button className={`material-icons ${style.icon}`} onClick={handelClick}>
-        expand_more
+      <button className={style.icon} onClick={handelClick}>
+        <Icon icon="arrowDown" width={14} />
       </button>
       {isOpen && (
         <div className={style.list}>
