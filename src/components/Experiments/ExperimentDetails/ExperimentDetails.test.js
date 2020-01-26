@@ -11,6 +11,7 @@ jest.mock('../../../services/ExperimentsService', () =>
 )
 
 jest.mock('../Trials/Trials.component')
+jest.mock('../../Tabs/Tabs.component')
 jest.mock('../MetricParameterChart/MetricParameterChart.component')
 jest.mock('../Labels/Labels.component')
 
@@ -104,24 +105,11 @@ describe('Component: ExperimentsDetails', () => {
       ...props,
     }
     wrapper = mount(<ExperimentDetails {...localProps} />)
-    expect(
-      wrapper.find('[data-dom-id="exp-details-trials-total"]'),
-    ).toHaveLength(1)
-    expect(
-      wrapper.find('[data-dom-id="exp-details-trials-total"]').text(),
-    ).toBe(`${localProps.trials.length}`)
-    expect(
-      wrapper.find('[data-dom-id="exp-details-trials-completed"]'),
-    ).toHaveLength(1)
-    expect(
-      wrapper.find('[data-dom-id="exp-details-trials-completed"]').text(),
-    ).toBe('38')
-    expect(
-      wrapper.find('[data-dom-id="exp-details-trials-failed"]'),
-    ).toHaveLength(1)
-    expect(
-      wrapper.find('[data-dom-id="exp-details-trials-failed"]').text(),
-    ).toBe('2')
+    expect(wrapper.find('TrialsStatistics')).toHaveLength(1)
+    expect(wrapper.find('TrialsStatistics').props()).toHaveProperty(
+      'trials',
+      props.trials,
+    )
     wrapper.unmount()
   })
 
