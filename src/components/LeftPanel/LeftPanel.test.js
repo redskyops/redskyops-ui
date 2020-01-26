@@ -3,7 +3,7 @@ import {shallow} from 'enzyme'
 
 import {LeftPanel} from './LeftPanel.component'
 
-jest.mock('../Experiments/ExperimentsList.component')
+jest.mock('../Experiments/ExperimentsList/ExperimentsList.component')
 
 describe('Component: LeftPanel', () => {
   const props = {

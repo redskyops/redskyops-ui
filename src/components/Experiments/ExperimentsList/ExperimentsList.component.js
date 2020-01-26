@@ -1,9 +1,9 @@
 import React from 'react'
 
 import style from './ExperimentsList.module.scss'
-import {ExperimentsService} from '../../services/ExperimentsService'
-import {connectWithState} from '../../context/StateContext'
-import useApiCallEffect from '../../hooks/useApiCallEffect'
+import {ExperimentsService} from '../../../services/ExperimentsService'
+import {connectWithState} from '../../../context/StateContext'
+import useApiCallEffect from '../../../hooks/useApiCallEffect'
 
 type Props = {
   experiments: Object,

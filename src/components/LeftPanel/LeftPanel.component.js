@@ -1,6 +1,6 @@
 import React from 'react'
 
-import ExperimentsList from '../Experiments/ExperimentsList.component'
+import ExperimentsList from '../Experiments/ExperimentsList/ExperimentsList.component'
 import {connectWithState} from '../../context/StateContext'
 import {TypeExperiments} from '../../context/DefaultState'
 
