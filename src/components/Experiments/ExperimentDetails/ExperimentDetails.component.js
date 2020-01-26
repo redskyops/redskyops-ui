@@ -9,7 +9,7 @@ import {
   TypeActiveTrial,
   TypeLabels,
 } from '../../../context/DefaultState'
-import Trials from '../Trials/Trials.component'
+import ExperimentResults from '../ExperimentResults/ExperimentResults.component'
 import TrialDetails from '../TrialDetails/TrialDetails.component'
 import TrialsStatistics from '../TrialsStatistics/TrialsStatistics.component'
 import {ExperimentsService} from '../../../services/ExperimentsService'
@@ -208,7 +208,7 @@ export const ExperimentDetails = (props: Props) => {
     return (
       <Tabs>
         <div data-title="EXPERIMENT RESULTS">
-          <Trials {...trialProps} />
+          <ExperimentResults {...trialProps} />
           <TrialsStatistics trials={trials} />
         </div>
         <div data-title="PARAMETER DRILLDOWN">

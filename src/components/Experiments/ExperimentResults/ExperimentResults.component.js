@@ -5,9 +5,9 @@ import DotsChart2D from '../../Charts/DotsChart2D/DotsChart2D.component'
 import DotsChart3D from '../../Charts/DotsChart3D/DotsChart3D.component'
 import {ChartPropsType} from '../../Charts/ChartProps.type'
 
-type Props = ChartPropsType & {numOfMertics: number}
+type TypeProps = ChartPropsType & {numOfMertics: number}
 
-export class Trials extends React.Component<Props> {
+export class ExperimentResults extends React.Component<TypeProps> {
   render() {
     if (this.props.numOfMertics === 1) {
       return <DotsChart1D {...this.props} />
@@ -21,4 +21,4 @@ export class Trials extends React.Component<Props> {
   }
 }
 
-export default Trials
+export default ExperimentResults

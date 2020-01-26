@@ -10,7 +10,7 @@ jest.mock('../../../services/ExperimentsService', () =>
   jest.requireActual('../../../services/__mocks__/ExperimentsService'),
 )
 
-jest.mock('../Trials/Trials.component')
+jest.mock('../ExperimentResults/ExperimentResults.component')
 jest.mock('../../Tabs/Tabs.component')
 jest.mock('../MetricParameterChart/MetricParameterChart.component')
 jest.mock('../Labels/Labels.component')
@@ -89,14 +89,14 @@ describe('Component: ExperimentsDetails', () => {
       ...props,
     }
     wrapper = mount(<ExperimentDetails {...localProps} />)
-    const trialsComp = wrapper.find('Trials')
-    expect(trialsComp).toHaveLength(1)
-    const trialsProps = trialsComp.props()
-    expect(trialsProps).toHaveProperty('trials', localProps.trials)
-    expect(trialsProps).toHaveProperty('xAxisMetricName', 'cost')
-    expect(trialsProps).toHaveProperty('yAxisMetricName', 'duration')
-    expect(trialsProps).toHaveProperty('xAxisMinValue', 0)
-    expect(typeof trialsProps.selectTrialHandler).toBe('function')
+    const resultComp = wrapper.find('ExperimentResults')
+    expect(resultComp).toHaveLength(1)
+    const resultsProps = resultComp.props()
+    expect(resultsProps).toHaveProperty('trials', localProps.trials)
+    expect(resultsProps).toHaveProperty('xAxisMetricName', 'cost')
+    expect(resultsProps).toHaveProperty('yAxisMetricName', 'duration')
+    expect(resultsProps).toHaveProperty('xAxisMinValue', 0)
+    expect(typeof resultsProps.selectTrialHandler).toBe('function')
     wrapper.unmount()
   })
 
@@ -338,15 +338,19 @@ describe('Component: ExperimentsDetails', () => {
 
   it('should set one X axis metric name if active experiment has one or metric', async () => {
     wrapper = await mount(<ExperimentDetails {...props} />)
-    expect(wrapper.find('Trials')).toHaveLength(1)
-    expect(wrapper.find('Trials').prop('xAxisMetricName')).toBeTruthy()
+    expect(wrapper.find('ExperimentResults')).toHaveLength(1)
+    expect(
+      wrapper.find('ExperimentResults').prop('xAxisMetricName'),
+    ).toBeTruthy()
     wrapper.unmount()
   })
 
   it('should set one Y axis metric name if active experiment has one or metric', async () => {
     wrapper = await mount(<ExperimentDetails {...props} />)
-    expect(wrapper.find('Trials')).toHaveLength(1)
-    expect(wrapper.find('Trials').prop('yAxisMetricName')).toBeTruthy()
+    expect(wrapper.find('ExperimentResults')).toHaveLength(1)
+    expect(
+      wrapper.find('ExperimentResults').prop('yAxisMetricName'),
+    ).toBeTruthy()
     wrapper.unmount()
   })
 
@@ -364,8 +368,10 @@ describe('Component: ExperimentsDetails', () => {
       {...localProps.experiments.list[0].metrics[0]},
     ]
     wrapper = await mount(<ExperimentDetails {...localProps} />)
-    expect(wrapper.find('Trials')).toHaveLength(1)
-    expect(wrapper.find('Trials').prop('zAxisMetricName')).toBeTruthy()
+    expect(wrapper.find('ExperimentResults')).toHaveLength(1)
+    expect(
+      wrapper.find('ExperimentResults').prop('zAxisMetricName'),
+    ).toBeTruthy()
     wrapper.unmount()
   })
 
@@ -538,7 +544,7 @@ describe('Component: ExperimentsDetails', () => {
     }
 
     wrapper = await mount(<ExperimentDetails {...localProps} />)
-    expect(wrapper.find('Trials').props()).toHaveProperty(
+    expect(wrapper.find('ExperimentResults').props()).toHaveProperty(
       'labelsFilter',
       localProps.experiments.labelsFilter,
     )
