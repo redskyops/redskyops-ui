@@ -190,19 +190,7 @@ export const ExperimentDetails = (props: Props) => {
 
     const {metricParameterChart} = activeExperiment
     const trialProps = {
-      trials,
-      activeTrial,
       selectTrialHandler: selectTrial,
-      numOfMertics: experiment.metrics.length,
-      labelsFilter: experiments.labelsFilter,
-      xAxisMetricName: experiment.metrics[0].name,
-      xAxisMinValue: 0,
-      ...(experiment.metrics[1] && {
-        yAxisMetricName: experiment.metrics[1].name,
-      }),
-      ...(experiment.metrics[2] && {
-        zAxisMetricName: experiment.metrics[2].name,
-      }),
     }
 
     return (

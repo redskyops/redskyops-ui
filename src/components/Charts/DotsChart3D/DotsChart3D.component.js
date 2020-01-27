@@ -378,7 +378,10 @@ export class DotsChart3D extends React.Component<ChartPropsType> {
     }
     if (
       prevProps.trials !== this.props.trials ||
-      prevProps.labelsFilter !== this.props.labelsFilter
+      prevProps.labelsFilter !== this.props.labelsFilter ||
+      prevProps.xAxisMetricName !== this.props.xAxisMetricName ||
+      prevProps.yAxisMetricName !== this.props.yAxisMetricName ||
+      prevProps.zAxisMetricName !== this.props.zAxisMetricName
     ) {
       this.clearChart()
       this.setScales()

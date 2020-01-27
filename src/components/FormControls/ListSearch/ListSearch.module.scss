@@ -6,7 +6,7 @@
 $min-width: 100px;
 
 @mixin input-shared {
-  background-color: transparent;
+  background-color: $white;
   font-size: 12px;
   line-height: $size-4x;
   min-width: $min-width;

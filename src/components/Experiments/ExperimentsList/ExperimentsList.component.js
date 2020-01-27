@@ -12,7 +12,9 @@ type Props = {
 }
 
 const getMetricsList = experiment => {
-  return (experiment.metrics || []).map(({name}) => name)
+  return (experiment.metrics || [])
+    .sort(m => (m.minimize ? 1 : -1))
+    .map(({name}) => name)
 }
 
 const getParametersList = experiment => {
@@ -62,6 +64,9 @@ export const ExperimentsList = (props: Props) => {
         parametersList,
         isLoading: true,
         metricParameterChart: null,
+        xAxisMetric: metricsList[0],
+        ...(metricsList.length >= 2 ? {yAxisMetric: metricsList[1]} : null),
+        ...(metricsList.length >= 3 ? {zAxisMetric: metricsList[2]} : null),
       },
       experiments: {
         ...experiments,
