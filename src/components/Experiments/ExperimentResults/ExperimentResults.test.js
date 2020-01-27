@@ -6,8 +6,16 @@ import {ExperimentResults} from './ExperimentResults.component'
 describe('Component: ExperimentResults', () => {
   let wrapper
   let props = {
-    numOfMertics: 1,
-    otherProp: 'test',
+    experiments: {
+      labelsFilter: {},
+    },
+    activeExperiment: {
+      metricsList: [],
+      parametersList: [],
+      xAxisMetric: 'cost',
+      yAxisMetric: 'duration',
+      zAxisMetric: 'throughput',
+    },
   }
 
   it('should render ExperimentResults component', () => {
@@ -17,42 +25,54 @@ describe('Component: ExperimentResults', () => {
   })
 
   it('shourld render 1D chart with right props if experiment has one metric', () => {
-    wrapper = shallow(<ExperimentResults {...props} />)
+    const localProps = {
+      ...props,
+      activeExperiment: {
+        ...props.activeExperiment,
+        metricsList: ['cost'],
+      },
+    }
+    wrapper = shallow(<ExperimentResults {...localProps} />)
     expect(wrapper.find('DotsChart1D')).toHaveLength(1)
-    expect(wrapper.find('DotsChart1D').props()).toHaveProperty(
-      'otherProp',
-      'test',
-    )
     wrapper.unmount()
   })
 
   it('shourld render 2D chart with right props if experiment has 2 metrics', () => {
-    wrapper = shallow(<ExperimentResults {...props} numOfMertics={2} />)
+    const localProps = {
+      ...props,
+      activeExperiment: {
+        ...props.activeExperiment,
+        metricsList: ['cost', 'duration'],
+      },
+    }
+    wrapper = shallow(<ExperimentResults {...localProps} />)
     expect(wrapper.find('DotsChart2D')).toHaveLength(1)
-    expect(wrapper.find('DotsChart2D').props()).toHaveProperty(
-      'otherProp',
-      'test',
-    )
     wrapper.unmount()
   })
 
   it('shourld render 3D chart with right props if experiment has 3 metrics', () => {
-    wrapper = shallow(<ExperimentResults {...props} numOfMertics={3} />)
+    const localProps = {
+      ...props,
+      activeExperiment: {
+        ...props.activeExperiment,
+        metricsList: ['cost', 'duration', 'throughput'],
+      },
+    }
+    wrapper = shallow(<ExperimentResults {...localProps} />)
     expect(wrapper.find('DotsChart3D')).toHaveLength(1)
-    expect(wrapper.find('DotsChart3D').props()).toHaveProperty(
-      'otherProp',
-      'test',
-    )
     wrapper.unmount()
   })
 
   it('shourld render 3D chart with right props if experiment has more than 3 metrics', () => {
-    wrapper = shallow(<ExperimentResults {...props} numOfMertics={5} />)
+    const localProps = {
+      ...props,
+      activeExperiment: {
+        ...props.activeExperiment,
+        metricsList: ['cost', 'duration', 'throughput', 'anoth_metric'],
+      },
+    }
+    wrapper = shallow(<ExperimentResults {...localProps} />)
     expect(wrapper.find('DotsChart3D')).toHaveLength(1)
-    expect(wrapper.find('DotsChart3D').props()).toHaveProperty(
-      'otherProp',
-      'test',
-    )
     wrapper.unmount()
   })
 })
