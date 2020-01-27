@@ -23,7 +23,7 @@ type Props = {
 export const MetricParameterChart = (props: Props) => {
   return (
     <div className={style.chart}>
-      <h2 className={style.title}>Metirc / Parameter Chart</h2>
+      <h2 className={style.title}>Metric / Parameter Chart</h2>
       <div className={style.optionsRow}>
         <div className={style.dropdown}>
           <strong>Metric: </strong>
