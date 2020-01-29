@@ -1,10 +1,15 @@
 export type TypeExperimentsList = Array<Object>
 
+export type TypeExperimentsFilter = {
+  name: string,
+}
+
 export type TypeExperiments = {
   list: TypeExperimentsList,
   loading: boolean,
   error: string,
   labelsFilter: Array<string>,
+  filter: TypeExperimentsFilter,
 }
 
 export type TypeActiveExperiment = {
@@ -34,11 +39,16 @@ const experimentsList: TypeExperimentsList = []
 
 const trials: TypeTrials = null
 
+const experimentsFilter: TypeExperimentsFilter = {
+  name: '',
+}
+
 const experiments: TypeExperiments = {
   list: experimentsList,
-  loading: false,
+  loading: true,
   error: '',
   labelsFilter: [],
+  filter: experimentsFilter,
 }
 
 const activeExperiment: TypeActiveExperiment = null

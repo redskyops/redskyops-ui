@@ -2,41 +2,48 @@ import React from 'react'
 
 import style from './ExperimentsList.module.scss'
 import {ExperimentsService} from '../../services/ExperimentsService'
-import ListSearch from '../FormControls/ListSearch/ListSearch.component'
 import {connectWithState} from '../../context/StateContext'
 import useApiCallEffect from '../../hooks/useApiCallEffect'
 
 type Props = {
-  experiments: Array<Object>,
+  experiments: Object,
   activeExperiment: Object,
   updateState: () => any,
 }
 
 export const ExperimentsList = (props: Props) => {
-  const {experiments = [], activeExperiment = null, updateState} = props
+  const {experiments = {}, activeExperiment = null, updateState} = props
+  const {filter} = experiments
   const expService = new ExperimentsService()
 
-  const requestFactory = () => expService.getExperimentsFactory({limit: 500})
+  const requestFactory = () =>
+    experiments.loading ? expService.getExperimentsFactory({limit: 500}) : null
+
   const requestSuccess = expResponse => {
     updateState({
       experiments: {
         ...experiments,
         list: expResponse.experiments,
+        loading: false,
       },
     })
   }
+
   const requestError = () => {
     updateState({
       experiments: {
         ...experiments,
         error: 'Error loading experiments list',
+        loading: false,
       },
     })
   }
 
-  useApiCallEffect(requestFactory, requestSuccess, requestError, [])
+  useApiCallEffect(requestFactory, requestSuccess, requestError, [
+    experiments.loading,
+  ])
 
-  const setActiveExperiment = ({index}) => {
+  const setActiveExperiment = index => () => {
     updateState({
       activeExperiment: {
         ...activeExperiment,
@@ -55,18 +62,42 @@ export const ExperimentsList = (props: Props) => {
 
   return (
     <div className={style.expList}>
-      <div>
+      <div className={style.details}>
         <strong data-dom-id="experiments-num">{experiments.list.length}</strong>{' '}
         experiments loaded
       </div>
       <div className={style.list}>
-        <ListSearch
-          itemsList={experiments.list.map(e => ({label: e.id, value: e.id}))}
-          onSelect={setActiveExperiment}
-        />
+        {experiments.list
+          .filter(ex => {
+            return (
+              !filter ||
+              !filter.name ||
+              (filter.name.length > 0 &&
+                new RegExp(filter.name, 'ig').test(ex.displayName))
+            )
+          })
+          .map((e, i) => {
+            let classes = style.btn
+            classes +=
+              activeExperiment && i === activeExperiment.index
+                ? ` ${style.active}`
+                : ''
+            return (
+              <button
+                className={classes}
+                key={e.id}
+                onClick={setActiveExperiment(i)}
+              >
+                {e.displayName}
+              </button>
+            )
+          })}
       </div>
     </div>
   )
 }
 
-export default connectWithState(ExperimentsList)
+export default connectWithState(ExperimentsList, [
+  'experiments',
+  'activeExperiment',
+])

@@ -2,7 +2,6 @@ import React from 'react'
 import {shallow} from 'enzyme'
 
 import {Header} from './Header.component'
-import ExperimentsList from '../Experiments/ExperimentsList.component'
 
 describe('Component: Header', () => {
   let wrapper
@@ -17,10 +16,6 @@ describe('Component: Header', () => {
 
   it('should render <header> tag', () => {
     expect(wrapper.find('header')).toHaveLength(1)
-  })
-
-  it('should render Header and ExperimentsList components', () => {
-    expect(wrapper.find(ExperimentsList)).toHaveLength(1)
   })
 
   it('should render logo', () => {

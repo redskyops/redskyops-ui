@@ -22,7 +22,7 @@ describe('Component: ExperimentsDetails', () => {
       index: 0,
     },
     experiments: {
-      list: expService.addIdsToExperments(expStub).experiments,
+      list: expService.addIdsToExperiments(expStub).experiments,
       labelsFilter: [],
     },
     trials: trialsStub.trials,
@@ -145,7 +145,7 @@ describe('Component: ExperimentsDetails', () => {
     wrapper.unmount()
   })
 
-  it('should update state when trials are loaded', async () => {
+  it('should update state when trials are loaded', async done => {
     expService.getTrialsFactory.mockImplementationOnce(() => [
       () => Promise.resolve(trialsStub),
       () => {},
@@ -158,15 +158,18 @@ describe('Component: ExperimentsDetails', () => {
       },
     }
     wrapper = await mount(<ExperimentDetails {...localProps} />)
-    expect(localProps.updateState).toHaveBeenCalledTimes(1)
-    expect(localProps.updateState.mock.calls[0][0]).toMatchObject({
-      trials: trialsStub.trials,
-      activeExperiment: {
-        ...props.activeExperiment,
-        isLoading: false,
-      },
+    setImmediate(() => {
+      expect(localProps.updateState).toHaveBeenCalledTimes(1)
+      expect(localProps.updateState.mock.calls[0][0]).toMatchObject({
+        trials: trialsStub.trials,
+        activeExperiment: {
+          ...props.activeExperiment,
+          isLoading: false,
+        },
+      })
+      wrapper.unmount()
+      done()
     })
-    wrapper.unmount()
   })
 
   it('should render MetricParameterChart component', async () => {

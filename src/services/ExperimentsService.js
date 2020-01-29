@@ -14,7 +14,7 @@ export class ExperimentsService {
     return instance
   }
 
-  addIdsToExperments(expData) {
+  addIdsToExperiments(expData) {
     return {
       experiments: expData.experiments.map(exp => {
         const id = exp._metadata.Link[0].match(
@@ -39,7 +39,7 @@ export class ExperimentsService {
           throw new Error('Error in ExperimentsService.getExperiments')
         }
         const expData = await response.json()
-        return this.addIdsToExperments(expData)
+        return this.addIdsToExperiments(expData)
       })
     return [getExperiments, abort]
   }
