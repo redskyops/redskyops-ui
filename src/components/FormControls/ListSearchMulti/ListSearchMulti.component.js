@@ -1,23 +1,31 @@
 import React, {useState, useEffect, useRef} from 'react'
 
-import style from './ListSearch.module.scss'
+import style from './ListSearchMulti.module.scss'
 import Icon from '../../Icon/Icon.component'
 
 type Props = {
-  value: string,
+  value?: Array<string | number>,
   itemsList: Array<{label: string, value: any}>,
   placeholder: string,
-  onSelect: (val: Object) => any,
+  onChange: (val: Object) => any,
 }
 
-export const ListSearch = (props: Props) => {
-  const {value, itemsList, placeholder, onSelect} = props
-  const initialIndex = value
-    ? itemsList.findIndex(item => item.value === value)
-    : -1
+const mapValuesToIndex = (value, itemsList) => {
+  /* eslint-disable indent */
+  return Array.isArray(value) && value.length > 0
+    ? value
+        .map(val => itemsList.findIndex(item => item.value === val))
+        .filter(i => i >= 0)
+    : []
+  /* eslint-enable indent */
+}
+
+export const ListSearchMulti = (props: Props) => {
+  const {value = [], itemsList, placeholder, onChange} = props
+  const initialIndex = mapValuesToIndex(value, itemsList)
   const [isOpen, setIsOpen] = useState(false)
   const [selectedIndex, setSelectedIndex] = useState(initialIndex)
-  const [tempIndex, setTempIndex] = useState(selectedIndex)
+  const [tempIndex, setTempIndex] = useState(0)
   const [tempSearch, setTempSearch] = useState('')
   const wrapperRef = useRef(null)
   const inputRef = useRef(null)
@@ -32,11 +40,7 @@ export const ListSearch = (props: Props) => {
   const openMenu = () => {
     clearTimeout(blurInterval)
     setIsOpen(true)
-    setTempIndex(
-      (found => (found && found.lenght > 0 ? found[0].index : -1))(
-        filteredList.find(i => i.index === selectedIndex),
-      ),
-    )
+    setTempIndex(0)
     setTempSearch('')
     inputRef.current.value = ''
     document.removeEventListener('click', documentClick)
@@ -46,7 +50,7 @@ export const ListSearch = (props: Props) => {
   const closeMenu = () => {
     clearTimeout(blurInterval)
     setIsOpen(false)
-    setTempIndex(selectedIndex)
+    setTempIndex(0)
     setTempSearch('')
     document.removeEventListener('click', documentClick)
   }
@@ -55,17 +59,11 @@ export const ListSearch = (props: Props) => {
     openMenu()
   }
 
-  const handelBlur = () => {
-    clearTimeout(blurInterval)
-    blurInterval = setTimeout(() => {
-      closeMenu()
-    }, 200)
-  }
-
-  const handelClick = e => {
+  const handelClick = shouldClose => e => {
     e.preventDefault()
     e.nativeEvent.stopImmediatePropagation()
     if (isOpen) {
+      shouldClose && closeMenu()
       return
     }
     openMenu()
@@ -73,18 +71,22 @@ export const ListSearch = (props: Props) => {
 
   const setValue = index => {
     setTempSearch('')
-    setSelectedIndex(index)
+    const newValue = [...selectedIndex]
+    const indexOfItem = newValue.indexOf(index)
+    if (indexOfItem > -1) {
+      newValue.splice(indexOfItem, 1)
+    } else {
+      newValue.push(index)
+    }
+    setSelectedIndex(newValue)
     inputRef.current.value = ''
 
-    onSelect({
-      index,
-      item: itemsList[index],
-    })
+    onChange({indexs: newValue, items: newValue.map(i => itemsList[i])})
   }
 
   const itemClick = index => () => {
     setValue(index)
-    closeMenu()
+    // closeMenu()
   }
 
   const documentClick = e => {
@@ -136,7 +138,7 @@ export const ListSearch = (props: Props) => {
     }
   }, [value])
 
-  let textToShow = selectedIndex >= 0 ? itemsList[selectedIndex].label : value
+  let textToShow = placeholder
   if (!textToShow) {
     textToShow = placeholder
   }
@@ -152,7 +154,7 @@ export const ListSearch = (props: Props) => {
           className={style.valuePlacehoder}
           onClick={e => {
             inputRef.current.focus()
-            handelClick(e)
+            handelClick(false)(e)
           }}
         >
           {textToShow}
@@ -164,12 +166,15 @@ export const ListSearch = (props: Props) => {
         defaultValue={textToShow}
         className={style.input}
         onFocus={handelFocus}
-        onBlur={handelBlur}
-        onClick={handelClick}
+        // onBlur={handelBlur}
+        onClick={handelClick(false)}
         onKeyUp={handelPress}
       />
-      <button className={style.icon} onClick={handelClick}>
-        <Icon icon="arrowDown" width={14} />
+      <button className={style.icon} onClick={handelClick(true)}>
+        <Icon
+          icon={isOpen ? 'circleX' : 'arrowDown'}
+          width={isOpen ? 17 : 14}
+        />
       </button>
       {isOpen && (
         <div className={style.list}>
@@ -178,7 +183,8 @@ export const ListSearch = (props: Props) => {
               filteredList.map((item, index) => {
                 let css = style.item
                 css += index === tempIndex ? ` ${style.active}` : ''
-                css += item.index === selectedIndex ? ` ${style.selected}` : ''
+                css +=
+                  selectedIndex.indexOf(index) > -1 ? ` ${style.selected}` : ''
                 return (
                   <button
                     className={css}
@@ -186,6 +192,7 @@ export const ListSearch = (props: Props) => {
                     key={`${item.index}-${item.value}`}
                     onClick={itemClick(item.index)}
                   >
+                    <span className={style.circle} />
                     {item.label}
                   </button>
                 )
@@ -197,4 +204,4 @@ export const ListSearch = (props: Props) => {
   )
 }
 
-export default ListSearch
+export default ListSearchMulti

@@ -28,7 +28,18 @@
   }
 }
 
+.activeFilter {
+  circle,
+  path {
+    fill: $color-6;
+  }
+}
+
 .dropdown {
   margin-left: $size-1x;
   width: 120px;
+}
+
+.alignRight {
+  margin-left: auto;
 }

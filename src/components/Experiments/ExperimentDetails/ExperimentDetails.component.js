@@ -50,9 +50,11 @@ export const ExperimentDetails = (props: Props) => {
         }) // eslint-disable-line indent
       : null
   const requestSuccess = ({trials}) => {
+    const labelsList = getAllLabelsFromTrials(trials)
     updateState({
       activeExperiment: {
         ...activeExperiment,
+        labelsList,
         isLoading: false,
       },
       trials,
@@ -83,32 +85,6 @@ export const ExperimentDetails = (props: Props) => {
         postingDelLabel: false,
         newLabel: '',
         labelToDelete: '',
-      },
-    })
-  }
-
-  const labelClick = label => e => {
-    e.preventDefault()
-    if (label === 'ALL') {
-      updateState({
-        experiments: {
-          ...experiments,
-          labelsFilter: [],
-        },
-      })
-      return
-    }
-    const newFilter = [...experiments.labelsFilter]
-    const targetIndex = newFilter.indexOf(label)
-    if (targetIndex < 0) {
-      newFilter.push(label)
-    } else {
-      newFilter.splice(targetIndex, 1)
-    }
-    updateState({
-      experiments: {
-        ...experiments,
-        labelsFilter: newFilter,
       },
     })
   }
@@ -244,51 +220,9 @@ export const ExperimentDetails = (props: Props) => {
     )
   }
 
-  const renderLabels = () => {
-    if (!trials || trials.length < 1) {
-      return null
-    }
-    const allLabels = getAllLabelsFromTrials(trials)
-
-    return (
-      <div className={style.labels}>
-        <h2 className={style.h2}>Filter by label:</h2>
-        <div className={style.labelInner}>
-          {allLabels.map(l => {
-            return (
-              <button
-                data-dome-id="exp-details-label"
-                className={style.label}
-                key={l}
-                onClick={labelClick(l)}
-              >
-                <span className={`material-icons ${style.checkbox}`}>
-                  {experiments.labelsFilter.indexOf(l) < 0
-                    ? 'check_box_outline_blank'
-                    : 'check_box'}
-                </span>{' '}
-                {l}
-              </button>
-            )
-          })}
-          {experiments.labelsFilter.length > 0 && (
-            <button
-              data-dome-id="exp-details-show-all"
-              className={style.label}
-              onClick={labelClick('ALL')}
-            >
-              Show all labels
-            </button>
-          )}
-        </div>
-      </div>
-    )
-  }
-
   return (
     <div className={style.expDetails}>
       <h1 className={style.h1}>{experiment.displayName.replace(/-/g, ' ')}</h1>
-      {renderLabels()}
       {renderTrials()}
       {renderTrialDetails()}
     </div>

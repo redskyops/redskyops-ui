@@ -5,18 +5,17 @@ import DotsChart2D from '../../Charts/DotsChart2D/DotsChart2D.component'
 import DotsChart3D from '../../Charts/DotsChart3D/DotsChart3D.component'
 import {
   TypeActiveExperiment,
-  TypeExperiments,
   TypeTrials,
   TypeActiveTrial,
 } from '../../Charts/ChartProps.type'
 import Icon from '../../Icon/Icon.component'
 import ListSearch from '../../FormControls/ListSearch/ListSearch.component'
+import ListSearchMulti from '../../FormControls/ListSearchMulti/ListSearchMulti.component'
 import {connectWithState} from '../../../context/StateContext'
 
 import style from './ExperimentResults.module.scss'
 
 type TypeProps = {
-  experiments: TypeExperiments,
   activeExperiment: TypeActiveExperiment,
   trials: TypeTrials,
   activeTrial: TypeActiveTrial,
@@ -26,7 +25,6 @@ type TypeProps = {
 
 export const ExperimentResults = (props: TypeProps) => {
   const {
-    experiments,
     activeExperiment,
     trials,
     activeTrial,
@@ -44,12 +42,21 @@ export const ExperimentResults = (props: TypeProps) => {
     })
   }
 
+  const onSelectedLabelsChange = ({items}) => {
+    updateState({
+      activeExperiment: {
+        ...activeExperiment,
+        labelsFilter: items.map(l => l.value),
+      },
+    })
+  }
+
   const chartProps = {
     trials,
     activeTrial,
     selectTrialHandler: selectTrialHandler,
     numOfMertics: activeExperiment.metricsList.length,
-    labelsFilter: experiments.labelsFilter,
+    labelsFilter: activeExperiment.labelsFilter,
     xAxisMetricName: activeExperiment.xAxisMetric,
     xAxisMinValue: 0,
     ...(numOfMertics >= 2 && {
@@ -81,9 +88,9 @@ export const ExperimentResults = (props: TypeProps) => {
           <div className={style.dropdown}>
             <ListSearch
               value={activeExperiment.xAxisMetric}
-              itemsList={activeExperiment.metricsList.map(m => ({
-                label: m.toUpperCase(),
-                value: m,
+              itemsList={activeExperiment.metricsList.map(label => ({
+                label: label.toUpperCase(),
+                value: label,
               }))}
               onSelect={onMetricChange('x')}
             />
@@ -123,6 +130,25 @@ export const ExperimentResults = (props: TypeProps) => {
             </div>
           </div>
         )}
+
+        <div
+          className={`${style.metric} ${style.alignRight}  ${
+            activeExperiment.labelsFilter.length > 0 ? style.activeFilter : ''
+          }`}
+        >
+          <Icon icon="filter" width={18} cssClass={style.metricIcon} />
+          <div className={style.dropdown}>
+            <ListSearchMulti
+              value={activeExperiment.labelsFilter}
+              itemsList={activeExperiment.labelsList.map(m => ({
+                label: m.toUpperCase(),
+                value: m,
+              }))}
+              placeholder="FILTER BY"
+              onChange={onSelectedLabelsChange}
+            />
+          </div>
+        </div>
       </div>
       <div className={style.chart}>{renderChart()}</div>
     </div>

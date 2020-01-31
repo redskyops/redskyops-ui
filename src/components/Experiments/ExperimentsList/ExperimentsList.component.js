@@ -64,6 +64,7 @@ export const ExperimentsList = (props: Props) => {
         parametersList,
         isLoading: true,
         metricParameterChart: null,
+        labelsFilter: [],
         xAxisMetric: metricsList[0],
         ...(metricsList.length >= 2 ? {yAxisMetric: metricsList[1]} : null),
         ...(metricsList.length >= 3 ? {zAxisMetric: metricsList[2]} : null),
