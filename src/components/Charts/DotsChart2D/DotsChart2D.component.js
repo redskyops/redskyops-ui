@@ -25,7 +25,7 @@ export class DotsChart2D extends React.Component<
       return
     }
 
-    const canvasWidth = 1024
+    const canvasWidth = 1280
     const canvasHeight = 500
     const margins = {top: 20, right: 20, bottom: 40, left: 70}
     const width = canvasWidth - margins.top - margins.left

@@ -5,13 +5,7 @@
   background-color: $white;
   min-height: 500px;
   padding-top: $size-2x;
-  width: 1024px;
-}
-
-.title {
-  font-weight: 600;
-  font-size: 18px;
-  padding-left: $size-2x;
+  min-width: 1280px;
 }
 
 .optionsRow {
