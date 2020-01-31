@@ -25,10 +25,10 @@
 }
 
 .button {
-  background-color: $color-2;
+  background-color: $color-7;
   border: 0;
   border-left: 1px solid $white;
-  color: $color-3;
+  color: $white;
   cursor: pointer;
   font-size: 16px;
   font-weight: 600;
@@ -38,6 +38,6 @@
 
   &.active {
     background-color: $white;
-    color: $color-4;
+    color: $color-6;
   }
 }

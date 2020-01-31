@@ -10,6 +10,8 @@ import {ReactComponent as YAxisIcon} from '../../assets/icons/Y-axis.svg'
 import {ReactComponent as ZAxisIcon} from '../../assets/icons/Z-axis.svg'
 import {ReactComponent as DownArrowIcon} from '../../assets/icons/DownArrow.svg'
 import {ReactComponent as FilterIcon} from '../../assets/icons/Filter.svg'
+import {ReactComponent as ParametersIcon} from '../../assets/icons/Parameters.svg'
+import {ReactComponent as MetricsIcon} from '../../assets/icons/Metrics.svg'
 
 import style from './icon.module.scss'
 
@@ -23,6 +25,8 @@ const iconsMap = {
   zAxis: ZAxisIcon,
   arrowDown: DownArrowIcon,
   filter: FilterIcon,
+  parameters: ParametersIcon,
+  metrics: MetricsIcon,
 }
 
 const strokeOrFill = {}

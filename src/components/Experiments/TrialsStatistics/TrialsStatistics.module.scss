@@ -7,7 +7,7 @@
 }
 
 .divider {
-  background-color: $color-3;
+  background-color: $color-5;
   height: 1px;
   margin: 0 auto;
   width: 50%;
@@ -24,7 +24,7 @@
 }
 
 .item {
-  color: $color-4;
+  color: $color-5;
   display: flex;
   flex-direction: column;
   font-size: 16px;
@@ -38,9 +38,11 @@
     margin-right: 0;
   }
 
-  circle {
-    fill: $color-2;
+  circle,
+  path {
+    fill: $color-8;
   }
+
 }
 
 .icon {

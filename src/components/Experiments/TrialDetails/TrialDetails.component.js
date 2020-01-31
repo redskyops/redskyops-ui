@@ -2,6 +2,7 @@ import React from 'react'
 
 import style from './TrialDetails.module.scss'
 import ValueDisplay from '../ValueDisplay/ValueDisplay.component'
+import Icon from '../../Icon/Icon.component'
 
 type Props = {
   trial?: Object,
@@ -25,7 +26,9 @@ export const TrialDetails = (props: Props) => {
   return (
     <div className={style.trial}>
       <div className={`${style.column} ${style.metrics}`}>
-        <h3 className={style.h3}>METRICS</h3>
+        <h3 className={style.h3}>
+          <Icon icon="metrics" width={18} cssClass={style.titleIcon} /> METRICS
+        </h3>
         {trial.values.map(metric => (
           <ValueDisplay
             key={metric.metricName}
@@ -35,7 +38,10 @@ export const TrialDetails = (props: Props) => {
         ))}
       </div>
       <div className={`${style.column} ${style.parameters}`}>
-        <h3 className={style.h3}>PARAMETERS</h3>
+        <h3 className={style.h3}>
+          <Icon icon="parameters" width={18} cssClass={style.titleIcon} />{' '}
+          PARAMETERS
+        </h3>
         <div className={style.paramList}>
           {trial.assignments.map(para => {
             return (

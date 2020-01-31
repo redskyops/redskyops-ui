@@ -2,6 +2,9 @@
 @import '../../../styles/vars';
 @import '../../../styles/mixins';
 
+$bar-color: #b8b6b6;
+$indicator-color: #515050;
+
 .rangeIndicator {
   display: block;
   line-height: 12px;
@@ -10,7 +13,7 @@
 }
 
 .bar {
-  background-color: $color-2;
+  background-color: $bar-color;
   display: block;
   height: 10px;
   width: 100%;
@@ -18,7 +21,7 @@
 
 .indicator {
   @include transition('width');
-  background-color: $color-3;
+  background-color: $indicator-color;
   display: block;
   height: 10px;
   width: 0;
