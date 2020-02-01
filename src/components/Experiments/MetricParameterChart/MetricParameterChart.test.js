@@ -55,7 +55,7 @@ describe('Component: MetricParameterChart', () => {
       .prop('itemsList')
       .forEach((item, i) => {
         expect(item).toMatchObject({
-          label: props.metricsList[i],
+          label: props.metricsList[i].toUpperCase().replace(/_/g, ' '),
           value: props.metricsList[i],
         })
       })
@@ -91,7 +91,7 @@ describe('Component: MetricParameterChart', () => {
       .prop('itemsList')
       .forEach((item, i) => {
         expect(item).toMatchObject({
-          label: props.parametersList[i],
+          label: props.parametersList[i].toUpperCase().replace(/_/g, ' '),
           value: props.parametersList[i],
         })
       })

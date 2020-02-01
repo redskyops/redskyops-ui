@@ -27,7 +27,10 @@ export const MetricParameterChart = (props: Props) => {
         <div className={style.dropdown}>
           <strong>Metric: </strong>
           <ListSearch
-            itemsList={props.metricsList.map(p => ({label: p, value: p}))}
+            itemsList={props.metricsList.map(p => ({
+              label: p.toUpperCase().replace(/_/g, ' '),
+              value: p,
+            }))}
             value={props.metric}
             onSelect={props.onMetricChange}
           />
@@ -35,7 +38,10 @@ export const MetricParameterChart = (props: Props) => {
         <div className={style.dropdown}>
           <strong>Parameter: </strong>
           <ListSearch
-            itemsList={props.parametersList.map(p => ({label: p, value: p}))}
+            itemsList={props.parametersList.map(p => ({
+              label: p.toUpperCase().replace(/_/g, ' '),
+              value: p,
+            }))}
             value={props.parameter}
             onSelect={props.onParameterChange}
           />
@@ -49,7 +55,7 @@ export const MetricParameterChart = (props: Props) => {
                 props.onParameterChange()
               }}
             >
-              Clear
+              CLEAR
             </button>
           </div>
         )}
