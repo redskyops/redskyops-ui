@@ -6,7 +6,7 @@ import Icon from '../../Icon/Icon.component'
 type Props = {
   value?: Array<string | number>,
   itemsList: Array<{label: string, value: any}>,
-  placeholder: string,
+  placeholder?: string,
   onChange: (val: Object) => any,
 }
 
@@ -21,7 +21,7 @@ const mapValuesToIndex = (value, itemsList) => {
 }
 
 export const ListSearchMulti = (props: Props) => {
-  const {value = [], itemsList, placeholder, onChange} = props
+  const {value = [], itemsList, placeholder = '', onChange} = props
   const initialIndex = mapValuesToIndex(value, itemsList)
   const [isOpen, setIsOpen] = useState(false)
   const [selectedIndex, setSelectedIndex] = useState(initialIndex)
@@ -29,7 +29,6 @@ export const ListSearchMulti = (props: Props) => {
   const [tempSearch, setTempSearch] = useState('')
   const wrapperRef = useRef(null)
   const inputRef = useRef(null)
-  let blurInterval
 
   const filteredList = (itemsList || [])
     .map((i, index) => ({...i, index}))
@@ -38,7 +37,6 @@ export const ListSearchMulti = (props: Props) => {
     })
 
   const openMenu = () => {
-    clearTimeout(blurInterval)
     setIsOpen(true)
     setTempIndex(0)
     setTempSearch('')
@@ -48,7 +46,6 @@ export const ListSearchMulti = (props: Props) => {
   }
 
   const closeMenu = () => {
-    clearTimeout(blurInterval)
     setIsOpen(false)
     setTempIndex(0)
     setTempSearch('')
@@ -69,6 +66,10 @@ export const ListSearchMulti = (props: Props) => {
     openMenu()
   }
 
+  const handleInputChange = e => {
+    setTempSearch(e.target.value)
+  }
+
   const setValue = index => {
     setTempSearch('')
     const newValue = [...selectedIndex]
@@ -86,7 +87,6 @@ export const ListSearchMulti = (props: Props) => {
 
   const itemClick = index => () => {
     setValue(index)
-    // closeMenu()
   }
 
   const documentClick = e => {
@@ -96,52 +96,15 @@ export const ListSearchMulti = (props: Props) => {
     closeMenu()
   }
 
-  const handelPress = e => {
-    if (!isOpen) {
-      return
-    }
-    let nextIndex = tempIndex
-    switch (e.key) {
-      case 'ArrowDown':
-        nextIndex += 1
-        break
-      case 'ArrowUp':
-        nextIndex -= 1
-        break
-      case 'Enter':
-        setValue(filteredList[tempIndex].index)
-        closeMenu()
-        return
-      case 'Escape':
-        e.preventDefault()
-        closeMenu()
-        return
-      default:
-        setTempSearch(e.target.value)
-        return
-    }
-    if (nextIndex < 0) nextIndex = 0
-    if (nextIndex > filteredList.length - 1) nextIndex = filteredList.length - 1
-    setTempIndex(nextIndex)
-
-    const targetItem = document.querySelector(`#listSearch-${nextIndex}`)
-    if (targetItem) targetItem.scrollIntoView()
-  }
-
   useEffect(() => {
     setSelectedIndex(initialIndex)
     return () => {
-      // eslint-disable-next-line
-      clearTimeout(blurInterval)
       // eslint-disable-next-line
       document.removeEventListener('click', documentClick)
     }
   }, [value])
 
   let textToShow = placeholder
-  if (!textToShow) {
-    textToShow = placeholder
-  }
   if (isOpen) {
     textToShow = ''
   }
@@ -165,10 +128,9 @@ export const ListSearchMulti = (props: Props) => {
         ref={inputRef}
         defaultValue={textToShow}
         className={style.input}
+        onChange={handleInputChange}
         onFocus={handelFocus}
-        // onBlur={handelBlur}
         onClick={handelClick(false)}
-        onKeyUp={handelPress}
       />
       <button className={style.icon} onClick={handelClick(true)}>
         <Icon

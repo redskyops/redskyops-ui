@@ -3,10 +3,10 @@ import {mount} from 'enzyme'
 
 import {Icon} from './Icon.component'
 
-xdescribe('Icon component', () => {
+describe('Icon component', () => {
   let wrapper
   const props = {
-    icon: 'menu',
+    icon: 'search',
   }
 
   beforeEach(() => {
@@ -22,8 +22,12 @@ xdescribe('Icon component', () => {
   })
 
   it('should render nothing if icon props not identified', () => {
+    const errorSpy = jest.spyOn(console, 'error')
+    errorSpy.mockImplementation(() => '')
     wrapper.setProps({icon: 'blah'})
     expect(wrapper.find('svg')).toHaveLength(0)
+    expect(errorSpy).toHaveBeenCalledTimes(1)
+    errorSpy.mockRestore()
   })
 
   it('should set default width to 24 pixel', () => {

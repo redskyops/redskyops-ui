@@ -2,9 +2,9 @@ import React from 'react'
 import {act} from 'react-dom/test-utils'
 import {mount} from 'enzyme'
 
-import {ListSearch} from './ListSearch.component'
+import {ListSearchMulti} from './ListSearchMulti.component'
 
-describe('ListSearch component', () => {
+describe('ListSearchMulti component', () => {
   let wrapper
   let props = {
     value: '',
@@ -13,70 +13,45 @@ describe('ListSearch component', () => {
       {label: 'two', value: 2},
       {label: 'three', value: 3},
     ],
-    onSelect: jest.fn(),
+    onChange: jest.fn(),
+    placeholder: 'placeholder_test',
   }
 
   beforeEach(() => {
-    props.onSelect.mockClear()
+    props.onChange.mockClear()
   })
 
   it('should render Dropdown component', () => {
-    wrapper = mount(<ListSearch {...props} />)
+    wrapper = mount(<ListSearchMulti {...props} />)
     expect(wrapper).toHaveLength(1)
     wrapper.unmount()
   })
 
   it('should render text box to hold selected item', () => {
-    wrapper = mount(<ListSearch {...props} />)
+    wrapper = mount(<ListSearchMulti {...props} />)
     expect(wrapper.find('input[type="text"]')).toHaveLength(1)
     wrapper.unmount()
   })
 
-  it('should set initial value', () => {
+  it('should set text value to placeholder', () => {
     const localProps = {
       ...props,
       value: 3,
     }
-    wrapper = mount(<ListSearch {...localProps} />)
+    wrapper = mount(<ListSearchMulti {...localProps} />)
     expect(wrapper.find('input[type="text"]').props().defaultValue).toBe(
-      'three',
+      'placeholder_test',
     )
     wrapper.unmount()
   })
 
   it('should show dropdown menu on focus', () => {
-    wrapper = mount(<ListSearch {...props} />)
+    wrapper = mount(<ListSearchMulti {...props} />)
     wrapper
       .find('input[type="text"]')
       .first()
       .simulate('focus')
     expect(wrapper.find('button.item')).toHaveLength(3)
-    wrapper.unmount()
-  })
-
-  it('should hide dropdown menu on blur', done => {
-    jest.useFakeTimers()
-    wrapper = mount(<ListSearch {...props} />)
-    wrapper
-      .find('input[type="text"]')
-      .first()
-      .simulate('focus')
-    expect(wrapper.find('button.item')).toHaveLength(3)
-    wrapper
-      .find('input[type="text"]')
-      .first()
-      .simulate('blur')
-
-    act(() => {
-      jest.runAllTimers()
-      setImmediate(() => {
-        wrapper.update()
-        expect(wrapper.find('button.item')).toHaveLength(0)
-        done()
-      })
-    })
-
-    jest.useRealTimers()
     wrapper.unmount()
   })
 
@@ -87,7 +62,7 @@ describe('ListSearch component', () => {
         stopImmediatePropagation: () => {},
       },
     }
-    wrapper = mount(<ListSearch {...props} />)
+    wrapper = mount(<ListSearchMulti {...props} />)
     wrapper
       .find('button.icon')
       .first()
@@ -96,14 +71,15 @@ describe('ListSearch component', () => {
     wrapper.unmount()
   })
 
-  it('should do nothing if menu open and clicked again', () => {
+  it('should toggle menu on/off on icon click', () => {
     const event = {
       preventDefault: () => {},
       nativeEvent: {
         stopImmediatePropagation: () => {},
       },
     }
-    wrapper = mount(<ListSearch {...props} />)
+    wrapper = mount(<ListSearchMulti {...props} />)
+    expect(wrapper.find('button.item')).toHaveLength(0)
     wrapper
       .find('button.icon')
       .first()
@@ -114,19 +90,19 @@ describe('ListSearch component', () => {
       .find('button.icon')
       .first()
       .simulate('click', event)
-    expect(wrapper.find('button.item')).toHaveLength(3)
+    expect(wrapper.find('button.item')).toHaveLength(0)
 
     wrapper.unmount()
   })
 
-  it('should call onSelect on item click', () => {
+  it('should call onChange on item click', () => {
     const event = {
       preventDefault: () => {},
       nativeEvent: {
         stopImmediatePropagation: () => {},
       },
     }
-    wrapper = mount(<ListSearch {...props} />)
+    wrapper = mount(<ListSearchMulti {...props} />)
     wrapper
       .find('button.icon')
       .first()
@@ -135,91 +111,11 @@ describe('ListSearch component', () => {
     expect(menuItems).toHaveLength(3)
 
     menuItems.at(2).simulate('click', event)
-    expect(props.onSelect).toHaveBeenCalledTimes(1)
-    expect(props.onSelect.mock.calls[0][0]).toMatchObject({
-      index: 2,
-      item: {label: 'three', value: 3},
+    expect(props.onChange).toHaveBeenCalledTimes(1)
+    expect(props.onChange.mock.calls[0][0]).toMatchObject({
+      indexs: [2],
+      items: [{label: 'three', value: 3}],
     })
-    wrapper.unmount()
-  })
-
-  it('should call onSelect with down arrow navigation and enter', () => {
-    const event = {
-      preventDefault: () => {},
-      nativeEvent: {
-        stopImmediatePropagation: () => {},
-      },
-    }
-    wrapper = mount(<ListSearch {...props} />)
-    wrapper
-      .find('button.icon')
-      .first()
-      .simulate('click', event)
-    const menuItems = wrapper.find('button.item')
-    expect(menuItems).toHaveLength(3)
-
-    const input = wrapper.find('input[type="text"]')
-    input.simulate('keyUp', {...event, key: 'ArrowDown'})
-    input.simulate('keyUp', {...event, key: 'ArrowDown'})
-    input.simulate('keyUp', {...event, key: 'Enter'})
-
-    expect(props.onSelect).toHaveBeenCalledTimes(1)
-    expect(props.onSelect.mock.calls[0][0]).toMatchObject({
-      index: 1,
-      item: {label: 'two', value: 2},
-    })
-    wrapper.unmount()
-  })
-
-  it('should call onSelect up arrow navigation and enter', () => {
-    const event = {
-      preventDefault: () => {},
-      nativeEvent: {
-        stopImmediatePropagation: () => {},
-      },
-    }
-    wrapper = mount(<ListSearch {...props} value="three" />)
-    wrapper
-      .find('button.icon')
-      .first()
-      .simulate('click', event)
-    const menuItems = wrapper.find('button.item')
-    expect(menuItems).toHaveLength(3)
-
-    const input = wrapper.find('input[type="text"]')
-    input.simulate('keyUp', {key: 'ArrowUp'})
-    input.simulate('keyUp', {key: 'ArrowUp'})
-    input.simulate('keyUp', {key: 'Enter'})
-
-    expect(props.onSelect).toHaveBeenCalledTimes(1)
-    expect(props.onSelect.mock.calls[0][0]).toMatchObject({
-      index: 0,
-      item: {label: 'one', value: 1},
-    })
-    wrapper.unmount()
-  })
-
-  it('should close menu on escape click', () => {
-    const event = {
-      preventDefault: () => {},
-      nativeEvent: {
-        stopImmediatePropagation: () => {},
-      },
-    }
-    wrapper = mount(<ListSearch {...props} value="three" />)
-    wrapper
-      .find('button.icon')
-      .first()
-      .simulate('click', event)
-    const menuItems = wrapper.find('button.item')
-    expect(menuItems).toHaveLength(3)
-
-    const input = wrapper.find('input[type="text"]')
-    input.simulate('keyUp', {key: 'ArrowUp'})
-    input.simulate('keyUp', {key: 'Escape'})
-
-    expect(wrapper.find('button.item')).toHaveLength(0)
-    expect(props.onSelect).toHaveBeenCalledTimes(0)
     wrapper.unmount()
   })
 
@@ -230,67 +126,25 @@ describe('ListSearch component', () => {
         stopImmediatePropagation: () => {},
       },
     }
-    wrapper = mount(<ListSearch {...props} value={3} />)
+    wrapper = mount(<ListSearchMulti {...props} value={[1, 3]} />)
     wrapper
       .find('button.icon')
       .first()
       .simulate('click', event)
+
     const menuItems = wrapper.find('button.item')
+    expect(menuItems.at(0).hasClass('selected')).toBe(true)
+    expect(menuItems.at(1).hasClass('selected')).toBe(false)
     expect(menuItems.at(2).hasClass('selected')).toBe(true)
     wrapper.unmount()
   })
 
-  it('should set max limit while navigating with arrows', () => {
-    const event = {
-      preventDefault: () => {},
-      nativeEvent: {
-        stopImmediatePropagation: () => {},
-      },
-    }
-    wrapper = mount(<ListSearch {...props} value={3} />)
-    wrapper
-      .find('button.icon')
-      .first()
-      .simulate('click', event)
-    const menuItems = wrapper.find('button.item')
-    expect(menuItems).toHaveLength(3)
-
-    const input = wrapper.find('input[type="text"]')
-    input.simulate('keyUp', {key: 'ArrowDown'})
-    expect(
-      wrapper
-        .find('button.item')
-        .at(0)
-        .hasClass('active'),
-    ).toBe(true)
-    input.simulate('keyUp', {key: 'ArrowDown'})
-    expect(
-      wrapper
-        .find('button.item')
-        .at(1)
-        .hasClass('active'),
-    ).toBe(true)
-    input.simulate('keyUp', {key: 'ArrowDown'})
-    expect(
-      wrapper
-        .find('button.item')
-        .at(2)
-        .hasClass('active'),
-    ).toBe(true)
-    input.simulate('keyUp', {key: 'ArrowDown'})
-    expect(
-      wrapper
-        .find('button.item')
-        .at(2)
-        .hasClass('active'),
-    ).toBe(true)
-    wrapper.unmount()
-  })
-
-  it('should add label div to show selected item', () => {
-    wrapper = mount(<ListSearch {...props} value="three" />)
+  it('should add label div to show placholder text', () => {
+    wrapper = mount(<ListSearchMulti {...props} value="three" />)
     expect(wrapper.find('[data-dom-id="label"]')).toHaveLength(1)
-    expect(wrapper.find('[data-dom-id="label"]').text()).toBe('three')
+    expect(wrapper.find('[data-dom-id="label"]').text()).toBe(
+      'placeholder_test',
+    )
     wrapper.unmount()
   })
 
@@ -301,29 +155,10 @@ describe('ListSearch component', () => {
         stopImmediatePropagation: () => {},
       },
     }
-    wrapper = mount(<ListSearch {...props} value="three" />)
+    wrapper = mount(<ListSearchMulti {...props} value="three" />)
     wrapper.find('[data-dom-id="label"]').simulate('click', event)
     expect(wrapper.find('.list')).toHaveLength(1)
     expect(wrapper.find('[data-dom-id="label"]')).toHaveLength(0)
-    wrapper.unmount()
-  })
-
-  it('should update label text on item selection', () => {
-    const event = {
-      preventDefault: () => {},
-      nativeEvent: {
-        stopImmediatePropagation: () => {},
-      },
-    }
-    wrapper = mount(<ListSearch {...props} />)
-    wrapper
-      .find('button.icon')
-      .first()
-      .simulate('click', event)
-    const menuItems = wrapper.find('button.item')
-
-    menuItems.at(1).simulate('click', event)
-    expect(wrapper.find('[data-dom-id="label"]').text()).toBe('two')
     wrapper.unmount()
   })
 
@@ -334,7 +169,7 @@ describe('ListSearch component', () => {
         stopImmediatePropagation: () => {},
       },
     }
-    wrapper = mount(<ListSearch {...props} />)
+    wrapper = mount(<ListSearchMulti {...props} />)
     wrapper
       .find('button.icon')
       .first()
@@ -351,14 +186,14 @@ describe('ListSearch component', () => {
         stopImmediatePropagation: () => {},
       },
     }
-    wrapper = mount(<ListSearch {...props} />)
+    wrapper = mount(<ListSearchMulti {...props} />)
     wrapper
       .find('button.icon')
       .first()
       .simulate('click', event)
 
     const input = wrapper.find('input[type="text"]')
-    input.simulate('keyUp', {target: {value: 'two'}})
+    input.simulate('change', {target: {value: 'two'}})
     expect(wrapper.find('button.item')).toHaveLength(1)
     expect(
       wrapper
@@ -366,30 +201,6 @@ describe('ListSearch component', () => {
         .at(0)
         .text(),
     ).toBe('two')
-    wrapper.unmount()
-  })
-
-  it('should do nothing if menu is open and button clicked', () => {
-    const event = {
-      preventDefault: () => {},
-      nativeEvent: {
-        stopImmediatePropagation: () => {},
-      },
-    }
-    wrapper = mount(<ListSearch {...props} />)
-    wrapper
-      .find('button.icon')
-      .first()
-      .simulate('click', event)
-    const menuItems = wrapper.find('button.item')
-    expect(menuItems).toHaveLength(3)
-
-    wrapper
-      .find('button.icon')
-      .first()
-      .simulate('click', event)
-    expect(wrapper.find('button.item')).toHaveLength(3)
-
     wrapper.unmount()
   })
 
@@ -406,7 +217,7 @@ describe('ListSearch component', () => {
       },
     }
 
-    wrapper = mount(<ListSearch {...props} />)
+    wrapper = mount(<ListSearchMulti {...props} />)
     const containsSpy = jest
       .spyOn(
         wrapper
@@ -450,7 +261,7 @@ describe('ListSearch component', () => {
         stopImmediatePropagation: () => {},
       },
     }
-    wrapper = mount(<ListSearch {...props} />)
+    wrapper = mount(<ListSearchMulti {...props} />)
     wrapper
       .find('button.icon')
       .first()
@@ -481,58 +292,13 @@ describe('ListSearch component', () => {
     })
   })
 
-  it('should do nothing if key pressed and menu is closed', () => {
-    wrapper = mount(<ListSearch {...props} />)
-    const keyEvent = {
-      key: 'Enter',
-      preventDefault: () => {},
-    }
-    wrapper.find('input[type="text"]').simulate('keyup', keyEvent)
-    expect(props.onSelect).toHaveBeenCalledTimes(0)
-    wrapper.unmount()
-  })
-
-  it('should render ListSearch with default props values', () => {
+  it('should render ListSearchMulti with default props values', () => {
     const localProps = {...props}
     delete localProps.value
-    delete localProps.onSelect
-    wrapper = mount(<ListSearch {...localProps} />)
+    delete localProps.onChange
+    delete localProps.placeholder
+    wrapper = mount(<ListSearchMulti {...localProps} />)
     expect(wrapper.find('[data-dom-id="label"]').text()).toBe('')
-    wrapper.unmount()
-  })
-
-  it('should scroll menu item into view if navigated by keys', () => {
-    const scrollIntoView = jest.fn()
-    const querySelectorSpy = jest.spyOn(document, 'querySelector')
-    querySelectorSpy.mockImplementation(() => ({
-      scrollIntoView,
-    }))
-    const event = {
-      preventDefault: () => {},
-      nativeEvent: {
-        stopImmediatePropagation: () => {},
-      },
-    }
-    wrapper = mount(<ListSearch {...props} value={3} />)
-    wrapper
-      .find('button.icon')
-      .first()
-      .simulate('click', event)
-    const menuItems = wrapper.find('button.item')
-    expect(menuItems).toHaveLength(3)
-
-    const input = wrapper.find('input[type="text"]')
-    input.simulate('keyUp', {key: 'ArrowDown'})
-    expect(
-      wrapper
-        .find('button.item')
-        .at(0)
-        .hasClass('active'),
-    ).toBe(true)
-
-    expect(scrollIntoView).toHaveBeenCalledTimes(1)
-
-    querySelectorSpy.mockRestore()
     wrapper.unmount()
   })
 })
