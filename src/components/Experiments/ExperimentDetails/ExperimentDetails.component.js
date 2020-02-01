@@ -18,6 +18,7 @@ import getAllLabelsFromTrials from '../../../utilities/getAllLabelsFromTrials'
 import style from './ExperimentDetails.module.scss'
 import MetricParameterChart from '../MetricParameterChart/MetricParameterChart.component'
 import Tabs from '../../Tabs/Tabs.component'
+import arrowImage from '../../../assets/images/ArrowLeft.png'
 
 type Props = {
   activeExperiment: TypeActiveExperiment,
@@ -138,7 +139,21 @@ export const ExperimentDetails = (props: Props) => {
   if (!activeExperiment) {
     return (
       <div className={style.expDetails} data-dom-id="exp-details-select">
-        <h1 className={style.h1}>Select an experiment!</h1>
+        <div className={style.noExp}>
+          <div>
+            <h1 className={style.noExpTitle}>RED SKY OPS</h1>
+            <h3 className={style.noExpSubTitle}>VERSION 2.0</h3>
+            <h2 className={style.h1}>
+              <img
+                src={arrowImage}
+                width={26}
+                className={style.noExpArrow}
+                alt="Select Experiment"
+              />
+              Select an experiment!
+            </h2>
+          </div>
+        </div>
       </div>
     )
   }
