@@ -5,6 +5,7 @@ import {connectWithState} from '../../context/StateContext'
 import {TypeExperiments} from '../../context/DefaultState'
 
 import style from './LeftPanel.module.scss'
+import Icon from '../Icon/Icon.component'
 
 type TypeProps = {
   experiments: TypeExperiments,
@@ -21,7 +22,7 @@ export const LeftPanel = (props: TypeProps) => {
         <input
           type="text"
           className={style.searchInput}
-          placeholder="Filter experiments"
+          placeholder="FILTER EXPERIMENTS"
           value={experiments.filter.name}
           onChange={e => {
             updateState({
@@ -35,6 +36,7 @@ export const LeftPanel = (props: TypeProps) => {
             })
           }}
         />
+        <Icon icon="search" width={24} cssClass={style.icon} />
       </div>
       <ExperimentsList />
     </div>

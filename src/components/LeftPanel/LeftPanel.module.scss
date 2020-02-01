@@ -22,13 +22,25 @@
 
 .search {
   margin: $size-4x 0;
+  position: relative;
 }
 
 .searchInput {
   border: 0;
   background-color: $white;
   height: 40px;
-  padding: 0 $size-2x;
+  padding: 0 $size-6x 0 $size-2x;
   outline: 0;
   width: 100%;
+}
+
+.icon {
+  position: absolute;
+  right: $size-1x;
+  top: 50%;
+  transform: translateY(-50%);
+
+  path {
+    fill: $color-6;
+  }
 }
