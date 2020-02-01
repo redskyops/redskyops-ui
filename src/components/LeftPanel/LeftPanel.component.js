@@ -36,7 +36,28 @@ export const LeftPanel = (props: TypeProps) => {
             })
           }}
         />
-        <Icon icon="search" width={24} cssClass={style.icon} />
+        {!experiments.filter.name && (
+          <Icon icon="search" width={24} cssClass={style.icon} />
+        )}
+        {experiments.filter.name && (
+          <button
+            className={style.searchClearBtn}
+            data-dom-id="left-panel-clear"
+            onClick={() => {
+              updateState({
+                experiments: {
+                  ...experiments,
+                  filter: {
+                    ...experiments.filter,
+                    name: '',
+                  },
+                },
+              })
+            }}
+          >
+            <Icon icon="circleX" width={24} cssClass={style.icon} />
+          </button>
+        )}
       </div>
       <ExperimentsList />
     </div>

@@ -23,6 +23,10 @@
 .search {
   margin: $size-4x 0;
   position: relative;
+
+  path {
+    fill: $color-6;
+  }
 }
 
 .searchInput {
@@ -39,8 +43,12 @@
   right: $size-1x;
   top: 50%;
   transform: translateY(-50%);
+}
 
-  path {
-    fill: $color-6;
-  }
+.searchClearBtn {
+  background-color: transparent;
+  border: 0;
+  right: $size-1x;
+  top: 5px;
+  padding: 0;
 }
