@@ -90,6 +90,15 @@ export const ExperimentDetails = (props: Props) => {
     })
   }
 
+  const filterChange = ({items}) => {
+    updateState({
+      activeExperiment: {
+        ...activeExperiment,
+        labelsFilter: items.map(l => l.value),
+      },
+    })
+  }
+
   const onMetricChange = ({item} = {}) => {
     if (!item) {
       updateState({
@@ -182,6 +191,7 @@ export const ExperimentDetails = (props: Props) => {
     const {metricParameterChart} = activeExperiment
     const trialProps = {
       selectTrialHandler: selectTrial,
+      filterChangeHandler: filterChange,
     }
 
     return (
@@ -194,8 +204,9 @@ export const ExperimentDetails = (props: Props) => {
           <MetricParameterChart
             trials={trials}
             activeTrial={activeTrial}
-            metricsList={experiment.metrics.map(({name}) => name)}
-            parametersList={experiment.parameters.map(({name}) => name)}
+            metricsList={activeExperiment.metricsList}
+            parametersList={activeExperiment.parametersList}
+            labelsList={activeExperiment.labelsList}
             metric={
               metricParameterChart && metricParameterChart.metric
                 ? metricParameterChart.metric
@@ -206,10 +217,11 @@ export const ExperimentDetails = (props: Props) => {
                 ? metricParameterChart.parameter
                 : null
             }
-            labelsFilter={experiments.labelsFilter}
+            labelsFilter={activeExperiment.labelsFilter}
             onMetricChange={onMetricChange}
             onParameterChange={onParameterChange}
             selectTrialHandler={selectTrial}
+            filterChangeHandler={filterChange}
           />
         </div>
       </Tabs>

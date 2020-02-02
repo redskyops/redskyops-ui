@@ -4,21 +4,25 @@
 .chart {
   background-color: $white;
   min-height: 500px;
-  padding-top: $size-2x;
+  padding-top: $size-3x;
   min-width: 1280px;
 }
 
 .optionsRow {
   display: flex;
   flex-direction: row;
-  padding: $size-2x;
+  margin-left: $size-7x;
 }
 
-.dropdown {
+.metric {
   align-items: center;
   display: flex;
   flex-direction: row;
   margin-right: $size-4x;
+
+  &.right {
+    margin-left: auto;
+  }
 
   strong {
     margin-right: $size-2x;
@@ -34,4 +38,18 @@
   font-weight: bold;
   line-height: 28px;
   padding: 0 $size-2x;
+}
+
+.icon {
+  margin-right: $size-1x;
+
+  circle,
+  path {
+    fill: $color-7;
+  }
+}
+
+.dropdown {
+  margin-left: $size-1x;
+  width: 120px;
 }

@@ -20,6 +20,7 @@ type TypeProps = {
   trials: TypeTrials,
   activeTrial: TypeActiveTrial,
   selectTrialHandler: () => {},
+  filterChangeHandler: () => {},
   updateState: () => {},
 }
 
@@ -29,6 +30,7 @@ export const ExperimentResults = (props: TypeProps) => {
     trials,
     activeTrial,
     selectTrialHandler,
+    filterChangeHandler,
     updateState,
   } = props
   const numOfMertics = activeExperiment.metricsList.length
@@ -38,15 +40,6 @@ export const ExperimentResults = (props: TypeProps) => {
       activeExperiment: {
         ...activeExperiment,
         [`${axis}AxisMetric`]: item.value,
-      },
-    })
-  }
-
-  const onSelectedLabelsChange = ({items}) => {
-    updateState({
-      activeExperiment: {
-        ...activeExperiment,
-        labelsFilter: items.map(l => l.value),
       },
     })
   }
@@ -145,7 +138,7 @@ export const ExperimentResults = (props: TypeProps) => {
                 value: m,
               }))}
               placeholder="FILTER BY"
-              onChange={onSelectedLabelsChange}
+              onChange={filterChangeHandler}
             />
           </div>
         </div>
