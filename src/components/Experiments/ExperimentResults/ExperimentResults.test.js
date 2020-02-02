@@ -19,12 +19,14 @@ describe('Component: ExperimentResults', () => {
       zAxisMetric: 'throughput',
     },
     selectTrialHandler: jest.fn(),
+    filterChangeHandler: jest.fn(),
     updateState: jest.fn(),
   }
 
   beforeEach(() => {
     props.updateState.mockClear()
     props.selectTrialHandler.mockClear()
+    props.filterChangeHandler.mockClear()
   })
 
   it('should render ExperimentResults component', () => {
@@ -254,7 +256,7 @@ describe('Component: ExperimentResults', () => {
     wrapper.unmount()
   })
 
-  it('should render dropdow for labels filters', () => {
+  it('should render labels filter component with right props', () => {
     const localProps = {
       ...props,
       activeExperiment: {
@@ -264,45 +266,13 @@ describe('Component: ExperimentResults', () => {
       },
     }
     wrapper = shallow(<ExperimentResults {...localProps} />)
-    expect(wrapper.find('ListSearchMulti')).toHaveLength(1)
-    const listProps = wrapper
-      .find('ListSearchMulti')
-      .first()
-      .props()
-    expect(listProps.value).toBe(localProps.activeExperiment.labelsFilter)
-    expect(Array.isArray(listProps.itemsList)).toBe(true)
-    listProps.itemsList.forEach((item, i) => {
-      expect(item).toMatchObject({
-        label: localProps.activeExperiment.labelsList[i].toUpperCase(),
-        value: localProps.activeExperiment.labelsList[i],
-      })
-    })
-    wrapper.unmount()
-  })
-
-  it('should update state when lable filter is selected', () => {
-    const localProps = {
-      ...props,
-      activeExperiment: {
-        ...props.activeExperiment,
-        labelsList: ['best', 'optimal', 'bad'],
-        labelsFilter: ['optimal'],
-      },
-    }
-    wrapper = shallow(<ExperimentResults {...localProps} />)
-    expect(wrapper.find('ListSearchMulti')).toHaveLength(1)
-    const listProps = wrapper
-      .find('ListSearchMulti')
-      .first()
-      .props()
-    listProps.onChange({indexs: [2], items: [{value: 'bad'}]})
-    expect(props.updateState).toHaveBeenCalledTimes(1)
-    expect(props.updateState.mock.calls[0][0]).toMatchObject({
-      activeExperiment: {
-        ...localProps.activeExperiment,
-        labelsFilter: ['bad'],
-      },
-    })
+    expect(wrapper.find('LabelsFilter')).toHaveLength(1)
+    const filterProps = wrapper.find('LabelsFilter').props()
+    expect(filterProps.selectedValues).toBe(
+      localProps.activeExperiment.labelsFilter,
+    )
+    expect(filterProps.labelsList).toBe(localProps.activeExperiment.labelsList)
+    expect(filterProps.onChange).toBe(localProps.filterChangeHandler)
     wrapper.unmount()
   })
 })

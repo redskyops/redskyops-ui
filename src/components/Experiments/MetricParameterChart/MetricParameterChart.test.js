@@ -10,15 +10,18 @@ describe('Component: MetricParameterChart', () => {
     trials: trialsStub,
     metricsList: ['duration', 'cost'],
     parametersList: ['cpu', 'memory'],
+    labelsList: ['best'],
     onMetricChange: jest.fn(),
     onParameterChange: jest.fn(),
     selectTrialHandler: jest.fn(),
+    filterChangeHandler: jest.fn(),
   }
 
   beforeEach(() => {
     props.onParameterChange.mockClear()
     props.onMetricChange.mockClear()
     props.selectTrialHandler.mockClear()
+    props.filterChangeHandler.mockClear()
   })
 
   it('should render MetricParameterChart', () => {

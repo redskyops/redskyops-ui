@@ -189,15 +189,14 @@ export const ExperimentDetails = (props: Props) => {
     }
 
     const {metricParameterChart} = activeExperiment
-    const trialProps = {
-      selectTrialHandler: selectTrial,
-      filterChangeHandler: filterChange,
-    }
 
     return (
       <Tabs>
         <div data-title="EXPERIMENT RESULTS">
-          <ExperimentResults {...trialProps} />
+          <ExperimentResults
+            selectTrialHandler={selectTrial}
+            filterChangeHandler={filterChange}
+          />
           <TrialsStatistics trials={trials} />
         </div>
         <div data-title="PARAMETER DRILLDOWN">

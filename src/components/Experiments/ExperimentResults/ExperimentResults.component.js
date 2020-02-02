@@ -10,10 +10,10 @@ import {
 } from '../../Charts/ChartProps.type'
 import Icon from '../../Icon/Icon.component'
 import ListSearch from '../../FormControls/ListSearch/ListSearch.component'
-import ListSearchMulti from '../../FormControls/ListSearchMulti/ListSearchMulti.component'
 import {connectWithState} from '../../../context/StateContext'
 
 import style from './ExperimentResults.module.scss'
+import {LabelsFilter} from '../LabelsFilter/LabelsFilter.component'
 
 type TypeProps = {
   activeExperiment: TypeActiveExperiment,
@@ -129,18 +129,11 @@ export const ExperimentResults = (props: TypeProps) => {
             activeExperiment.labelsFilter.length > 0 ? style.activeFilter : ''
           }`}
         >
-          <Icon icon="filter" width={18} cssClass={style.metricIcon} />
-          <div className={style.dropdown}>
-            <ListSearchMulti
-              value={activeExperiment.labelsFilter}
-              itemsList={activeExperiment.labelsList.map(m => ({
-                label: m.toUpperCase(),
-                value: m,
-              }))}
-              placeholder="FILTER BY"
-              onChange={filterChangeHandler}
-            />
-          </div>
+          <LabelsFilter
+            labelsList={activeExperiment.labelsList}
+            selectedValues={activeExperiment.labelsFilter}
+            onChange={filterChangeHandler}
+          />
         </div>
       </div>
       <div className={style.chart}>{renderChart()}</div>

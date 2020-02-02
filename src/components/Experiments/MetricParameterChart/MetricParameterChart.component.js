@@ -5,9 +5,9 @@ import DotsChart2D, {
   AXIS_TYPE,
 } from '../../Charts/DotsChart2D/DotsChart2D.component'
 import {ListSearch} from '../../FormControls/ListSearch/ListSearch.component'
-import {ListSearchMulti} from '../../FormControls/ListSearchMulti/ListSearchMulti.component'
 import {TypeActiveTrial} from '../../../context/DefaultState'
 import Icon from '../../Icon/Icon.component'
+import {LabelsFilter} from '../LabelsFilter/LabelsFilter.component'
 
 type Props = {
   trials: Array<Object>,
@@ -68,24 +68,18 @@ export const MetricParameterChart = (props: Props) => {
                 props.onParameterChange()
               }}
             >
+              <Icon icon="circleX" width={18} className={style.clearIcon} />
               CLEAR
             </button>
           </div>
         )}
 
         <div className={`${style.metric} ${style.right}`}>
-          <Icon icon="filter" width={18} cssClass={style.icon} />
-          <div className={style.dropdown}>
-            <ListSearchMulti
-              itemsList={props.labelsList.map(p => ({
-                label: p.toUpperCase().replace(/_/g, ' '),
-                value: p,
-              }))}
-              value={props.labelsFilter}
-              onChange={props.filterChangeHandler}
-              placeholder="FILTER BY"
-            />
-          </div>
+          <LabelsFilter
+            labelsList={props.labelsList}
+            selectedValues={props.labelsFilter}
+            onChange={props.filterChangeHandler}
+          />
         </div>
       </div>
       {props.metric && props.parameter && (

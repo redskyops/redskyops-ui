@@ -30,14 +30,26 @@
 }
 
 .button {
-  border: 0;
+  align-items: center;
   background-color: $color-7;
-  border-radius: 14px;
+  border: 0;
+  border-radius: 20px;
   color: $white;
   cursor: pointer;
+  display: flex;
   font-weight: bold;
-  line-height: 28px;
-  padding: 0 $size-2x;
+  line-height: 8px;
+  outline: 0;
+  padding: 3px 8px 3px 4px;
+}
+
+.clearIcon {
+  margin-right: $size-1x;
+
+  circle,
+  path {
+    fill: $white;
+  }
 }
 
 .icon {

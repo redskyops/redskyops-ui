@@ -21,6 +21,9 @@ describe('Component: ExperimentsDetails', () => {
   let props = {
     activeExperiment: {
       index: 0,
+      metricsList: ['cost', 'duration'],
+      parametersList: ['cpu', 'memory'],
+      labelsList: ['best'],
     },
     experiments: {
       list: expService.addIdsToExperiments(expStub).experiments,
@@ -85,22 +88,17 @@ describe('Component: ExperimentsDetails', () => {
   })
 
   it('should ExperimentResults component with right props', () => {
-    const localProps = {
-      ...props,
-    }
-    wrapper = mount(<ExperimentDetails {...localProps} />)
+    wrapper = mount(<ExperimentDetails {...props} />)
     const resultComp = wrapper.find('ExperimentResults')
     expect(resultComp).toHaveLength(1)
     const resultsProps = resultComp.props()
     expect(typeof resultsProps.selectTrialHandler).toBe('function')
+    expect(typeof resultsProps.filterChangeHandler).toBe('function')
     wrapper.unmount()
   })
 
   it('should render trials statistics', () => {
-    const localProps = {
-      ...props,
-    }
-    wrapper = mount(<ExperimentDetails {...localProps} />)
+    wrapper = mount(<ExperimentDetails {...props} />)
     expect(wrapper.find('TrialsStatistics')).toHaveLength(1)
     expect(wrapper.find('TrialsStatistics').props()).toHaveProperty(
       'trials',
@@ -164,6 +162,7 @@ describe('Component: ExperimentsDetails', () => {
     expect(chartProps).toHaveProperty('activeTrial', props.activeTrial)
     expect(chartProps).toHaveProperty('metricsList', ['cost', 'duration'])
     expect(chartProps).toHaveProperty('parametersList', ['cpu', 'memory'])
+    expect(chartProps).toHaveProperty('labelsList', ['best'])
     expect(chartProps).toHaveProperty('metric', null)
     expect(chartProps).toHaveProperty('parameter', null)
     wrapper.setProps({
@@ -223,7 +222,7 @@ describe('Component: ExperimentsDetails', () => {
     wrapper.unmount()
   })
 
-  it('should update change when parameter changed in MetricParameterChart', async () => {
+  it('should update state when parameter changed in MetricParameterChart', async () => {
     wrapper = await mount(<ExperimentDetails {...props} />)
     expect(wrapper.find('MetricParameterChart')).toHaveLength(1)
 
@@ -267,7 +266,7 @@ describe('Component: ExperimentsDetails', () => {
     wrapper.unmount()
   })
 
-  it('should update when trial is selected in MetricParameterChart', async () => {
+  it('should update state when trial is selected in MetricParameterChart', async () => {
     wrapper = await mount(<ExperimentDetails {...props} />)
     expect(wrapper.find('MetricParameterChart')).toHaveLength(1)
     wrapper.find('MetricParameterChart').prop('selectTrialHandler')({
@@ -294,6 +293,24 @@ describe('Component: ExperimentsDetails', () => {
     expect(props.updateState.mock.calls[1][0]).toMatchObject({
       activeTrial: null,
     })
+    wrapper.unmount()
+  })
+
+  it('should update state filter is change in one of chart components', async () => {
+    wrapper = await mount(<ExperimentDetails {...props} />)
+    expect(wrapper.find('MetricParameterChart')).toHaveLength(1)
+    wrapper.find('MetricParameterChart').prop('filterChangeHandler')({
+      indexs: [0],
+      items: [{value: 'best'}],
+    })
+    expect(props.updateState).toHaveBeenCalledTimes(1)
+    expect(props.updateState.mock.calls[0][0]).toMatchObject({
+      activeExperiment: {
+        ...props.activeExperiment,
+        labelsFilter: ['best'],
+      },
+    })
+
     wrapper.unmount()
   })
 
