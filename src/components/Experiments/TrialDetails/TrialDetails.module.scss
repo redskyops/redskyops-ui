@@ -25,6 +25,14 @@
   margin-right: $size-1x;
 }
 
+.bestIcon {
+  margin-left: $size-1x;
+
+  path {
+    fill: $color-7;
+  }
+}
+
 .metrics {
   width: 250px;
 }
