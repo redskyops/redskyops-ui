@@ -1,5 +1,9 @@
 @import '../../../styles/colors';
 @import '../../../styles/vars';
+@import '../../../styles/mixins';
+
+$bar-color: #b8b6b6;
+$indicator-color: #515050;
 
 .rangeIndicator {
   display: block;
@@ -9,10 +13,18 @@
 }
 
 .bar {
-  background-color: $gray;
+  background-color: $bar-color;
   display: block;
-  height: 3px;
+  height: 10px;
   width: 100%;
+}
+
+.indicator {
+  @include transition('width');
+  background-color: $indicator-color;
+  display: block;
+  height: 10px;
+  width: 0;
 }
 
 .labels {
@@ -22,11 +34,4 @@
   font-weight: bold;
   justify-content: space-between;
   margin-top: 4px;
-}
-
-.icon {
-  color: $cr-green;
-  font-size: 32px;
-  position: absolute;
-  top: -10px;
 }

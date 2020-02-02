@@ -1,14 +1,24 @@
 import React from 'react'
 
 import style from './ExperimentsList.module.scss'
-import {ExperimentsService} from '../../services/ExperimentsService'
-import {connectWithState} from '../../context/StateContext'
-import useApiCallEffect from '../../hooks/useApiCallEffect'
+import {ExperimentsService} from '../../../services/ExperimentsService'
+import {connectWithState} from '../../../context/StateContext'
+import useApiCallEffect from '../../../hooks/useApiCallEffect'
 
 type Props = {
   experiments: Object,
   activeExperiment: Object,
   updateState: () => any,
+}
+
+const getMetricsList = experiment => {
+  return (experiment.metrics || [])
+    .sort(m => (m.minimize ? 1 : -1))
+    .map(({name}) => name)
+}
+
+const getParametersList = experiment => {
+  return (experiment.parameters || []).map(({name}) => name)
 }
 
 export const ExperimentsList = (props: Props) => {
@@ -44,12 +54,20 @@ export const ExperimentsList = (props: Props) => {
   ])
 
   const setActiveExperiment = index => () => {
+    const metricsList = getMetricsList(experiments.list[index])
+    const parametersList = getParametersList(experiments.list[index])
     updateState({
       activeExperiment: {
         ...activeExperiment,
         index,
+        metricsList,
+        parametersList,
         isLoading: true,
         metricParameterChart: null,
+        labelsFilter: [],
+        xAxisMetric: metricsList[0],
+        ...(metricsList.length >= 2 ? {yAxisMetric: metricsList[1]} : null),
+        ...(metricsList.length >= 3 ? {zAxisMetric: metricsList[2]} : null),
       },
       experiments: {
         ...experiments,
@@ -88,7 +106,7 @@ export const ExperimentsList = (props: Props) => {
                 key={e.id}
                 onClick={setActiveExperiment(i)}
               >
-                {e.displayName}
+                {e.displayName.replace(/-/g, ' ')}
               </button>
             )
           })}

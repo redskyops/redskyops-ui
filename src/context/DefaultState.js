@@ -8,13 +8,16 @@ export type TypeExperiments = {
   list: TypeExperimentsList,
   loading: boolean,
   error: string,
-  labelsFilter: Array<string>,
   filter: TypeExperimentsFilter,
 }
 
 export type TypeActiveExperiment = {
   index: number,
   isLoading: boolean,
+  metricsList: Array<string>,
+  parametersList: Array<string>,
+  labelsList: Array<string>,
+  labelsFilter: Array<string>,
   metricParameterChart?: {
     metric: string,
     parameter: string,

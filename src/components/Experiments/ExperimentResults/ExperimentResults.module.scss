@@ -1,0 +1,45 @@
+@import '../../../styles/colors';
+@import '../../../styles/vars';
+
+.expResults {
+  display: block;
+}
+
+.metrics {
+  display: flex;
+  flex-direction: row;
+  margin-top: $size-3x;
+  margin-left: $size-7x;
+}
+
+.metric {
+  align-items: center;
+  display: flex;
+  flex-direction: row;
+  margin-right: $size-4x;
+}
+
+.metricIcon {
+  margin-right: $size-1x;
+
+  circle,
+  path {
+    fill: $color-7;
+  }
+}
+
+.activeFilter {
+  circle,
+  path {
+    fill: $color-6;
+  }
+}
+
+.dropdown {
+  margin-left: $size-1x;
+  width: 120px;
+}
+
+.alignRight {
+  margin-left: auto;
+}

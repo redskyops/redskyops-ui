@@ -2,11 +2,11 @@ import React from 'react'
 import {shallow, mount} from 'enzyme'
 
 import {ExperimentsList} from './ExperimentsList.component'
-import expStub from '../../services/_stubs/exp-data'
-import {ExperimentsService} from '../../services/ExperimentsService'
+import expStub from '../../../services/_stubs/exp-data'
+import {ExperimentsService} from '../../../services/ExperimentsService'
 
-jest.mock('../../services/ExperimentsService', () =>
-  jest.requireActual('../../services/__mocks__/ExperimentsService'),
+jest.mock('../../../services/ExperimentsService', () =>
+  jest.requireActual('../../../services/__mocks__/ExperimentsService'),
 )
 
 describe('Component: ExperimentList', () => {

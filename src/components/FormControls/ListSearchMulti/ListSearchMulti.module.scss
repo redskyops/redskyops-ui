@@ -3,7 +3,7 @@
 @import '../../../styles/vars';
 @import '../../../styles/mixins';
 
-$min-width: 95px;
+$min-width: 100px;
 
 @mixin input-shared {
   background-color: $white;
@@ -56,10 +56,13 @@ $min-width: 95px;
 }
 
 .item {
+  align-items: center;
   background-color: $white;
   border: 0;
   color: $black;
   cursor: pointer;
+  display: flex;
+  flex-direction: row;
   font-size: 12px;
   line-height: $size-5x;
   outline: 0;
@@ -79,12 +82,16 @@ $min-width: 95px;
   &.selected {
     color: $color-6;
     font-weight: bold;
+
+    .circle {
+      background-color: $color-6;
+    }
   }
 }
 
 .valuePlacehoder {
   @include input-shared {
-    width: calc(100% - 48px);
+    width: calc(100% - 45px);
     padding: 0 0 0 $size-2x;
   }
   overflow: hidden;
@@ -95,4 +102,14 @@ $min-width: 95px;
   white-space: nowrap;
   top: 1px;
   left: 1px;
+}
+
+.circle {
+  background-color: transparent;
+  border: 2px solid $color-6;
+  border-radius: 7px;
+  display: block;
+  height: 14px;
+  margin-right: $size-1x;
+  width: 14px;
 }

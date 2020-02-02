@@ -3,15 +3,9 @@
 
 .chart {
   background-color: $white;
-  margin-top: $size-2x;
+  min-height: 500px;
   padding-top: $size-2x;
-  width: 1024px;
-}
-
-.title {
-  font-weight: 600;
-  font-size: 18px;
-  padding-left: $size-2x;
+  min-width: 1280px;
 }
 
 .optionsRow {
@@ -33,9 +27,11 @@
 
 .button {
   border: 0;
-  background-color: $bg-light;
+  background-color: $color-7;
   border-radius: 14px;
+  color: $white;
   cursor: pointer;
+  font-weight: bold;
   line-height: 28px;
-  padding: 0 $size-4x;
+  padding: 0 $size-2x;
 }
