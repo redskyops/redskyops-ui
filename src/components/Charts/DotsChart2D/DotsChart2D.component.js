@@ -98,9 +98,11 @@ export class DotsChart2D extends React.Component<
         `translate(-${margins.left - 20}, ${height / 2}) rotate(-90)`,
       )
       .attr('font-size', '1.5em')
+      .attr('font-family', "'Montserrat', sans-serif")
+      .attr('font-weight', 'bold')
       .style('text-anchor', 'middle')
       .style('fill', '#000')
-      .text(yValueName)
+      .text(yValueName.toUpperCase().replace(/_/g, ' '))
 
     const xAxis = d3.axisBottom(xScale).ticks(10)
 
@@ -111,11 +113,13 @@ export class DotsChart2D extends React.Component<
 
     svg
       .append('text')
-      .attr('transform', `translate(${width / 2}, ${height + 35})`)
+      .attr('transform', `translate(${width / 2}, ${height + 38})`)
       .attr('font-size', '1.5em')
+      .attr('font-family', "'Montserrat', sans-serif")
+      .attr('font-weight', 'bold')
       .style('text-anchor', 'middle')
       .style('fill', '#000')
-      .text(xValueName)
+      .text(xValueName.toUpperCase().replace(/_/g, ' '))
 
     const makeXGridlines = () => {
       return d3.axisBottom(xScale).ticks(10)
@@ -123,7 +127,7 @@ export class DotsChart2D extends React.Component<
 
     svg
       .append('g')
-      .attr('class', style.grid)
+      .attr('class', style.gridX)
       .attr('transform', `translate(0, ${height})`)
       .call(
         makeXGridlines()
@@ -254,7 +258,7 @@ export class DotsChart2D extends React.Component<
       .attr('class', 'point')
       .attr('r', d =>
         this.props.activeTrial && d.index === this.props.activeTrial.index
-          ? 6
+          ? 10
           : 3,
       )
       .attr('class', style.circle)

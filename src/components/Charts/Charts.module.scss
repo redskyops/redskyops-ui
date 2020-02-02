@@ -11,24 +11,35 @@
   padding: $size-4x 0;
   background-color: $white;
   width: 100%;
+
+  :global(.domain) {
+    stroke: $color-8;
+    stroke-width: 4px;
+  }
+
+  :global(.tick) {
+    line {
+      stroke: $gray-light;
+    }
+  }
 }
 
 .circle {
   cursor: pointer;
-  fill: $cr-blue;
+  fill: $color-9;
 
   &.best {
-    fill: $cr-orange;
+    fill: $color-7;
   }
 
-  &.active,
-  &.selected {
-    fill: $cr-green;
+  // &.active,
+  // &.selected {
 
-    &.best {
-      fill: $cr-pink;
-    }
-  }
+
+  //   &.best {
+  //     fill: $cr-pink;
+  //   }
+  // }
 }
 
 
@@ -40,6 +51,24 @@
 
   path {
     &:first-child {
+      display: none;
+    }
+  }
+}
+
+.gridX {
+  line {
+    stroke: $gray-light;
+  }
+
+  path {
+    &:first-child {
+      display: none;
+    }
+  }
+
+  :global(.tick) {
+    &:first-of-type {
       display: none;
     }
   }

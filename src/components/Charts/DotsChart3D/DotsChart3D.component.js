@@ -229,21 +229,21 @@ export class DotsChart3D extends React.Component<ChartPropsType> {
       this.scene.add(label)
     }
 
-    const xLabel = this.getText(this.scales[0].name, 'center')
-    xLabel.position.z = mid + 0.25
+    const xLabel = this.getText(this.scales[0].name.toUpperCase(), 'center')
+    xLabel.position.z = mid + 0.32
     xLabel.rotation.x = -Math.PI / 2
     this.scene.add(xLabel)
 
-    const yLabel = this.getText(this.scales[1].name, 'center')
+    const yLabel = this.getText(this.scales[1].name.toUpperCase(), 'center')
     yLabel.position.x = -mid
     yLabel.position.y = mid
-    yLabel.position.z = mid + 0.3
+    yLabel.position.z = mid + 0.32
     yLabel.rotation.y = Math.PI / 2
     yLabel.rotation.z = Math.PI / 2
     this.scene.add(yLabel)
 
-    const zLabel = this.getText(this.scales[2].name, 'center')
-    zLabel.position.x = mid + 0.35
+    const zLabel = this.getText(this.scales[2].name.toUpperCase(), 'center')
+    zLabel.position.x = mid + 0.32
     zLabel.rotation.z = Math.PI / 2
     zLabel.rotation.x = -Math.PI / 2
     this.scene.add(zLabel)
