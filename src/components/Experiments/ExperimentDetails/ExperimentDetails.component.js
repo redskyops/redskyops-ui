@@ -8,6 +8,7 @@ import {
   TypeTrials,
   TypeActiveTrial,
   TypeLabels,
+  TypeHoveredTrial,
 } from '../../../context/DefaultState'
 import ExperimentResults from '../ExperimentResults/ExperimentResults.component'
 import TrialDetails from '../TrialDetails/TrialDetails.component'
@@ -19,6 +20,7 @@ import style from './ExperimentDetails.module.scss'
 import MetricParameterChart from '../MetricParameterChart/MetricParameterChart.component'
 import Tabs from '../../Tabs/Tabs.component'
 import arrowImage from '../../../assets/images/ArrowLeft.png'
+import TrialPopup from '../TrialPopup/TrialPopup.component'
 
 type Props = {
   activeExperiment: TypeActiveExperiment,
@@ -26,6 +28,7 @@ type Props = {
   trials: TypeTrials,
   activeTrial: TypeActiveTrial,
   labels: TypeLabels,
+  hoveredTrial: TypeHoveredTrial,
   updateState: () => any,
 }
 
@@ -37,6 +40,7 @@ export const ExperimentDetails = (props: Props) => {
     trials,
     activeTrial,
     labels,
+    hoveredTrial,
   } = props
   const expService = new ExperimentsService()
 
@@ -88,6 +92,25 @@ export const ExperimentDetails = (props: Props) => {
         labelToDelete: '',
       },
     })
+  }
+
+  const hoverTrial = ({trial, index, domBox, xData, yData}) => {
+    if (trial) {
+      updateState({
+        hoveredTrial: {
+          ...hoveredTrial,
+          trial,
+          index,
+          xData,
+          yData,
+          left: domBox.left,
+          top: domBox.top,
+        },
+      })
+      return
+    }
+
+    updateState({hoveredTrial: null})
   }
 
   const filterChange = ({items}) => {
@@ -195,6 +218,7 @@ export const ExperimentDetails = (props: Props) => {
         <div data-title="EXPERIMENT RESULTS">
           <ExperimentResults
             selectTrialHandler={selectTrial}
+            hoverTrialHandler={hoverTrial}
             filterChangeHandler={filterChange}
           />
           <TrialsStatistics trials={trials} />
@@ -251,6 +275,7 @@ export const ExperimentDetails = (props: Props) => {
       <h1 className={style.h1}>{experiment.displayName.replace(/-/g, ' ')}</h1>
       {renderTrials()}
       {renderTrialDetails()}
+      <TrialPopup />
     </div>
   )
 }

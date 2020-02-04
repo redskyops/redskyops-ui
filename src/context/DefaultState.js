@@ -38,6 +38,15 @@ export type TypeLabels = {
   labelToDelete: string,
 }
 
+export type TypeHoveredTrial = {
+  left: number,
+  top: number,
+  trial: Object,
+  xData: {name: string, value: number, type: string},
+  yData?: {name: string, value: number, type: string},
+  zData?: {name: string, value: number, type: string},
+}
+
 const experimentsList: TypeExperimentsList = []
 
 const trials: TypeTrials = null
@@ -65,10 +74,13 @@ const labels: TypeTrials = {
   labelToDelete: '',
 }
 
+const hoveredTrial: TypeHoveredTrial = null
+
 export const DEFAULT_STATE = {
   experiments,
   activeExperiment,
   trials,
   activeTrial,
   labels,
+  hoveredTrial,
 }

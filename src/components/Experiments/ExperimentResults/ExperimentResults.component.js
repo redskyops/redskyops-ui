@@ -22,6 +22,7 @@ type TypeProps = {
   selectTrialHandler: () => {},
   filterChangeHandler: () => {},
   updateState: () => {},
+  hoverTrialHandler: () => {},
 }
 
 export const ExperimentResults = (props: TypeProps) => {
@@ -30,6 +31,7 @@ export const ExperimentResults = (props: TypeProps) => {
     trials,
     activeTrial,
     selectTrialHandler,
+    hoverTrialHandler,
     filterChangeHandler,
     updateState,
   } = props
@@ -48,6 +50,7 @@ export const ExperimentResults = (props: TypeProps) => {
     trials,
     activeTrial,
     selectTrialHandler: selectTrialHandler,
+    hoverTrialHandler: hoverTrialHandler,
     numOfMertics: activeExperiment.metricsList.length,
     labelsFilter: activeExperiment.labelsFilter,
     xAxisMetricName: activeExperiment.xAxisMetric,
@@ -141,4 +144,9 @@ export const ExperimentResults = (props: TypeProps) => {
   )
 }
 
-export default connectWithState(ExperimentResults)
+export default connectWithState(ExperimentResults, [
+  'activeExperiment',
+  'experiments',
+  'trials',
+  'activeTrial',
+])

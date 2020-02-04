@@ -1,0 +1,28 @@
+@import '../../../styles/vars';
+@import '../../../styles/mixins';
+
+.trialPopup {
+  background-color: $color-1;
+  border: 1px solid $color-8;
+  display: block;
+  padding: $size-2x;
+  position: absolute;
+  top: 100px;
+  left: 100px;
+  letter-spacing: 1px;
+  white-space: nowrap;
+  width: auto;
+  z-index: 1000;
+
+  &.toRightSide {
+    transform: translate(10px, calc(-100% - 10px));
+  }
+
+  &.toLeftSide {
+    transform: translate(calc(-100% - 10px), calc(-100% - 10px));
+  }
+}
+
+.title {
+  margin-bottom: $size-2x;
+}
