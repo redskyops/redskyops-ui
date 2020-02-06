@@ -7,24 +7,43 @@ import {
   TypeTrials,
   TypeActiveTrial,
   TypeLabels,
+  TypeActiveExperiment,
+  TypeExperiments,
 } from '../../../context/DefaultState'
 import getAllLabelsFromTrials from '../../../utilities/getAllLabelsFromTrials'
 
 import style from './Labels.module.scss'
+import Icon from '../../Icon/Icon.component'
 
 const DEFAULT_LABEL_VALUE = 'true'
 
 type Props = {
   activeTrial: TypeActiveTrial,
+  activeExperiment: TypeActiveExperiment,
+  experiments: TypeExperiments,
   trials: TypeTrials,
   labels: TypeLabels,
-  experimentId: string,
   updateState: () => any,
 }
 
 export const Labels = (props: Props) => {
-  const {activeTrial, trials, labels, experimentId, updateState} = props
+  const {
+    activeTrial,
+    activeExperiment,
+    experiments,
+    trials,
+    labels,
+    updateState,
+  } = props
   const trial = trials[activeTrial.index]
+  const experiment =
+    experiments &&
+    experiments.list &&
+    activeExperiment &&
+    experiments.list[activeExperiment.index]
+      ? experiments.list[activeExperiment.index]
+      : null
+  const experimentId = experiment ? experiment.id : null
 
   const expService = new ExperimentsService()
 
@@ -59,6 +78,25 @@ export const Labels = (props: Props) => {
         postingNewLabel: false,
         newLabel: '',
       },
+      /* eslint-disable indent */
+      ...(label => {
+        return label
+          ? null
+          : {
+              activeExperiment: {
+                ...activeExperiment,
+                labelsList: [
+                  ...activeExperiment.labelsList,
+                  labels.newLabel.trim().toLowerCase(),
+                ],
+              },
+            }
+      })(
+        activeExperiment.labelsList.find(
+          l => l.toLowerCase() === labels.newLabel.trim().toLowerCase(),
+        ),
+      ),
+      /* eslint-enable indent */
     })
   }
 
@@ -81,11 +119,6 @@ export const Labels = (props: Props) => {
   const onAddFormSubmit = e => {
     e.preventDefault()
     addLabel()
-  }
-
-  const onAddLabelClick = label => e => {
-    e.preventDefault()
-    addLabel(label)
   }
 
   /* eslint-disable indent */
@@ -118,6 +151,10 @@ export const Labels = (props: Props) => {
         postingDelLabel: false,
         labelToDelete: '',
       },
+      activeExperiment: {
+        ...activeExperiment,
+        labelsList: getAllLabelsFromTrials(updatedTrials),
+      },
     })
   }
 
@@ -147,64 +184,56 @@ export const Labels = (props: Props) => {
           onClick={deleteLabel(label)}
           disabled={labels.postingNewLabel || labels.postingDelLabel}
         >
-          {label}
-          <span className={`material-icons ${style.labelDel}`}>close</span>
+          {label.toUpperCase()}
+          <Icon icon="circleX" width={14} cssClass={style.labelDel} />
         </button>
       )
     })
-    return list.length > 0 ? (
-      <div className={style.list}>{list}</div>
-    ) : (
-      <span>No labels assigned</span>
-    )
+    return list.length > 0 ? <div className={style.list}>{list}</div> : null
   }
 
-  const renderLabelsToAdd = () => {
-    const existingLabels = Object.keys(trial.labels || {})
-    return getAllLabelsFromTrials(trials)
-      .filter(l => existingLabels.indexOf(l) < 0)
-      .map(label => {
-        return (
-          <button
-            key={label}
-            className={`${style.label} ${style.labelAssign}`}
-            onClick={onAddLabelClick(label)}
-          >
-            {label}
-            <span className={`material-icons ${style.labelDel}`}>add</span>
-          </button>
-        )
-      })
+  // const renderLabelsToAdd = () => {
+  //   const existingLabels = Object.keys(trial.labels || {})
+  //   return getAllLabelsFromTrials(trials)
+  //     .filter(l => existingLabels.indexOf(l) < 0)
+  //     .map(label => {
+  //       return (
+  //         <button
+  //           key={label}
+  //           className={`${style.label} ${style.labelAssign}`}
+  //           onClick={onAddLabelClick(label)}
+  //         >
+  //           {label}
+  //           <span className={`material-icons ${style.labelDel}`}>add</span>
+  //         </button>
+  //       )
+  //     })
+  // }
+
+  if (!experimentId || !trial) {
+    return null
   }
 
   return (
     <div className={style.labels}>
-      <div className={style.section} data-dom-id="labels-assigned">
-        <h4 className={style.h4}>Assigned labels</h4>
-        {renderLabels()}
-      </div>
-      <div className={style.section} data-dom-id="labels-new">
-        <h4 className={style.h4}>Assign label</h4>
-        {renderLabelsToAdd()}
-      </div>
-      <div className={style.section}>
-        <h4 className={style.h4}>Create new label</h4>
-        <form onSubmit={onAddFormSubmit}>
-          <input
-            type="text"
-            className={style.labelInput}
-            value={labels.newLabel}
-            onChange={e =>
-              updateState({
-                labels: {
-                  ...labels,
-                  newLabel: e.target.value,
-                },
-              })
-            }
-          />
-        </form>
-      </div>
+      {renderLabels()}
+      <form onSubmit={onAddFormSubmit} className={style.form}>
+        <input
+          type="text"
+          className={style.labelInput}
+          value={labels.newLabel}
+          placeholder="Assign Label"
+          onChange={e =>
+            updateState({
+              labels: {
+                ...labels,
+                newLabel: e.target.value,
+              },
+            })
+          }
+        />
+        <button className={style.submit}>SUBMIT</button>
+      </form>
     </div>
   )
 }

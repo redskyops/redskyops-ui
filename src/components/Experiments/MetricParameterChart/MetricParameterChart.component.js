@@ -21,6 +21,7 @@ type Props = {
   onMetricChange: () => {},
   onParameterChange: () => {},
   selectTrialHandler: () => {},
+  hoverTrialHandler: () => {},
   filterChangeHandler: () => {},
 }
 
@@ -89,6 +90,7 @@ export const MetricParameterChart = (props: Props) => {
           xAxisMetricName={props.parameter}
           yAxisMetricName={props.metric}
           selectTrialHandler={props.selectTrialHandler}
+          hoverTrialHandler={props.hoverTrialHandler}
           activeTrial={props.activeTrial}
           labelsFilter={props.labelsFilter}
         />

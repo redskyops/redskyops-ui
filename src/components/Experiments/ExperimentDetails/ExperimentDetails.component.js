@@ -244,6 +244,7 @@ export const ExperimentDetails = (props: Props) => {
             onMetricChange={onMetricChange}
             onParameterChange={onParameterChange}
             selectTrialHandler={selectTrial}
+            hoverTrialHandler={hoverTrial}
             filterChangeHandler={filterChange}
           />
         </div>

@@ -3,6 +3,7 @@ import React from 'react'
 import style from './TrialDetails.module.scss'
 import ValueDisplay from '../ValueDisplay/ValueDisplay.component'
 import Icon from '../../Icon/Icon.component'
+import Labels from '../Labels/Labels.component'
 
 type Props = {
   trial?: Object,
@@ -41,6 +42,11 @@ export const TrialDetails = (props: Props) => {
             value={metric.value}
           />
         ))}
+
+        <h3 className={`${style.h3} ${style.spaceTop}`}>
+          <Icon icon="metrics" width={18} cssClass={style.titleIcon} /> LABELS
+        </h3>
+        <Labels />
       </div>
       <div className={`${style.column} ${style.parameters} parametersCol`}>
         <h3 className={style.h3}>

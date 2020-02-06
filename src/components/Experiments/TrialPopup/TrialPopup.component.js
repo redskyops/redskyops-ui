@@ -1,12 +1,13 @@
 import React from 'react'
 
 import {connectWithState} from '../../../context/StateContext'
-import {TypeHoveredTrial} from '../../../context/DefaultState'
+import {TypeHoveredTrial, TypeActiveTrial} from '../../../context/DefaultState'
 
 import style from './TrialPopup.module.scss'
 
 type TypeProps = {
   hoveredTrial: TypeHoveredTrial,
+  activeTrial: TypeActiveTrial,
 }
 
 export const TrialPopup = (props: TypeProps) => {
@@ -15,11 +16,21 @@ export const TrialPopup = (props: TypeProps) => {
   if (!hoveredTrial) {
     return null
   }
-  const {left, top, xData, yData, zData} = hoveredTrial
+  const {left, top, xData, yData, zData, trial} = hoveredTrial
 
   const divPos = {
     left: left + window.scrollX,
     top: top + window.scrollY,
+  }
+
+  const renderLables = () => {
+    const trialLabels = Object.keys(trial.labels || {}).map(l =>
+      l.toUpperCase(),
+    )
+    if (trialLabels.length < 1) {
+      return null
+    }
+    return <h3 className={style.title}>{trialLabels.join(', ')}</h3>
   }
 
   let classes = style.trialPopup
@@ -30,7 +41,7 @@ export const TrialPopup = (props: TypeProps) => {
 
   return (
     <div className={classes} style={divPos}>
-      <h3 className={style.title}>EXPERIMENT LABEL</h3>
+      {renderLables()}
       {xData && (
         <div className={style.metric}>
           {xData.name.toUpperCase().replace(/_/g, ' ')}{' '}
