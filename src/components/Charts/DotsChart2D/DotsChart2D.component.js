@@ -175,11 +175,6 @@ export class DotsChart2D extends React.Component<
           v => v.metricName === yValueName,
         )[0].value
 
-        // let xPos = xScale(xValue)
-        // let yPos = yScale(yValue)
-        // xPos -= xPos + popupWidth >= width ? popupWidth + 5 : 0
-        // yPos -= yPos + popupHeight >= height ? popupHeight + 8 : 0
-
         d3.select(this)
           .classed(style.active, true)
           .attr('r', 6)
@@ -197,30 +192,6 @@ export class DotsChart2D extends React.Component<
         }
 
         hoverTrialHandler(hoverData)
-        // const popup = d3
-        //   .select(`#popup-${chartId}`)
-        //   .attr('transform', `translate(${xPos}, ${yPos})`)
-        //   .classed(style.hidden, false)
-        //   .classed(style.fadeIn, true)
-        //   .classed(style.best, dataPoint.labels && 'best' in dataPoint.labels)
-
-        // popup.selectAll('text').remove()
-        // popup
-        //   .append('text')
-        //   .attr('font-size', '1.5em')
-        //   .attr('font-family', 'sans-serif')
-        //   .style('text-anchor', 'start')
-        //   .attr('transform', 'translate(10, 23)')
-        //   .attr('width', 100)
-        //   .text(`${xValueName}: ${xValue}`)
-        // popup
-        //   .append('text')
-        //   .attr('font-size', '1.5em')
-        //   .attr('font-family', 'sans-serif')
-        //   .style('text-anchor', 'start')
-        //   .attr('transform', 'translate(10, 45)')
-        //   .attr('width', 100)
-        //   .text(`${yValueName}: ${yValue}`)
       }
 
     const circleOut = (activeTrial, hoverTrialHandler) =>
@@ -231,9 +202,6 @@ export class DotsChart2D extends React.Component<
             'r',
             activeTrial && dataPoint.index === activeTrial.index ? 6 : 3,
           )
-        // d3.select(`#popup-${chartId}`)
-        //   .classed(style.hidden, true)
-        //   .classed(style.fadeIn, false)
         hoverTrialHandler({trial: null, domBox: null, index: -1})
       }
 
