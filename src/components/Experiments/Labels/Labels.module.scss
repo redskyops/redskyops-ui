@@ -9,6 +9,9 @@
 }
 
 .form {
+  display: block;
+  position: relative;
+
   width: 100%;
 }
 
@@ -73,5 +76,30 @@
 
   path {
     fill: $color-8;
+  }
+}
+
+.menu {
+  @include default-shadow;
+  background-color: $white;
+  position: absolute;
+  left: 0;
+  top: 48px;
+  width: 100%;
+  z-index: 10;
+}
+
+.menuItem {
+  background-color: transparent;
+  border: 0;
+  border-bottom: 1px solid $gray-light;
+  cursor: pointer;
+  font-size: 14px;
+  padding: $size-1x $size-2x;
+  text-align: left;
+  width: 100%;
+
+  &:last-child {
+    border-bottom: 0;
   }
 }

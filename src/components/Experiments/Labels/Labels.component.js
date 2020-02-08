@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useState, useEffect} from 'react'
 
 import {connectWithState} from '../../../context/StateContext'
 import {ExperimentsService} from '../../../services/ExperimentsService'
@@ -44,14 +44,15 @@ export const Labels = (props: Props) => {
       ? experiments.list[activeExperiment.index]
       : null
   const experimentId = experiment ? experiment.id : null
-
   const expService = new ExperimentsService()
+  const [showMenu, setShowMenu] = useState(false)
+  let interval
 
   /* eslint-disable indent */
   const postLabelFactory = () =>
     labels.postingNewLabel === true &&
     labels.postingDelLabel === false &&
-    labels.newLabel
+    !!labels.newLabel === true
       ? expService.postLabelToTrialFactory({
           experimentId,
           trialId: trial.number,
@@ -106,19 +107,18 @@ export const Labels = (props: Props) => {
     labels.postingNewLabel,
   ])
 
-  const addLabel = newLabel => {
-    updateState({
-      labels: {
-        ...labels,
-        postingNewLabel: true,
-        ...(newLabel ? {newLabel} : null),
-      },
-    })
-  }
-
   const onAddFormSubmit = e => {
     e.preventDefault()
-    addLabel()
+    if (labels.postingNewLabel || labels.postingDelLabel) {
+      return
+    }
+    labels.newLabel &&
+      updateState({
+        labels: {
+          ...labels,
+          postingNewLabel: true,
+        },
+      })
   }
 
   /* eslint-disable indent */
@@ -166,6 +166,9 @@ export const Labels = (props: Props) => {
 
   const deleteLabel = labelToDelete => e => {
     e.preventDefault()
+    if (labelToDelete === 'best') {
+      return
+    }
     updateState({
       labels: {
         ...labels,
@@ -185,30 +188,39 @@ export const Labels = (props: Props) => {
           disabled={labels.postingNewLabel || labels.postingDelLabel}
         >
           {label.toUpperCase()}
-          <Icon icon="circleX" width={14} cssClass={style.labelDel} />
+          {label !== 'best' && (
+            <Icon icon="circleX" width={14} cssClass={style.labelDel} />
+          )}
         </button>
       )
     })
     return list.length > 0 ? <div className={style.list}>{list}</div> : null
   }
 
-  // const renderLabelsToAdd = () => {
-  //   const existingLabels = Object.keys(trial.labels || {})
-  //   return getAllLabelsFromTrials(trials)
-  //     .filter(l => existingLabels.indexOf(l) < 0)
-  //     .map(label => {
-  //       return (
-  //         <button
-  //           key={label}
-  //           className={`${style.label} ${style.labelAssign}`}
-  //           onClick={onAddLabelClick(label)}
-  //         >
-  //           {label}
-  //           <span className={`material-icons ${style.labelDel}`}>add</span>
-  //         </button>
-  //       )
-  //     })
-  // }
+  const handleFocus = () => {
+    clearInterval(interval)
+    setShowMenu(true)
+  }
+
+  const handleBlur = () => {
+    clearInterval(interval)
+    interval = setTimeout(() => setShowMenu(false), 150)
+  }
+
+  const onMenuItemClick = label => e => {
+    e.preventDefault()
+    clearInterval(interval)
+    setShowMenu(false)
+    updateState({
+      labels: {
+        ...labels,
+        newLabel: label,
+        postingNewLabel: true,
+      },
+    })
+  }
+
+  useEffect(() => () => clearInterval(interval))
 
   if (!experimentId || !trial) {
     return null
@@ -231,7 +243,25 @@ export const Labels = (props: Props) => {
               },
             })
           }
+          onFocus={handleFocus}
+          onBlur={handleBlur}
         />
+        {showMenu && (
+          <div className={style.menu}>
+            {activeExperiment.labelsList
+              .filter(l => new RegExp(labels.newLabel, 'gi').test(l))
+              .map(label => (
+                <button
+                  className={style.menuItem}
+                  key={label}
+                  onClick={onMenuItemClick(label)}
+                >
+                  {label.toUpperCase()}
+                </button>
+              ))}
+          </div>
+        )}
+
         <button className={style.submit}>SUBMIT</button>
       </form>
     </div>
