@@ -11,7 +11,7 @@
 
 .h3 {
   align-items: center;
-  color: $color-5;
+  color: $color-9;
   display: flex;
   font-size: 18px;
   width: 100%;
@@ -23,13 +23,21 @@
 
 .titleIcon {
   margin-right: $size-1x;
-}
-
-.bestIcon {
-  margin-left: $size-1x;
 
   path {
-    fill: $color-7;
+    fill: $color-9;
+  }
+}
+
+.best {
+  h3 {
+    color: $color-7;
+  }
+
+  .titleIcon {
+    path {
+      fill: $color-7;
+    }
   }
 }
 
