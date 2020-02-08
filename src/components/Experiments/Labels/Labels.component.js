@@ -109,16 +109,15 @@ export const Labels = (props: Props) => {
 
   const onAddFormSubmit = e => {
     e.preventDefault()
-    if (labels.postingNewLabel || labels.postingDelLabel) {
+    if (labels.postingNewLabel || labels.postingDelLabel || !labels.newLabel) {
       return
     }
-    labels.newLabel &&
-      updateState({
-        labels: {
-          ...labels,
-          postingNewLabel: true,
-        },
-      })
+    updateState({
+      labels: {
+        ...labels,
+        postingNewLabel: true,
+      },
+    })
   }
 
   /* eslint-disable indent */
@@ -249,6 +248,7 @@ export const Labels = (props: Props) => {
         {showMenu && (
           <div className={style.menu}>
             {activeExperiment.labelsList
+              .filter(l => !(l in trial.labels))
               .filter(l => new RegExp(labels.newLabel, 'gi').test(l))
               .map(label => (
                 <button

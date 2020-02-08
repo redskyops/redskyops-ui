@@ -1,4 +1,5 @@
 import React from 'react'
+import {act} from 'react-dom/test-utils'
 import {shallow, mount} from 'enzyme'
 
 import {Labels} from './Labels.component'
@@ -15,7 +16,13 @@ describe('Component: Lables', () => {
   const props = {
     trials: trialsStub.trials,
     activeTrial: {index: 2},
-    experimentId: 'experiment-one',
+    experiments: {
+      list: [{id: 'experiment_id'}],
+    },
+    activeExperiment: {
+      index: 0,
+      labelsList: ['one', 'two', 'three'],
+    },
     labels: {
       postingNewLabel: false,
       postingDelLabel: false,
@@ -59,8 +66,65 @@ describe('Component: Lables', () => {
     wrapper.unmount()
   })
 
-  it('should set state to posing when user post add new label', () => {
+  it('should NOT set state to posing when user post add new label with empty string', () => {
     wrapper = shallow(<Labels {...props} />)
+    wrapper
+      .find('form')
+      .first()
+      .simulate('submit', {
+        preventDefault: () => {},
+      })
+    expect(props.updateState).toHaveBeenCalledTimes(0)
+    wrapper.unmount()
+  })
+
+  it('should NOT set state to posing when user submit form again while posting new label', () => {
+    const localProps = {
+      ...props,
+      labels: {
+        ...props.labels,
+        postingNewLabel: true,
+      },
+    }
+    wrapper = shallow(<Labels {...localProps} />)
+    wrapper
+      .find('form')
+      .first()
+      .simulate('submit', {
+        preventDefault: () => {},
+      })
+    expect(props.updateState).toHaveBeenCalledTimes(0)
+    wrapper.unmount()
+  })
+
+  it('should NOT set state to posing when user submit form again while posting to delete label', () => {
+    const localProps = {
+      ...props,
+      labels: {
+        ...props.labels,
+        postingDelLabel: true,
+      },
+    }
+    wrapper = shallow(<Labels {...localProps} />)
+    wrapper
+      .find('form')
+      .first()
+      .simulate('submit', {
+        preventDefault: () => {},
+      })
+    expect(props.updateState).toHaveBeenCalledTimes(0)
+    wrapper.unmount()
+  })
+
+  it('should set state to posing when user post add new label', () => {
+    const localProps = {
+      ...props,
+      labels: {
+        ...props.labels,
+        newLabel: 'new_label',
+      },
+    }
+    wrapper = shallow(<Labels {...localProps} />)
     wrapper
       .find('form')
       .first()
@@ -70,6 +134,7 @@ describe('Component: Lables', () => {
     expect(props.updateState).toHaveBeenCalledTimes(1)
     expect(props.updateState.mock.calls[0][0]).toHaveProperty('labels')
     expect(props.updateState.mock.calls[0][0].labels).toMatchObject({
+      ...localProps.labels,
       postingNewLabel: true,
     })
     wrapper.unmount()
@@ -95,7 +160,7 @@ describe('Component: Lables', () => {
     wrapper = mount(<Labels {...localProps} />)
     expect(expService.postLabelToTrialFactory).toHaveBeenCalledTimes(1)
     expect(expService.postLabelToTrialFactory).toHaveBeenCalledWith({
-      experimentId: props.experimentId,
+      experimentId: 'experiment_id',
       trialId: props.trials[props.activeTrial.index].number,
       labels: {
         new_label: 'true',
@@ -139,6 +204,46 @@ describe('Component: Lables', () => {
         postingNewLabel: false,
         newLabel: '',
       })
+      expect(props.updateState.mock.calls[0][0]).toHaveProperty(
+        'activeExperiment',
+      )
+      expect(props.updateState.mock.calls[0][0].activeExperiment).toMatchObject(
+        {
+          ...props.activeExperiment,
+          labelsList: ['one', 'two', 'three', 'some_label'],
+        },
+      )
+      done()
+    })
+    wrapper.unmount()
+    expect(abort).toHaveBeenCalledTimes(1)
+  })
+
+  it('should NOT update labels List in active experiment if new label already exists', done => {
+    const request = jest.fn(() => {
+      return Promise.resolve({labels: {some_label: 'true'}})
+    })
+    const abort = jest.fn()
+    expService.postLabelToTrialFactory.mockImplementationOnce(() => [
+      request,
+      abort,
+    ])
+    const localProps = {
+      ...props,
+      labels: {
+        ...props.labels,
+        postingNewLabel: true,
+        newLabel: 'two',
+      },
+    }
+    wrapper = mount(<Labels {...localProps} />)
+    expect(request).toHaveBeenCalledTimes(1)
+    setImmediate(() => {
+      expect(props.updateState).toHaveBeenCalledTimes(1)
+      expect(props.updateState.mock.calls[0][0]).not.toHaveProperty(
+        'activeExperiment',
+      )
+
       done()
     })
     wrapper.unmount()
@@ -159,9 +264,7 @@ describe('Component: Lables', () => {
       },
     }
     wrapper = shallow(<Labels {...localProps} />)
-    expect(wrapper.find('[data-dom-id="labels-assigned"] button')).toHaveLength(
-      3,
-    )
+    expect(wrapper.find('button.label')).toHaveLength(3)
     wrapper.unmount()
   })
 
@@ -180,7 +283,7 @@ describe('Component: Lables', () => {
     }
     wrapper = mount(<Labels {...localProps} />)
     wrapper
-      .find('[data-dom-id="labels-assigned"] button')
+      .find('button.label')
       .at(1)
       .simulate('click', {preventDefault: () => {}})
     expect(props.updateState).toHaveBeenCalledTimes(1)
@@ -219,12 +322,12 @@ describe('Component: Lables', () => {
     }
     wrapper = mount(<Labels {...localProps} />)
     wrapper
-      .find('[data-dom-id="labels-assigned"] button')
+      .find('button.label')
       .at(1)
       .simulate('click', {preventDefault: () => {}})
     expect(expService.postLabelToTrialFactory).toHaveBeenCalledTimes(1)
     expect(expService.postLabelToTrialFactory.mock.calls[0][0]).toMatchObject({
-      experimentId: props.experimentId,
+      experimentId: 'experiment_id',
       trialId: props.trials[props.activeTrial.index].number,
       labels: {
         two: '',
@@ -260,7 +363,7 @@ describe('Component: Lables', () => {
     }
     wrapper = mount(<Labels {...localProps} />)
     wrapper
-      .find('[data-dom-id="labels-assigned"] button')
+      .find('button.label')
       .at(1)
       .simulate('click', {preventDefault: () => {}})
     setImmediate(() => {
@@ -280,6 +383,15 @@ describe('Component: Lables', () => {
         props.updateState.mock.calls[0][0].trials[props.activeTrial.index]
           .labels,
       ).toMatchObject({one: 'true', three: 'true'})
+      expect(props.updateState.mock.calls[0][0]).toHaveProperty(
+        'activeExperiment',
+      )
+      expect(props.updateState.mock.calls[0][0].activeExperiment).toMatchObject(
+        {
+          ...props.activeExperiment,
+          labelsList: ['one', 'three', 'best'],
+        },
+      )
       done()
     })
     wrapper.unmount()
@@ -316,15 +428,15 @@ describe('Component: Lables', () => {
       expect(btn.props()).toHaveProperty('disabled', true)
     })
     wrapper
-      .find('[data-dom-id="labels-assigned"] button')
+      .find('button.label')
       .at(1)
       .simulate('click', {preventDefault: () => {}})
     wrapper
-      .find('[data-dom-id="labels-assigned"] button')
+      .find('button.label')
       .at(1)
       .simulate('click', {preventDefault: () => {}})
     wrapper
-      .find('[data-dom-id="labels-assigned"] button')
+      .find('button.label')
       .at(1)
       .simulate('click', {preventDefault: () => {}})
     setImmediate(() => {
@@ -334,7 +446,8 @@ describe('Component: Lables', () => {
     wrapper.unmount()
   })
 
-  it('render a list of unassigned labels', () => {
+  it('render show/hide menu of labels on input foucs/blur', done => {
+    jest.useFakeTimers()
     const localProps = {
       ...props,
       trials: [...props.trials],
@@ -347,12 +460,26 @@ describe('Component: Lables', () => {
         three: 'true',
       },
     }
-    wrapper = shallow(<Labels {...localProps} />)
-    expect(wrapper.find('[data-dom-id="labels-new"] button')).toHaveLength(1)
+    wrapper = mount(<Labels {...localProps} />)
+    wrapper
+      .find('input[type="text"]')
+      .simulate('focus', {preventDefault: () => {}})
+    expect(wrapper.find('.menu')).toHaveLength(1)
+    wrapper
+      .find('input[type="text"]')
+      .simulate('blur', {preventDefault: () => {}})
+    act(() => {
+      jest.runAllTimers()
+    })
+    setImmediate(() => {
+      expect(wrapper.find('.menu')).toHaveLength(0)
+      done()
+    })
     wrapper.unmount()
+    jest.useRealTimers()
   })
 
-  it('upate state if user clicked on anassigned label', () => {
+  it('upate state if user clicked one of unassinged labels in popup menu', () => {
     const localProps = {
       ...props,
       trials: [...props.trials],
@@ -362,11 +489,13 @@ describe('Component: Lables', () => {
       labels: {
         one: 'true',
         two: 'true',
-        three: 'true',
       },
     }
-    wrapper = shallow(<Labels {...localProps} />)
-    const unassigned = wrapper.find('[data-dom-id="labels-new"] button')
+    wrapper = mount(<Labels {...localProps} />)
+    wrapper
+      .find('input[type="text"]')
+      .simulate('focus', {preventDefault: () => {}})
+    const unassigned = wrapper.find('.menu button.menuItem')
     expect(unassigned).toHaveLength(1)
     unassigned.simulate('click', {preventDefault: () => {}})
     expect(props.updateState).toHaveBeenCalledTimes(1)
@@ -374,7 +503,7 @@ describe('Component: Lables', () => {
       labels: {
         ...props.labels,
         postingNewLabel: true,
-        newLabel: 'best',
+        newLabel: 'three',
       },
     })
     wrapper.unmount()
@@ -390,9 +519,7 @@ describe('Component: Lables', () => {
       labels: null,
     }
     wrapper = mount(<Labels {...localProps} />)
-    expect(wrapper.find('[data-dom-id="labels-assigned"] button')).toHaveLength(
-      0,
-    )
+    expect(wrapper.find('button.lable')).toHaveLength(0)
 
     wrapper.unmount()
   })

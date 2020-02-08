@@ -5,6 +5,8 @@ import {TrialDetails} from './TrialDetails.component'
 import expStub from '../../../services/_stubs/exp-data'
 import trialsStub from '../../../services/_stubs/trials-data'
 
+jest.mock('../Labels/Labels.component.js')
+
 describe('Component: TrialDetails', () => {
   let wrapper
   const props = {
@@ -48,7 +50,7 @@ describe('Component: TrialDetails', () => {
     wrapper.unmount()
   })
 
-  it('should render best icon if trial is optimal', () => {
+  it('should set right css class if trial is optimal', () => {
     const localProps = {
       ...props,
       trial: {
@@ -57,9 +59,13 @@ describe('Component: TrialDetails', () => {
       },
     }
     wrapper = shallow(<TrialDetails {...localProps} />)
-    expect(wrapper.find('Icon[icon="circleCheck"]')).toHaveLength(2)
-    wrapper.setProps(props)
-    expect(wrapper.find('Icon[icon="circleCheck"]')).toHaveLength(0)
+    expect(wrapper.hasClass('best')).toBe(true)
+    wrapper.unmount()
+  })
+
+  it('should render Labels component', () => {
+    wrapper = shallow(<TrialDetails {...props} />)
+    expect(wrapper.find('Labels')).toHaveLength(1)
     wrapper.unmount()
   })
 })
