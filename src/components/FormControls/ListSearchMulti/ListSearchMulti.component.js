@@ -82,7 +82,10 @@ export const ListSearchMulti = (props: Props) => {
     setSelectedIndex(newValue)
     inputRef.current.value = ''
 
-    onChange({indexs: newValue, items: newValue.map(i => itemsList[i])})
+    onChange({
+      indexs: newValue,
+      items: newValue.map(i => itemsList[i]).filter(Boolean),
+    })
   }
 
   const itemClick = index => () => {

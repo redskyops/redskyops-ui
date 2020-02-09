@@ -7,7 +7,7 @@ import {ListSearchMulti} from './ListSearchMulti.component'
 describe('ListSearchMulti component', () => {
   let wrapper
   let props = {
-    value: '',
+    value: [],
     itemsList: [
       {label: 'one', value: 1},
       {label: 'two', value: 2},
@@ -299,6 +299,42 @@ describe('ListSearchMulti component', () => {
     delete localProps.placeholder
     wrapper = mount(<ListSearchMulti {...localProps} />)
     expect(wrapper.find('[data-dom-id="label"]').text()).toBe('')
+    wrapper.unmount()
+  })
+
+  it('should send empty array in indexs and items if values props contains invalid value', () => {
+    const event = {
+      preventDefault: () => {},
+      nativeEvent: {
+        stopImmediatePropagation: () => {},
+      },
+    }
+    const localProps = {
+      ...props,
+      value: [1, 1000],
+    }
+    wrapper = mount(<ListSearchMulti {...localProps} />)
+    wrapper
+      .find('button.icon')
+      .first()
+      .simulate('click', event)
+    expect(wrapper.find('.list')).toHaveLength(1)
+    expect(wrapper.find('.item')).toHaveLength(3)
+    expect(
+      wrapper
+        .find('.item')
+        .first()
+        .hasClass('selected'),
+    ).toBe(true)
+    wrapper
+      .find('.item')
+      .first()
+      .simulate('click')
+    expect(props.onChange).toHaveBeenCalledTimes(1)
+    expect(props.onChange.mock.calls[0][0]).toMatchObject({
+      indexs: [],
+      items: [],
+    })
     wrapper.unmount()
   })
 })
