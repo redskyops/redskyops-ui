@@ -35,7 +35,7 @@ export const Labels = (props: Props) => {
     labels,
     updateState,
   } = props
-  const trial = trials[activeTrial.index]
+  const trial = activeTrial ? trials[activeTrial.index] : null
   const experiment =
     experiments &&
     experiments.list &&

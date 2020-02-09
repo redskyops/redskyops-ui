@@ -571,4 +571,12 @@ describe('Component: Lables', () => {
     expect(wrapper.find('.error').text()).toBe('test_error')
     wrapper.unmount()
   })
+
+  it('should render nothing if no active trial or no active experiment', () => {
+    wrapper = shallow(<Labels {...props} activeExperiment={null} />)
+    expect(wrapper.html()).toBe(null)
+    wrapper = shallow(<Labels {...props} activeTrial={null} />)
+    expect(wrapper.html()).toBe(null)
+    wrapper.unmount()
+  })
 })
