@@ -1,9 +1,8 @@
 import React from 'react'
 
 import style from './MetricParameterChart.module.scss'
-import DotsChart2D, {
-  AXIS_TYPE,
-} from '../../Charts/DotsChart2D/DotsChart2D.component'
+import DotsChart2D from '../../Charts/DotsChart2D/DotsChart2D.component'
+import {AXIS_TYPE} from '../../../constants'
 import {ListSearch} from '../../FormControls/ListSearch/ListSearch.component'
 import {TypeActiveTrial} from '../../../context/DefaultState'
 import Icon from '../../Icon/Icon.component'

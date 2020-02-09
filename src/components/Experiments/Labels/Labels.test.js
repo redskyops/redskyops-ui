@@ -398,6 +398,40 @@ describe('Component: Lables', () => {
     expect(abort).toHaveBeenCalledTimes(1)
   })
 
+  it('update state in case of backend error', done => {
+    const request = jest.fn(() => {
+      return Promise.reject({message: 'error_from_backend'})
+    })
+    const abort = jest.fn()
+    expService.postLabelToTrialFactory.mockImplementationOnce(() => [
+      request,
+      abort,
+    ])
+    const localProps = {
+      ...props,
+      labels: {
+        ...props.labels,
+        postingDelLabel: true,
+        labelToDelete: 'best',
+      },
+    }
+    wrapper = mount(<Labels {...localProps} />)
+
+    setImmediate(() => {
+      expect(request).toHaveBeenCalledTimes(1)
+      expect(props.updateState).toHaveBeenCalledTimes(1)
+      expect(props.updateState.mock.calls[0][0]).toHaveProperty('labels')
+      expect(props.updateState.mock.calls[0][0].labels).toMatchObject({
+        postingDelLabel: false,
+        labelToDelete: '',
+        error: 'error_from_backend',
+      })
+      done()
+    })
+    wrapper.unmount()
+    expect(abort).toHaveBeenCalledTimes(1)
+  })
+
   it('should disable remove labels if in posting state', done => {
     const request = jest.fn(() => {
       return Promise.resolve({labels: {some_label: 'true'}})
@@ -509,7 +543,7 @@ describe('Component: Lables', () => {
     wrapper.unmount()
   })
 
-  it('should render nothing if trail has not label object', () => {
+  it('should render nothing if trail has no label object', () => {
     const localProps = {
       ...props,
       trials: [...props.trials],
@@ -521,6 +555,20 @@ describe('Component: Lables', () => {
     wrapper = mount(<Labels {...localProps} />)
     expect(wrapper.find('button.lable')).toHaveLength(0)
 
+    wrapper.unmount()
+  })
+
+  it('should render error message', () => {
+    const localProps = {
+      ...props,
+      labels: {
+        ...props.labels,
+        error: 'test_error',
+      },
+    }
+    wrapper = shallow(<Labels {...localProps} />)
+    expect(wrapper.find('.error')).toHaveLength(1)
+    expect(wrapper.find('.error').text()).toBe('test_error')
     wrapper.unmount()
   })
 })

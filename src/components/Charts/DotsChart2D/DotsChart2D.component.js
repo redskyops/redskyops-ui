@@ -3,16 +3,10 @@ import * as d3 from 'd3'
 
 import {ChartPropsType} from '../ChartProps.type'
 import style from '../Charts.module.scss'
-
-export const AXIS_TYPE = {
-  PARAMETER: 'parameter',
-  METRIC: 'metric',
-}
-
-type AxisType = AXIS_TYPE.METIC | AXIS_TYPE.PARAMETER
+import {AXIS_TYPE, TypeAxisType} from '../../../constants'
 
 export class DotsChart2D extends React.Component<
-  ChartPropsType & {xAxisValueType: AxisType, xAxisMinValue: number},
+  ChartPropsType & {xAxisValueType: TypeAxisType, xAxisMinValue: number},
 > {
   constructor(props) {
     super(props)
@@ -194,7 +188,7 @@ export class DotsChart2D extends React.Component<
         hoverTrialHandler(hoverData)
       }
 
-    const circleOut = (activeTrial, hoverTrialHandler) =>
+    const circleOut = ({activeTrial, hoverTrialHandler}) =>
       function _circleOut(dataPoint) {
         d3.select(this)
           .classed(style.active, false)
@@ -270,7 +264,10 @@ export class DotsChart2D extends React.Component<
       )
       .on(
         'mouseout',
-        circleOut(this.props.activeTrial, this.props.hoverTrialHandler),
+        circleOut({
+          activeTrial: this.props.activeTrial,
+          hoverTrialHandler: this.props.hoverTrialHandler,
+        }),
       )
       .on(
         'click',
@@ -305,21 +302,6 @@ export class DotsChart2D extends React.Component<
     return (
       <div className={style.trials}>
         <div id={`chart-${this.chartId}`} />
-        <div className={style.svgFillter}>
-          <svg>
-            <filter id="dropshadow" height="130%">
-              <feGaussianBlur in="SourceAlpha" stdDeviation="4" />
-              <feOffset dx="3" dy="3" result="offsetblur" />
-              <feComponentTransfer>
-                <feFuncA type="linear" slope="0.2" />
-              </feComponentTransfer>
-              <feMerge>
-                <feMergeNode />
-                <feMergeNode in="SourceGraphic" />
-              </feMerge>
-            </filter>
-          </svg>
-        </div>
       </div>
     )
   }

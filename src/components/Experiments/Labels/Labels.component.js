@@ -101,9 +101,19 @@ export const Labels = (props: Props) => {
     })
   }
 
-  const postLabelError = () => {}
+  const onBackendError = e => {
+    updateState({
+      labels: {
+        ...labels,
+        postingNewLabel: false,
+        postingDelLabel: false,
+        labelToDelete: '',
+        error: e.message,
+      },
+    })
+  }
 
-  useApiCallEffect(postLabelFactory, postLabelSuccess, postLabelError, [
+  useApiCallEffect(postLabelFactory, postLabelSuccess, onBackendError, [
     labels.postingNewLabel,
   ])
 
@@ -116,6 +126,7 @@ export const Labels = (props: Props) => {
       labels: {
         ...labels,
         postingNewLabel: true,
+        error: '',
       },
     })
   }
@@ -157,22 +168,18 @@ export const Labels = (props: Props) => {
     })
   }
 
-  const deleteLabelError = () => {}
-
-  useApiCallEffect(deleteLabelFactory, deleteLabelSuccess, deleteLabelError, [
+  useApiCallEffect(deleteLabelFactory, deleteLabelSuccess, onBackendError, [
     labels.postingDelLabel,
   ])
 
   const deleteLabel = labelToDelete => e => {
     e.preventDefault()
-    if (labelToDelete === 'best') {
-      return
-    }
     updateState({
       labels: {
         ...labels,
         postingDelLabel: true,
         labelToDelete,
+        error: '',
       },
     })
   }
@@ -187,9 +194,7 @@ export const Labels = (props: Props) => {
           disabled={labels.postingNewLabel || labels.postingDelLabel}
         >
           {label.toUpperCase()}
-          {label !== 'best' && (
-            <Icon icon="circleX" width={14} cssClass={style.labelDel} />
-          )}
+          <Icon icon="circleX" width={14} cssClass={style.labelDel} />
         </button>
       )
     })
@@ -261,7 +266,7 @@ export const Labels = (props: Props) => {
               ))}
           </div>
         )}
-
+        {labels.error && <div className={style.error}>{labels.error}</div>}
         <button className={style.submit}>SUBMIT</button>
       </form>
     </div>

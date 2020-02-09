@@ -36,6 +36,7 @@ export type TypeLabels = {
   postingDelLabel: boolean,
   newLabel: string,
   labelToDelete: string,
+  error: string,
 }
 
 export type TypeHoveredTrial = {
@@ -67,11 +68,12 @@ const activeExperiment: TypeActiveExperiment = null
 
 const activeTrial: TypeActiveTrial = null
 
-const labels: TypeTrials = {
+const labels: TypeLabels = {
   postingNewLabel: false,
   postingDelLabel: false,
   newLabel: '',
   labelToDelete: '',
+  error: '',
 }
 
 const hoveredTrial: TypeHoveredTrial = null

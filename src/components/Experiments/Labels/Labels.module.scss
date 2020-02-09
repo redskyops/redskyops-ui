@@ -30,10 +30,11 @@
   border: 0;
   border-radius: 10px;
   color: $white;
+  display: block;
+  float: right;
   line-height: 26px;
   outline: 0;
   padding: 0 $size-2x;
-  float: right;
 }
 
 .list {
@@ -102,4 +103,10 @@
   &:last-child {
     border-bottom: 0;
   }
+}
+
+.error {
+  clear: both;
+  color: $color-7;
+  text-transform: uppercase;
 }

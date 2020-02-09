@@ -3,6 +3,7 @@ import * as d3 from 'd3'
 
 import {ChartPropsType} from '../ChartProps.type'
 import style from '../Charts.module.scss'
+import {AXIS_TYPE} from '../../../constants'
 
 export class DotsChart1D extends React.Component<ChartPropsType> {
   buildChart() {
@@ -77,40 +78,33 @@ export class DotsChart1D extends React.Component<ChartPropsType> {
           .tickFormat(''),
       )
 
-    const circleOver = () =>
+    const circleOver = ({hoverTrialHandler, xAxisMetricName}) =>
       function _circleOver(dataPoint) {
+        console.log('>>>>')
         var xValue = dataPoint.values.filter(
           v => v.metricName === xValueName,
         )[0].value
-
-        let xPos = xScale(xValue)
-        let yPos = height
-        xPos -= xPos + popupWidth >= width ? popupWidth + 5 : 0
-        yPos -= yPos + popupHeight >= height ? popupHeight + 8 : 0
 
         d3.select(this)
           .classed(style.active, true)
           .attr('r', 6)
 
-        const popup = d3
-          .select('#popup')
-          .attr('transform', `translate(${xPos}, ${yPos})`)
-          .classed(style.hidden, false)
-          .classed(style.fadeIn, true)
-          .classed(style.best, dataPoint.labels && 'best' in dataPoint.labels)
+        const domBox = d3
+          .select(this)
+          .node()
+          .getBoundingClientRect()
 
-        popup.selectAll('text').remove()
-        popup
-          .append('text')
-          .attr('font-size', '1em')
-          .attr('font-family', 'sans-serif')
-          .style('text-anchor', 'start')
-          .attr('transform', 'translate(10, 25)')
-          .attr('width', 100)
-          .text(`${xValueName}: ${xValue}`)
+        const hoverData = {
+          trial: dataPoint,
+          domBox,
+          index: dataPoint.index,
+          xData: {name: xAxisMetricName, type: AXIS_TYPE.METRIC, value: xValue},
+        }
+
+        hoverTrialHandler(hoverData)
       }
 
-    const circleOut = activeTrial =>
+    const circleOut = ({activeTrial, hoverTrialHandler}) =>
       function _circleOut(dataPoint) {
         d3.select(this)
           .classed(style.active, false)
@@ -118,9 +112,7 @@ export class DotsChart1D extends React.Component<ChartPropsType> {
             'r',
             activeTrial && dataPoint.index === activeTrial.index ? 6 : 3,
           )
-        d3.select('#popup')
-          .classed(style.hidden, true)
-          .classed(style.fadeIn, false)
+        hoverTrialHandler({trial: null, domBox: null, index: -1})
       }
 
     const circleClick = selectTrialHandler =>
@@ -139,7 +131,6 @@ export class DotsChart1D extends React.Component<ChartPropsType> {
       .attr('transform', d => {
         const [cost] = d.values.reduce((acc, v) => {
           if (v.metricName === xValueName) acc[0] = v
-          // if (v.metricName === yValueName) acc[1] = v
           return acc
         }, [])
         return `translate(${xScale(cost.value)}, ${height})`
@@ -162,8 +153,20 @@ export class DotsChart1D extends React.Component<ChartPropsType> {
         style.selected,
         d => this.props.activeTrial && d.index === this.props.activeTrial.index,
       )
-      .on('mouseover', circleOver())
-      .on('mouseout', circleOut(this.props.activeTrial))
+      .on(
+        'mouseover',
+        circleOver({
+          xAxisMetricName: this.props.xAxisMetricName,
+          hoverTrialHandler: this.props.hoverTrialHandler,
+        }),
+      )
+      .on(
+        'mouseout',
+        circleOut({
+          activeTrial: this.props.activeTrial,
+          hoverTrialHandler: this.props.hoverTrialHandler,
+        }),
+      )
       .on('click', circleClick(this.props.selectTrialHandler))
 
     svg
@@ -191,21 +194,6 @@ export class DotsChart1D extends React.Component<ChartPropsType> {
     return (
       <div className={style.trials}>
         <div id="chart" />
-        <div className={style.svgFillter}>
-          <svg>
-            <filter id="dropshadow" height="130%">
-              <feGaussianBlur in="SourceAlpha" stdDeviation="4" />
-              <feOffset dx="3" dy="3" result="offsetblur" />
-              <feComponentTransfer>
-                <feFuncA type="linear" slope="0.2" />
-              </feComponentTransfer>
-              <feMerge>
-                <feMergeNode />
-                <feMergeNode in="SourceGraphic" />
-              </feMerge>
-            </filter>
-          </svg>
-        </div>
       </div>
     )
   }

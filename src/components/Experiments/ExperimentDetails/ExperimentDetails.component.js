@@ -90,6 +90,7 @@ export const ExperimentDetails = (props: Props) => {
         postingDelLabel: false,
         newLabel: '',
         labelToDelete: '',
+        error: '',
       },
     })
   }

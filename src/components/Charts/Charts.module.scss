@@ -31,15 +31,6 @@
   &.best {
     fill: $color-7;
   }
-
-  // &.active,
-  // &.selected {
-
-
-  //   &.best {
-  //     fill: $cr-pink;
-  //   }
-  // }
 }
 
 
@@ -103,11 +94,6 @@
 
 .hidden {
   display: none;
-}
-
-.svgFillter {
-  position: absolute;
-  z-index: -1;
 }
 
 :global(canvas) {
