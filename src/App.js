@@ -1,10 +1,12 @@
 /* eslint-disable-next-line */
 import React, {Component} from 'react'
-import {BrowserRouter as Router} from 'react-router-dom'
+import {BrowserRouter as Router, Switch, Route} from 'react-router-dom'
 
 import './App.scss'
-import {Layout} from './components/Layout/Layout.component'
+import Layout from './components/Layout/Layout.component'
 import {StateProvider} from './context/StateContext'
+import Page404 from './components/Page404/Page404.component'
+import ServerDown from './components/ServerDown/ServerDown.component'
 
 class App extends Component {
   render() {
@@ -12,7 +14,11 @@ class App extends Component {
       <div className="App">
         <Router basename={process.env.REACT_APP_BASE_FOLDER || '/'}>
           <StateProvider>
-            <Layout />
+            <Switch>
+              <Route exact path="/" component={Layout} />
+              <Route exact path="/server-down" component={ServerDown} />
+              <Route path="*" component={Page404} />
+            </Switch>
           </StateProvider>
         </Router>
       </div>

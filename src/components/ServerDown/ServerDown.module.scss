@@ -1,0 +1,19 @@
+@import '../../styles/colors';
+@import '../../styles/vars';
+
+.serverDown {
+  align-items: center;
+  display: flex;
+  justify-content: center;
+  height: calc(100vh - #{$header-height});
+}
+
+.content {
+  text-align: center;
+}
+
+.red {
+  color: $color-7;
+  font-size: 18px;
+  margin-top: $size-2x;
+}
