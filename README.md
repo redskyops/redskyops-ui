@@ -28,6 +28,14 @@ This project is based on "Create React App", to generate an optimized production
 REACT_APP_BASE_FOLDER=/ui REDSKY_UI_SUBFOLDER=/ui npm run build
 ```
 
+To set the base URL for backend you have to set REACT_APP_BACKEND_URL environment variable, the default is /api if this variable is not set
+
+```sh
+REACT_APP_BASE_FOLDER=/ui REACT_APP_BACKEND_URL=/v1 npm run build
+```
+
+The above will make UI call the backend on /v1 and serve the app from /ui folder
+
 
 ### Generating Go Code
 
