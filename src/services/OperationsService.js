@@ -13,6 +13,8 @@ export class OperationsService {
   }
 
   shutdown() {
-    return this.http.get({url: `${this.url}/shutdown`})
+    const xhr = new XMLHttpRequest()
+    xhr.open('GET', '/shutdown', false)
+    xhr.send()
   }
 }

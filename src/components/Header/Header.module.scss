@@ -12,16 +12,3 @@
 .logo {
   height: $header-height;
 }
-
-.shutdown {
-  background-color: $color-7;
-  border: 0;
-  border-radius: 20px;
-  color: $white;
-  cursor: pointer;
-  font-size: 12px;
-  font-weight: bold;
-  outline: 0;
-  padding: $size-1x $size-2x;
-  text-transform: uppercase;
-}
