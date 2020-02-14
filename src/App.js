@@ -6,26 +6,20 @@ import './App.scss'
 import Layout from './components/Layout/Layout.component'
 import {StateProvider} from './context/StateContext'
 import Page404 from './components/Page404/Page404.component'
-import ServerDown from './components/ServerDown/ServerDown.component'
-import {OperationsService} from './services/OperationsService'
+import BackendHealthCheck from './components/BackendHealthCheck/BackendHealthCheck.component'
 
 class App extends Component {
-  componentDidMount() {
-    window.addEventListener('unload', function logData() {
-      const opsService = new OperationsService()
-      opsService.shutdown()
-    })
-  }
   render() {
     return (
       <div className="App">
         <Router basename={process.env.REACT_APP_BASE_FOLDER || '/'}>
           <StateProvider>
-            <Switch>
-              <Route exact path="/" component={Layout} />
-              <Route exact path="/server-down" component={ServerDown} />
-              <Route path="*" component={Page404} />
-            </Switch>
+            <BackendHealthCheck>
+              <Switch>
+                <Route exact path="/" component={Layout} />
+                <Route path="*" component={Page404} />
+              </Switch>
+            </BackendHealthCheck>
           </StateProvider>
         </Router>
       </div>

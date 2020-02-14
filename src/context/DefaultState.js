@@ -71,4 +71,6 @@ export const DEFAULT_STATE = {
   trials,
   activeTrial,
   labels,
+  initialBackendCheck: false,
+  backendHealthy: true,
 }
