@@ -63,9 +63,36 @@ describe('Component: TrialDetails', () => {
     wrapper.unmount()
   })
 
+  it('should not set best css class if lables object is missing', () => {
+    const localProps = {
+      ...props,
+      trial: {
+        ...props.trial,
+      },
+    }
+    delete localProps.trial.labels
+    wrapper = shallow(<TrialDetails {...localProps} />)
+    expect(wrapper.hasClass('best')).toBe(false)
+    wrapper.unmount()
+  })
+
   it('should render Labels component', () => {
     wrapper = shallow(<TrialDetails {...props} />)
     expect(wrapper.find('Labels')).toHaveLength(1)
+    wrapper.unmount()
+  })
+
+  it('should render with empty parameters array if missing', () => {
+    const localProps = {...props}
+    delete localProps.parameters
+    wrapper = shallow(<TrialDetails {...localProps} />)
+    expect(wrapper.find('ValueDisplay')).toHaveLength(4)
+    wrapper.find('ValueDisplay').forEach(vd => {
+      expect(vd.prop('min')).toBeFalsy()
+      expect(vd.prop('max')).toBeFalsy()
+      expect(vd.prop('value')).toBeTruthy()
+      expect(vd.prop('name')).toBeTruthy()
+    })
     wrapper.unmount()
   })
 })

@@ -63,6 +63,7 @@ export const MetricParameterChart = (props: Props) => {
           <div className={style.metric}>
             <button
               className={style.button}
+              data-dom-id="metric-param-clear"
               onClick={() => {
                 props.onMetricChange()
                 props.onParameterChange()
