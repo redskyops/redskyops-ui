@@ -56,6 +56,20 @@ describe('Component: TrialsStatistics', () => {
     wrapper.unmount()
   })
 
+  it('should render zero if no completed trials', () => {
+    wrapper = shallow(<TrialsStatistics {...props} trials={[]} />)
+    expect(
+      wrapper.find('[data-dom-id="statistics-completed-text"]'),
+    ).toHaveLength(1)
+    expect(
+      wrapper.find('[data-dom-id="statistics-completed-text"]').text(),
+    ).toContain('Completed Trials')
+    expect(wrapper.find('[data-dom-id="statistics-completed"]').text()).toBe(
+      `0`,
+    )
+    wrapper.unmount()
+  })
+
   it('should render number of failed trials', () => {
     wrapper = shallow(<TrialsStatistics {...props} />)
     expect(wrapper.find('[data-dom-id="statistics-failed-text"]')).toHaveLength(
@@ -65,6 +79,18 @@ describe('Component: TrialsStatistics', () => {
       wrapper.find('[data-dom-id="statistics-failed-text"]').text(),
     ).toContain('Unstable Configurations')
     expect(wrapper.find('[data-dom-id="statistics-failed"]').text()).toBe(`2`)
+    wrapper.unmount()
+  })
+
+  it('should render zero if no failed trials', () => {
+    wrapper = shallow(<TrialsStatistics {...props} trials={[]} />)
+    expect(wrapper.find('[data-dom-id="statistics-failed-text"]')).toHaveLength(
+      1,
+    )
+    expect(
+      wrapper.find('[data-dom-id="statistics-failed-text"]').text(),
+    ).toContain('Unstable Configurations')
+    expect(wrapper.find('[data-dom-id="statistics-failed"]').text()).toBe(`0`)
     wrapper.unmount()
   })
 })
