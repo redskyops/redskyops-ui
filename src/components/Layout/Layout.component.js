@@ -2,9 +2,9 @@ import React from 'react'
 
 import Header from '../Header/Header.component'
 import Main from '../Main/Main.component'
+import LeftPanel from '../LeftPanel/LeftPanel.component'
 
 import style from './Layout.module.scss'
-import LeftPanel from '../LeftPanel/LeftPanel.component'
 
 export const Layout = () => {
   return (

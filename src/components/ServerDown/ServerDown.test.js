@@ -15,7 +15,18 @@ describe('Component: ServerDown', () => {
     wrapper = shallow(<ServerDown />)
     expect(wrapper.find('h1')).toHaveLength(1)
     expect(wrapper.find('h1').text()).toBeTruthy()
-    expect(wrapper.find('p')).toHaveLength(1)
-    expect(wrapper.find('p').text()).toBeTruthy()
+    expect(wrapper.find('p')).toHaveLength(2)
+    expect(
+      wrapper
+        .find('p')
+        .at(0)
+        .text(),
+    ).toBeTruthy()
+    expect(
+      wrapper
+        .find('p')
+        .at(1)
+        .text(),
+    ).toBeTruthy()
   })
 })
