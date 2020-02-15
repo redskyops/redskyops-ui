@@ -17,6 +17,7 @@ describe('Component: ExperimentList', () => {
     experiments: {
       list: [],
       loading: true,
+      error: '',
     },
     activExperiment: null,
     updateState: jest.fn(),
@@ -63,6 +64,25 @@ describe('Component: ExperimentList', () => {
       expect(props.updateState.mock.calls[0][0].experiments).toMatchObject({
         list: expStub.experiments,
         loading: false,
+      })
+      done()
+    })
+  })
+
+  it('should update state in case of experiment loading error', async done => {
+    expService.getExperimentsFactory.mockImplementationOnce(() => [
+      () => Promise.reject(new Error()),
+      () => {},
+    ])
+    wrapper = await mount(<ExperimentsList {...props} />)
+
+    setImmediate(() => {
+      expect(props.updateState).toHaveBeenCalledTimes(1)
+      expect(props.updateState.mock.calls[0][0]).toHaveProperty('experiments')
+      expect(props.updateState.mock.calls[0][0].experiments).toMatchObject({
+        ...props.experiments,
+        loading: false,
+        error: 'Error loading experiments list',
       })
       done()
     })
@@ -123,6 +143,23 @@ describe('Component: ExperimentList', () => {
     wrapper = shallow(<ExperimentsList {...localProps} />)
     expect(wrapper.find('[data-dom-id="experiments-num"]').text()).toBe(
       `${localProps.experiments.list.length}`,
+    )
+    expect(wrapper.find('[data-dom-id="experiments-error"]')).toHaveLength(0)
+  })
+
+  it('should render error message', () => {
+    const localProps = {
+      ...props,
+      experiments: {
+        ...props.experiments,
+        error: 'error_message',
+      },
+    }
+    wrapper = shallow(<ExperimentsList {...localProps} />)
+    expect(wrapper.find('[data-dom-id="experiments-num"]')).toHaveLength(0)
+    expect(wrapper.find('[data-dom-id="experiments-error"]')).toHaveLength(1)
+    expect(wrapper.find('[data-dom-id="experiments-error"]').text()).toBe(
+      'error_message',
     )
   })
 })
