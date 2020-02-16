@@ -49,6 +49,7 @@ describe('Component: ExperimentList', () => {
       'limit',
       500,
     )
+    wrapper.unmount()
   })
 
   it('should update state after loading experiments', async done => {
@@ -67,6 +68,7 @@ describe('Component: ExperimentList', () => {
       })
       done()
     })
+    wrapper.unmount()
   })
 
   it('should update state in case of experiment loading error', async done => {
@@ -85,6 +87,7 @@ describe('Component: ExperimentList', () => {
         error: 'Error loading experiments list',
       })
       done()
+      wrapper.unmount()
     })
   })
 
@@ -100,6 +103,7 @@ describe('Component: ExperimentList', () => {
     expect(wrapper.find('button.btn')).toHaveLength(
       localProps.experiments.list.length,
     )
+    wrapper.unmount()
   })
 
   it('should update state when experiment is selected', () => {
@@ -123,6 +127,8 @@ describe('Component: ExperimentList', () => {
         index: 0,
         isLoading: true,
         metricParameterChart: null,
+        xAxisMetric: 'duration',
+        yAxisMetric: 'cost',
       },
       experiments: {
         ...localProps.experiments,
@@ -131,6 +137,82 @@ describe('Component: ExperimentList', () => {
       trials: null,
       activeTrial: null,
     })
+    wrapper.unmount()
+  })
+
+  it('should update state without yAxisMetric if metric list less than 2', () => {
+    const expService = new ExperimentsService()
+    expService.addIdsToExperiments(expStub)
+    const localProps = {
+      ...props,
+      experiments: {
+        ...props.experiments,
+        list: expService.addIdsToExperiments(expStub).experiments,
+      },
+    }
+    localProps.experiments.list[0].metrics = [
+      localProps.experiments.list[0].metrics[0],
+    ]
+    wrapper = shallow(<ExperimentsList {...localProps} />)
+    wrapper
+      .find('button.btn')
+      .first()
+      .simulate('click')
+    expect(props.updateState).toHaveBeenCalledTimes(1)
+    expect(props.updateState.mock.calls[0][0]).toMatchObject({
+      activeExperiment: {
+        index: 0,
+        isLoading: true,
+        metricParameterChart: null,
+        xAxisMetric: 'duration',
+      },
+    })
+    expect(
+      props.updateState.mock.calls[0][0].activeExperiment,
+    ).not.toHaveProperty('yAxisMetric')
+    expect(
+      props.updateState.mock.calls[0][0].activeExperiment,
+    ).not.toHaveProperty('zAxisMetric')
+    wrapper.unmount()
+  })
+
+  it('should update state with zAxisMetric if metric list greater or equal 3', () => {
+    const expService = new ExperimentsService()
+    expService.addIdsToExperiments(expStub)
+    const localProps = {
+      ...props,
+      experiments: {
+        ...props.experiments,
+        list: expService.addIdsToExperiments(expStub).experiments,
+      },
+    }
+    localProps.experiments.list[0].metrics = [
+      ...localProps.experiments.list[0].metrics,
+      {name: 'throughput'},
+    ]
+    wrapper = shallow(<ExperimentsList {...localProps} />)
+    wrapper
+      .find('button.btn')
+      .first()
+      .simulate('click')
+    expect(props.updateState).toHaveBeenCalledTimes(1)
+    expect(props.updateState.mock.calls[0][0]).toMatchObject({
+      activeExperiment: {
+        index: 0,
+        isLoading: true,
+        metricParameterChart: null,
+        xAxisMetric: 'throughput',
+        yAxisMetric: 'cost',
+        zAxisMetric: 'duration',
+      },
+      experiments: {
+        ...localProps.experiments,
+        labelsFilter: [],
+      },
+      trials: null,
+      activeTrial: null,
+    })
+    wrapper.unmount()
   })
 
   it('should render number of experiments loaded', () => {
@@ -161,5 +243,137 @@ describe('Component: ExperimentList', () => {
     expect(wrapper.find('[data-dom-id="experiments-error"]').text()).toBe(
       'error_message',
     )
+    wrapper.unmount()
+  })
+
+  it('should render only matched filter experiments', () => {
+    let localProps = {
+      ...props,
+      experiments: {
+        ...props.experiments,
+        list: expService.addIdsToExperiments(expStub).experiments,
+      },
+    }
+    wrapper = shallow(<ExperimentsList {...localProps} />)
+    expect(wrapper.find('button.btn')).toHaveLength(10)
+
+    localProps = {
+      ...props,
+      experiments: {
+        ...props.experiments,
+        list: expService.addIdsToExperiments(expStub).experiments,
+        filter: {
+          name: 'postgres',
+        },
+      },
+    }
+    wrapper = shallow(<ExperimentsList {...localProps} />)
+    expect(wrapper.find('button.btn')).toHaveLength(1)
+    wrapper.unmount()
+  })
+
+  it('should set right css class to selected experiment', () => {
+    let localProps = {
+      ...props,
+      experiments: {
+        ...props.experiments,
+        list: expService.addIdsToExperiments(expStub).experiments,
+      },
+      activeExperiment: {
+        ...props.activExperiment,
+        index: 5,
+      },
+    }
+    wrapper = shallow(<ExperimentsList {...localProps} />)
+    wrapper.find('button.btn').forEach((btn, i) => {
+      expect(btn.hasClass('active')).toBe(i === 5)
+    })
+    wrapper.unmount()
+  })
+
+  it('should set list of metrics to empty array in case of missing metrics in experiment', () => {
+    let localProps = {
+      ...props,
+      experiments: {
+        ...props.experiments,
+        list: expService.addIdsToExperiments(expStub).experiments,
+      },
+    }
+    localProps.experiments.list[2] = {...localProps.experiments.list[2]}
+    delete localProps.experiments.list[2].metrics
+    wrapper = shallow(<ExperimentsList {...localProps} />)
+    wrapper
+      .find('button.btn')
+      .at(2)
+      .simulate('click')
+    expect(props.updateState).toHaveBeenCalledTimes(1)
+    expect(props.updateState.mock.calls[0][0]).toMatchObject({
+      activeExperiment: {
+        index: 2,
+        metricsList: [],
+      },
+    })
+    wrapper.unmount()
+  })
+
+  it('should set list of parameters to empty array in case of missing parameters in experiment', () => {
+    let localProps = {
+      ...props,
+      experiments: {
+        ...props.experiments,
+        list: expService.addIdsToExperiments(expStub).experiments,
+      },
+    }
+    localProps.experiments.list[3] = {...localProps.experiments.list[3]}
+    delete localProps.experiments.list[3].parameters
+    wrapper = shallow(<ExperimentsList {...localProps} />)
+    wrapper
+      .find('button.btn')
+      .at(3)
+      .simulate('click')
+    expect(props.updateState).toHaveBeenCalledTimes(1)
+    expect(props.updateState.mock.calls[0][0]).toMatchObject({
+      activeExperiment: {
+        index: 3,
+        parametersList: [],
+      },
+    })
+    wrapper.unmount()
+  })
+
+  it('should sort metrics list by minimize property', () => {
+    let localProps = {
+      ...props,
+      experiments: {
+        ...props.experiments,
+        list: expService.addIdsToExperiments(expStub).experiments,
+      },
+    }
+    localProps.experiments.list[4] = {...localProps.experiments.list[4]}
+    localProps.experiments.list[4].metrics.forEach(m => (m.minimize = false))
+    localProps.experiments.list[4].metrics[1].minimize = true
+    wrapper = shallow(<ExperimentsList {...localProps} />)
+    wrapper
+      .find('button.btn')
+      .at(4)
+      .simulate('click')
+    expect(props.updateState).toHaveBeenCalledTimes(1)
+    expect(props.updateState.mock.calls[0][0]).toMatchObject({
+      activeExperiment: {
+        index: 4,
+        metricsList: ['cost', 'throughput', 'latency'],
+      },
+    })
+    wrapper.unmount()
+  })
+
+  it('should render withouth required props', () => {
+    let localProps = {
+      ...props,
+    }
+    delete localProps.experiments
+    delete localProps.activeExperiment
+    wrapper = shallow(<ExperimentsList {...localProps} />)
+    wrapper.unmount()
   })
 })

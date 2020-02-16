@@ -22,7 +22,7 @@ const getParametersList = experiment => {
 }
 
 export const ExperimentsList = (props: Props) => {
-  const {experiments = {}, activeExperiment = null, updateState} = props
+  const {experiments = {list: []}, activeExperiment = null, updateState} = props
   const {filter} = experiments
   const expService = new ExperimentsService()
 
