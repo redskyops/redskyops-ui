@@ -13,7 +13,7 @@ import ListSearch from '../../FormControls/ListSearch/ListSearch.component'
 import {connectWithState} from '../../../context/StateContext'
 
 import style from './ExperimentResults.module.scss'
-import {LabelsFilter} from '../LabelsFilter/LabelsFilter.component'
+import LabelsFilter from '../LabelsFilter/LabelsFilter.component'
 
 type TypeProps = {
   activeExperiment: TypeActiveExperiment,

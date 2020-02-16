@@ -19,10 +19,9 @@ export const LabelsFilter = (props: TypeProps) => {
   }
   return (
     <>
-      {!Array.isArray(selectedValues) ||
-        (selectedValues.length < 1 && (
-          <Icon icon="filter" width={18} cssClass={style.metricIcon} />
-        ))}
+      {(!Array.isArray(selectedValues) || selectedValues.length < 1) && (
+        <Icon icon="filter" width={18} cssClass={style.metricIcon} />
+      )}
       {Array.isArray(selectedValues) && selectedValues.length >= 1 && (
         <button className={style.btn} onClick={clearFilter}>
           <Icon icon="circleX" width={18} cssClass={style.metricIconBtn} />{' '}
@@ -43,3 +42,5 @@ export const LabelsFilter = (props: TypeProps) => {
     </>
   )
 }
+
+export default LabelsFilter
