@@ -1,1 +1,1 @@
-export const backedAddress = process.env.BACKEND_ADDRESS || '/api'
+export const backedAddress = process.env.REACT_APP_BACKEND_URL || '/v1'

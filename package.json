@@ -11,7 +11,7 @@
     "lint:js": "./node_modules/.bin/eslint ./src",
     "lint:sass": "./node_modules/.bin/sass-lint -v -q",
     "validate": "npm run lint:js && npm run format -- --list-different && npm run flow && npm run lint:sass",
-    "start": "react-scripts start",
+    "start": "REACT_APP_BACKEND_URL=/api react-scripts start",
     "test": "react-scripts test",
     "coverage": "react-scripts test --coverage --watchAll=false",
     "watch": "echo \"Error: no watch specified\" && exit 1"

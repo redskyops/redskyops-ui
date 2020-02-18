@@ -46,7 +46,7 @@ describe('Service: ExperimentsService', () => {
       const expData = await request()
       expect(http.get).toHaveBeenCalledTimes(1)
       expect(http.get.mock.calls[0][0]).toMatchObject({
-        url: '/api/experiments/',
+        url: '/v1/experiments/',
       })
       expect(expData).toMatchObject(expStub)
     })
@@ -113,7 +113,7 @@ describe('Service: ExperimentsService', () => {
       const expData = await request()
       expect(http.get).toHaveBeenCalledTimes(1)
       expect(http.get.mock.calls[0][0]).toMatchObject({
-        url: '/api/experiments/postgres-experiment/trials/',
+        url: '/v1/experiments/postgres-experiment/trials/',
       })
       expect(expData).toMatchObject(trialStub)
     })
@@ -171,7 +171,7 @@ describe('Service: ExperimentsService', () => {
       const expData = await request()
       expect(http.post).toHaveBeenCalledTimes(1)
       expect(http.post.mock.calls[0][0]).toMatchObject({
-        url: '/api/experiments/postgres-experiment/trials/4/labels',
+        url: '/v1/experiments/postgres-experiment/trials/4/labels',
       })
       expect(expData).toBe(true)
     })

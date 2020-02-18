@@ -1,4 +1,5 @@
 import React from 'react'
+import {withRouter} from 'react-router-dom'
 
 import style from './Header.module.scss'
 import logo from '../../assets/images/carbon-rlay-logo-dark.png'
@@ -11,4 +12,4 @@ export const Header = () => {
   )
 }
 
-export default Header
+export default withRouter(Header)

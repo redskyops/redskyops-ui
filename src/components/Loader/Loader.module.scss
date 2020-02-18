@@ -1,0 +1,77 @@
+// sass-lint:disable no-vendor-prefixes
+@import '../../styles/colors';
+@import '../../styles/mixins';
+@import '../../styles/vars';
+
+.wrapper {
+  align-items: center;
+  background-color: rgba($white, .6);
+  bottom: 0;
+  display: flex;
+  justify-content: center;
+  left: 0;
+  position: fixed;
+  right: 0;
+  top: 0;
+  z-index: $zindex-loader;
+}
+
+%loader-common {
+  background: var(--loader-color);
+  animation: load1 1s infinite ease-in-out;
+  width: 1em;
+  height: 4em;
+}
+
+.loader {
+  @extend %loader-common;
+  width: 40px;
+  height: 40px;
+
+  position: relative;
+  margin: 100px auto;
+}
+
+.doubleBounce1,
+.doubleBounce2 {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background-color: $color-7;
+  opacity: .6;
+  position: absolute;
+  top: 0;
+  left: 0;
+
+  -webkit-animation: sk-bounce 2s infinite ease-in-out;
+  animation: sk-bounce 2s infinite ease-in-out;
+}
+
+.doubleBounce2 {
+  -webkit-animation-delay: -1s;
+  animation-delay: -1s;
+}
+
+@-webkit-keyframes sk-bounce {
+  0%,
+  100% {
+    -webkit-transform: scale(0);
+  }
+
+  50% {
+    -webkit-transform: scale(1);
+  }
+}
+
+@keyframes sk-bounce {
+  0%,
+  100% {
+    transform: scale(0);
+    -webkit-transform: scale(0);
+  }
+
+  50% {
+    transform: scale(1);
+    -webkit-transform: scale(1);
+  }
+}

@@ -10,4 +10,22 @@ module.exports = function(app) {
       },
     }),
   )
+  app.use(
+    '/shutdown',
+    proxy({
+      target: 'http://localhost:8000',
+      router: {
+        '/shutdown': 'http://localhost:8000/shutdown',
+      },
+    }),
+  )
+  app.use(
+    '/health',
+    proxy({
+      target: 'http://localhost:8000',
+      router: {
+        '/health': 'http://localhost:8000/health',
+      },
+    }),
+  )
 }
