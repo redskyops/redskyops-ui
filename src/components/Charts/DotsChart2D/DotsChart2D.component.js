@@ -3,16 +3,10 @@ import * as d3 from 'd3'
 
 import {ChartPropsType} from '../ChartProps.type'
 import style from '../Charts.module.scss'
-
-export const AXIS_TYPE = {
-  PARAMETER: 'parameter',
-  METRIC: 'metric',
-}
-
-type AxisType = AXIS_TYPE.METIC | AXIS_TYPE.PARAMETER
+import {AXIS_TYPE, TypeAxisType} from '../../../constants'
 
 export class DotsChart2D extends React.Component<
-  ChartPropsType & {xAxisValueType: AxisType, xAxisMinValue: number},
+  ChartPropsType & {xAxisValueType: TypeAxisType, xAxisMinValue: number},
 > {
   constructor(props) {
     super(props)
@@ -98,9 +92,11 @@ export class DotsChart2D extends React.Component<
         `translate(-${margins.left - 20}, ${height / 2}) rotate(-90)`,
       )
       .attr('font-size', '1.5em')
+      .attr('font-family', "'Montserrat', sans-serif")
+      .attr('font-weight', 'bold')
       .style('text-anchor', 'middle')
       .style('fill', '#000')
-      .text(yValueName)
+      .text(yValueName.toUpperCase().replace(/_/g, ' '))
 
     const xAxis = d3.axisBottom(xScale).ticks(10)
 
@@ -111,11 +107,13 @@ export class DotsChart2D extends React.Component<
 
     svg
       .append('text')
-      .attr('transform', `translate(${width / 2}, ${height + 35})`)
+      .attr('transform', `translate(${width / 2}, ${height + 38})`)
       .attr('font-size', '1.5em')
+      .attr('font-family', "'Montserrat', sans-serif")
+      .attr('font-weight', 'bold')
       .style('text-anchor', 'middle')
       .style('fill', '#000')
-      .text(xValueName)
+      .text(xValueName.toUpperCase().replace(/_/g, ' '))
 
     const makeXGridlines = () => {
       return d3.axisBottom(xScale).ticks(10)
@@ -123,7 +121,7 @@ export class DotsChart2D extends React.Component<
 
     svg
       .append('g')
-      .attr('class', style.grid)
+      .attr('class', style.gridX)
       .attr('transform', `translate(0, ${height})`)
       .call(
         makeXGridlines()
@@ -145,7 +143,12 @@ export class DotsChart2D extends React.Component<
           .tickFormat(''),
       )
 
-    const circleOver = (xAxisValueType, chartId) =>
+    const circleOver = ({
+      xAxisValueType,
+      xAxisMetricName,
+      yAxisMetricName,
+      hoverTrialHandler,
+    }) =>
       function _circleOver(dataPoint) {
         let xValue = 0
         switch (xAxisValueType) {
@@ -166,42 +169,26 @@ export class DotsChart2D extends React.Component<
           v => v.metricName === yValueName,
         )[0].value
 
-        let xPos = xScale(xValue)
-        let yPos = yScale(yValue)
-        xPos -= xPos + popupWidth >= width ? popupWidth + 5 : 0
-        yPos -= yPos + popupHeight >= height ? popupHeight + 8 : 0
-
         d3.select(this)
           .classed(style.active, true)
           .attr('r', 6)
 
-        const popup = d3
-          .select(`#popup-${chartId}`)
-          .attr('transform', `translate(${xPos}, ${yPos})`)
-          .classed(style.hidden, false)
-          .classed(style.fadeIn, true)
-          .classed(style.best, dataPoint.labels && 'best' in dataPoint.labels)
+        const domBox = d3
+          .select(this)
+          .node()
+          .getBoundingClientRect()
+        const hoverData = {
+          trial: dataPoint,
+          domBox,
+          index: dataPoint.index,
+          xData: {name: xAxisMetricName, type: xAxisValueType, value: xValue},
+          yData: {name: yAxisMetricName, type: AXIS_TYPE.METRIC, value: yValue},
+        }
 
-        popup.selectAll('text').remove()
-        popup
-          .append('text')
-          .attr('font-size', '1.5em')
-          .attr('font-family', 'sans-serif')
-          .style('text-anchor', 'start')
-          .attr('transform', 'translate(10, 23)')
-          .attr('width', 100)
-          .text(`${xValueName}: ${xValue}`)
-        popup
-          .append('text')
-          .attr('font-size', '1.5em')
-          .attr('font-family', 'sans-serif')
-          .style('text-anchor', 'start')
-          .attr('transform', 'translate(10, 45)')
-          .attr('width', 100)
-          .text(`${yValueName}: ${yValue}`)
+        hoverTrialHandler(hoverData)
       }
 
-    const circleOut = (activeTrial, chartId) =>
+    const circleOut = ({activeTrial, hoverTrialHandler}) =>
       function _circleOut(dataPoint) {
         d3.select(this)
           .classed(style.active, false)
@@ -209,9 +196,7 @@ export class DotsChart2D extends React.Component<
             'r',
             activeTrial && dataPoint.index === activeTrial.index ? 6 : 3,
           )
-        d3.select(`#popup-${chartId}`)
-          .classed(style.hidden, true)
-          .classed(style.fadeIn, false)
+        hoverTrialHandler({trial: null, domBox: null, index: -1})
       }
 
     const circleClick = selectTrialHandler =>
@@ -254,7 +239,7 @@ export class DotsChart2D extends React.Component<
       .attr('class', 'point')
       .attr('r', d =>
         this.props.activeTrial && d.index === this.props.activeTrial.index
-          ? 6
+          ? 10
           : 3,
       )
       .attr('class', style.circle)
@@ -268,9 +253,29 @@ export class DotsChart2D extends React.Component<
         style.selected,
         d => this.props.activeTrial && d.index === this.props.activeTrial.index,
       )
-      .on('mouseover', circleOver(this.props.xAxisValueType, this.chartId))
-      .on('mouseout', circleOut(this.props.activeTrial, this.chartId))
-      .on('click', circleClick(this.props.selectTrialHandler))
+      .on(
+        'mouseover',
+        circleOver({
+          xAxisValueType: this.props.xAxisValueType,
+          xAxisMetricName: this.props.xAxisMetricName,
+          yAxisMetricName: this.props.yAxisMetricName,
+          hoverTrialHandler: this.props.hoverTrialHandler,
+        }),
+      )
+      .on(
+        'mouseout',
+        circleOut({
+          activeTrial: this.props.activeTrial,
+          hoverTrialHandler: this.props.hoverTrialHandler,
+        }),
+      )
+      .on(
+        'click',
+        circleClick(
+          this.props.selectTrialHandler,
+          this.props.hoverTrialHandler,
+        ),
+      )
 
     svg
       .append('g')
@@ -297,21 +302,6 @@ export class DotsChart2D extends React.Component<
     return (
       <div className={style.trials}>
         <div id={`chart-${this.chartId}`} />
-        <div className={style.svgFillter}>
-          <svg>
-            <filter id="dropshadow" height="130%">
-              <feGaussianBlur in="SourceAlpha" stdDeviation="4" />
-              <feOffset dx="3" dy="3" result="offsetblur" />
-              <feComponentTransfer>
-                <feFuncA type="linear" slope="0.2" />
-              </feComponentTransfer>
-              <feMerge>
-                <feMergeNode />
-                <feMergeNode in="SourceGraphic" />
-              </feMerge>
-            </filter>
-          </svg>
-        </div>
       </div>
     )
   }

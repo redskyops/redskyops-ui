@@ -1,17 +1,18 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 
-import {ReactComponent as SearchIcon} from '../../assets/icons/Search.svg'
-import {ReactComponent as ExperimentsIcon} from '../../assets/icons/Experiment.svg'
-import {ReactComponent as CheckIcon} from '../../assets/icons/Check.svg'
-import {ReactComponent as ExIcon} from '../../assets/icons/Ex.svg'
-import {ReactComponent as XAxisIcon} from '../../assets/icons/X-axis.svg'
-import {ReactComponent as YAxisIcon} from '../../assets/icons/Y-axis.svg'
-import {ReactComponent as ZAxisIcon} from '../../assets/icons/Z-axis.svg'
-import {ReactComponent as DownArrowIcon} from '../../assets/icons/DownArrow.svg'
-import {ReactComponent as FilterIcon} from '../../assets/icons/Filter.svg'
-import {ReactComponent as ParametersIcon} from '../../assets/icons/Parameters.svg'
-import {ReactComponent as MetricsIcon} from '../../assets/icons/Metrics.svg'
+import {ReactComponent as SearchIcon} from '../../assets/svgs/search.svg'
+import {ReactComponent as ExperimentsIcon} from '../../assets/svgs/experiment.svg'
+import {ReactComponent as CheckIcon} from '../../assets/svgs/check.svg'
+import {ReactComponent as ExIcon} from '../../assets/svgs/ex.svg'
+import {ReactComponent as XAxisIcon} from '../../assets/svgs/x-axis.svg'
+import {ReactComponent as YAxisIcon} from '../../assets/svgs/y-axis.svg'
+import {ReactComponent as ZAxisIcon} from '../../assets/svgs/z-axis.svg'
+import {ReactComponent as DownArrowIcon} from '../../assets/svgs/down-arrow.svg'
+import {ReactComponent as FilterIcon} from '../../assets/svgs/filter.svg'
+import {ReactComponent as ParametersIcon} from '../../assets/svgs/parameters.svg'
+import {ReactComponent as MetricsIcon} from '../../assets/svgs/metrics.svg'
+import {ReactComponent as PencilIcon} from '../../assets/svgs/pencil.svg'
 
 import style from './icon.module.scss'
 
@@ -27,6 +28,7 @@ const iconsMap = {
   filter: FilterIcon,
   parameters: ParametersIcon,
   metrics: MetricsIcon,
+  pencil: PencilIcon,
 }
 
 const strokeOrFill = {}

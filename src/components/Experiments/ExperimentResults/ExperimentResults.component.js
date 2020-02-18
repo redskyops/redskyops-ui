@@ -10,17 +10,19 @@ import {
 } from '../../Charts/ChartProps.type'
 import Icon from '../../Icon/Icon.component'
 import ListSearch from '../../FormControls/ListSearch/ListSearch.component'
-import ListSearchMulti from '../../FormControls/ListSearchMulti/ListSearchMulti.component'
 import {connectWithState} from '../../../context/StateContext'
 
 import style from './ExperimentResults.module.scss'
+import LabelsFilter from '../LabelsFilter/LabelsFilter.component'
 
 type TypeProps = {
   activeExperiment: TypeActiveExperiment,
   trials: TypeTrials,
   activeTrial: TypeActiveTrial,
   selectTrialHandler: () => {},
+  filterChangeHandler: () => {},
   updateState: () => {},
+  hoverTrialHandler: () => {},
 }
 
 export const ExperimentResults = (props: TypeProps) => {
@@ -29,6 +31,8 @@ export const ExperimentResults = (props: TypeProps) => {
     trials,
     activeTrial,
     selectTrialHandler,
+    hoverTrialHandler,
+    filterChangeHandler,
     updateState,
   } = props
   const numOfMertics = activeExperiment.metricsList.length
@@ -42,19 +46,11 @@ export const ExperimentResults = (props: TypeProps) => {
     })
   }
 
-  const onSelectedLabelsChange = ({items}) => {
-    updateState({
-      activeExperiment: {
-        ...activeExperiment,
-        labelsFilter: items.map(l => l.value),
-      },
-    })
-  }
-
   const chartProps = {
     trials,
     activeTrial,
     selectTrialHandler: selectTrialHandler,
+    hoverTrialHandler: hoverTrialHandler,
     numOfMertics: activeExperiment.metricsList.length,
     labelsFilter: activeExperiment.labelsFilter,
     xAxisMetricName: activeExperiment.xAxisMetric,
@@ -136,18 +132,11 @@ export const ExperimentResults = (props: TypeProps) => {
             activeExperiment.labelsFilter.length > 0 ? style.activeFilter : ''
           }`}
         >
-          <Icon icon="filter" width={18} cssClass={style.metricIcon} />
-          <div className={style.dropdown}>
-            <ListSearchMulti
-              value={activeExperiment.labelsFilter}
-              itemsList={activeExperiment.labelsList.map(m => ({
-                label: m.toUpperCase(),
-                value: m,
-              }))}
-              placeholder="FILTER BY"
-              onChange={onSelectedLabelsChange}
-            />
-          </div>
+          <LabelsFilter
+            labelsList={activeExperiment.labelsList}
+            selectedValues={activeExperiment.labelsFilter}
+            onChange={filterChangeHandler}
+          />
         </div>
       </div>
       <div className={style.chart}>{renderChart()}</div>
@@ -155,4 +144,9 @@ export const ExperimentResults = (props: TypeProps) => {
   )
 }
 
-export default connectWithState(ExperimentResults)
+export default connectWithState(ExperimentResults, [
+  'activeExperiment',
+  'experiments',
+  'trials',
+  'activeTrial',
+])

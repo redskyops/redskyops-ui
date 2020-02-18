@@ -22,7 +22,7 @@ const getParametersList = experiment => {
 }
 
 export const ExperimentsList = (props: Props) => {
-  const {experiments = {}, activeExperiment = null, updateState} = props
+  const {experiments = {list: []}, activeExperiment = null, updateState} = props
   const {filter} = experiments
   const expService = new ExperimentsService()
 
@@ -80,10 +80,19 @@ export const ExperimentsList = (props: Props) => {
 
   return (
     <div className={style.expList}>
-      <div className={style.details}>
-        <strong data-dom-id="experiments-num">{experiments.list.length}</strong>{' '}
-        experiments loaded
-      </div>
+      {experiments.error && (
+        <div data-dom-id="experiments-error" className={style.details}>
+          {experiments.error}
+        </div>
+      )}
+      {!experiments.error && (
+        <div className={style.details}>
+          <strong data-dom-id="experiments-num">
+            {experiments.list.length}
+          </strong>{' '}
+          experiments loaded
+        </div>
+      )}
       <div className={style.list}>
         {experiments.list
           .filter(ex => {

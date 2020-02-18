@@ -6,5 +6,6 @@ export type ChartPropsType = {
   xAxisMetricName: string,
   yAxisMetricName: string,
   selectTrialHandler: Function,
+  hoverTrialHandler: Function,
   labelsFilter: Array<string>,
 }

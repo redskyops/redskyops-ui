@@ -8,6 +8,7 @@ import {
   TypeTrials,
   TypeActiveTrial,
   TypeLabels,
+  TypeHoveredTrial,
 } from '../../../context/DefaultState'
 import ExperimentResults from '../ExperimentResults/ExperimentResults.component'
 import TrialDetails from '../TrialDetails/TrialDetails.component'
@@ -19,6 +20,7 @@ import style from './ExperimentDetails.module.scss'
 import MetricParameterChart from '../MetricParameterChart/MetricParameterChart.component'
 import Tabs from '../../Tabs/Tabs.component'
 import arrowImage from '../../../assets/images/ArrowLeft.png'
+import TrialPopup from '../TrialPopup/TrialPopup.component'
 
 type Props = {
   activeExperiment: TypeActiveExperiment,
@@ -26,6 +28,7 @@ type Props = {
   trials: TypeTrials,
   activeTrial: TypeActiveTrial,
   labels: TypeLabels,
+  hoveredTrial: TypeHoveredTrial,
   updateState: () => any,
 }
 
@@ -37,6 +40,7 @@ export const ExperimentDetails = (props: Props) => {
     trials,
     activeTrial,
     labels,
+    hoveredTrial,
   } = props
   const expService = new ExperimentsService()
 
@@ -86,6 +90,35 @@ export const ExperimentDetails = (props: Props) => {
         postingDelLabel: false,
         newLabel: '',
         labelToDelete: '',
+        error: '',
+      },
+    })
+  }
+
+  const hoverTrial = ({trial, index, domBox, xData, yData}) => {
+    if (trial) {
+      updateState({
+        hoveredTrial: {
+          ...hoveredTrial,
+          trial,
+          index,
+          xData,
+          yData,
+          left: domBox.left,
+          top: domBox.top,
+        },
+      })
+      return
+    }
+
+    updateState({hoveredTrial: null})
+  }
+
+  const filterChange = ({items}) => {
+    updateState({
+      activeExperiment: {
+        ...activeExperiment,
+        labelsFilter: items.map(l => l.value),
       },
     })
   }
@@ -180,22 +213,24 @@ export const ExperimentDetails = (props: Props) => {
     }
 
     const {metricParameterChart} = activeExperiment
-    const trialProps = {
-      selectTrialHandler: selectTrial,
-    }
 
     return (
       <Tabs>
         <div data-title="EXPERIMENT RESULTS">
-          <ExperimentResults {...trialProps} />
+          <ExperimentResults
+            selectTrialHandler={selectTrial}
+            hoverTrialHandler={hoverTrial}
+            filterChangeHandler={filterChange}
+          />
           <TrialsStatistics trials={trials} />
         </div>
         <div data-title="PARAMETER DRILLDOWN">
           <MetricParameterChart
             trials={trials}
             activeTrial={activeTrial}
-            metricsList={experiment.metrics.map(({name}) => name)}
-            parametersList={experiment.parameters.map(({name}) => name)}
+            metricsList={activeExperiment.metricsList}
+            parametersList={activeExperiment.parametersList}
+            labelsList={activeExperiment.labelsList}
             metric={
               metricParameterChart && metricParameterChart.metric
                 ? metricParameterChart.metric
@@ -206,10 +241,12 @@ export const ExperimentDetails = (props: Props) => {
                 ? metricParameterChart.parameter
                 : null
             }
-            labelsFilter={experiments.labelsFilter}
+            labelsFilter={activeExperiment.labelsFilter}
             onMetricChange={onMetricChange}
             onParameterChange={onParameterChange}
             selectTrialHandler={selectTrial}
+            hoverTrialHandler={hoverTrial}
+            filterChangeHandler={filterChange}
           />
         </div>
       </Tabs>
@@ -240,6 +277,7 @@ export const ExperimentDetails = (props: Props) => {
       <h1 className={style.h1}>{experiment.displayName.replace(/-/g, ' ')}</h1>
       {renderTrials()}
       {renderTrialDetails()}
+      <TrialPopup />
     </div>
   )
 }
