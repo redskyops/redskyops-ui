@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/redskyops/redskyops-ui/ui"
+	"github.com/redskyops/redskyops-ui/v2/ui"
 	"log"
 	"net/http"
 	"net/http/httputil"
