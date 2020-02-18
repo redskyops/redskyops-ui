@@ -10,15 +10,18 @@ describe('Component: MetricParameterChart', () => {
     trials: trialsStub,
     metricsList: ['duration', 'cost'],
     parametersList: ['cpu', 'memory'],
+    labelsList: ['best'],
     onMetricChange: jest.fn(),
     onParameterChange: jest.fn(),
     selectTrialHandler: jest.fn(),
+    filterChangeHandler: jest.fn(),
   }
 
   beforeEach(() => {
     props.onParameterChange.mockClear()
     props.onMetricChange.mockClear()
     props.selectTrialHandler.mockClear()
+    props.filterChangeHandler.mockClear()
   })
 
   it('should render MetricParameterChart', () => {
@@ -132,6 +135,38 @@ describe('Component: MetricParameterChart', () => {
       props.selectTrialHandler,
     )
     expect(chartProps.activeTrial).toMatchObject({index: 1})
+    wrapper.unmount()
+  })
+
+  it('should render clear button if metric and parameter are selected', () => {
+    wrapper = shallow(
+      <MetricParameterChart
+        {...props}
+        metric="cost"
+        parameter="memory"
+        activeTrial={{index: 1}}
+      />,
+    )
+    expect(
+      wrapper.find('button[data-dom-id="metric-param-clear"]'),
+    ).toHaveLength(1)
+    wrapper.unmount()
+  })
+
+  it('should call right props when clear button clicked', () => {
+    wrapper = shallow(
+      <MetricParameterChart
+        {...props}
+        metric="cost"
+        parameter="memory"
+        activeTrial={{index: 1}}
+      />,
+    )
+    wrapper.find('button[data-dom-id="metric-param-clear"]').simulate('click')
+    expect(props.onMetricChange).toHaveBeenCalledTimes(1)
+    expect(props.onMetricChange.mock.calls[0][0]).toBeFalsy()
+    expect(props.onParameterChange).toHaveBeenCalledTimes(1)
+    expect(props.onParameterChange.mock.calls[0][0]).toBeFalsy()
     wrapper.unmount()
   })
 })

@@ -23,7 +23,7 @@ $min-width: 100px;
 
 .input {
   @include input-shared {
-    border: 1px solid $color-4;
+    border: 1px solid $color-8;
   };
 }
 
@@ -43,7 +43,7 @@ $min-width: 100px;
 
 
 .list {
-  border: 1px solid $color-4;
+  border: 1px solid $color-8;
   border-top: 0;
   display: block;
   max-height: 400px;

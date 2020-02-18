@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useState, useEffect} from 'react'
 
 import {connectWithState} from '../../../context/StateContext'
 import {ExperimentsService} from '../../../services/ExperimentsService'
@@ -7,32 +7,52 @@ import {
   TypeTrials,
   TypeActiveTrial,
   TypeLabels,
+  TypeActiveExperiment,
+  TypeExperiments,
 } from '../../../context/DefaultState'
 import getAllLabelsFromTrials from '../../../utilities/getAllLabelsFromTrials'
 
 import style from './Labels.module.scss'
+import Icon from '../../Icon/Icon.component'
 
 const DEFAULT_LABEL_VALUE = 'true'
 
 type Props = {
   activeTrial: TypeActiveTrial,
+  activeExperiment: TypeActiveExperiment,
+  experiments: TypeExperiments,
   trials: TypeTrials,
   labels: TypeLabels,
-  experimentId: string,
   updateState: () => any,
 }
 
 export const Labels = (props: Props) => {
-  const {activeTrial, trials, labels, experimentId, updateState} = props
-  const trial = trials[activeTrial.index]
-
+  const {
+    activeTrial,
+    activeExperiment,
+    experiments,
+    trials,
+    labels,
+    updateState,
+  } = props
+  const trial = activeTrial ? trials[activeTrial.index] : null
+  const experiment =
+    experiments &&
+    experiments.list &&
+    activeExperiment &&
+    experiments.list[activeExperiment.index]
+      ? experiments.list[activeExperiment.index]
+      : null
+  const experimentId = experiment ? experiment.id : null
   const expService = new ExperimentsService()
+  const [showMenu, setShowMenu] = useState(false)
+  let interval
 
   /* eslint-disable indent */
   const postLabelFactory = () =>
     labels.postingNewLabel === true &&
     labels.postingDelLabel === false &&
-    labels.newLabel
+    !!labels.newLabel === true
       ? expService.postLabelToTrialFactory({
           experimentId,
           trialId: trial.number,
@@ -59,33 +79,56 @@ export const Labels = (props: Props) => {
         postingNewLabel: false,
         newLabel: '',
       },
+      /* eslint-disable indent */
+      ...(label => {
+        return label
+          ? null
+          : {
+              activeExperiment: {
+                ...activeExperiment,
+                labelsList: [
+                  ...activeExperiment.labelsList,
+                  labels.newLabel.trim().toLowerCase(),
+                ],
+              },
+            }
+      })(
+        activeExperiment.labelsList.find(
+          l => l.toLowerCase() === labels.newLabel.trim().toLowerCase(),
+        ),
+      ),
+      /* eslint-enable indent */
     })
   }
 
-  const postLabelError = () => {}
-
-  useApiCallEffect(postLabelFactory, postLabelSuccess, postLabelError, [
-    labels.postingNewLabel,
-  ])
-
-  const addLabel = newLabel => {
+  const onBackendError = e => {
     updateState({
       labels: {
         ...labels,
-        postingNewLabel: true,
-        ...(newLabel ? {newLabel} : null),
+        postingNewLabel: false,
+        postingDelLabel: false,
+        labelToDelete: '',
+        error: e.message,
       },
     })
   }
 
+  useApiCallEffect(postLabelFactory, postLabelSuccess, onBackendError, [
+    labels.postingNewLabel,
+  ])
+
   const onAddFormSubmit = e => {
     e.preventDefault()
-    addLabel()
-  }
-
-  const onAddLabelClick = label => e => {
-    e.preventDefault()
-    addLabel(label)
+    if (labels.postingNewLabel || labels.postingDelLabel || !labels.newLabel) {
+      return
+    }
+    updateState({
+      labels: {
+        ...labels,
+        postingNewLabel: true,
+        error: '',
+      },
+    })
   }
 
   /* eslint-disable indent */
@@ -118,12 +161,14 @@ export const Labels = (props: Props) => {
         postingDelLabel: false,
         labelToDelete: '',
       },
+      activeExperiment: {
+        ...activeExperiment,
+        labelsList: getAllLabelsFromTrials(updatedTrials),
+      },
     })
   }
 
-  const deleteLabelError = () => {}
-
-  useApiCallEffect(deleteLabelFactory, deleteLabelSuccess, deleteLabelError, [
+  useApiCallEffect(deleteLabelFactory, deleteLabelSuccess, onBackendError, [
     labels.postingDelLabel,
   ])
 
@@ -134,6 +179,7 @@ export const Labels = (props: Props) => {
         ...labels,
         postingDelLabel: true,
         labelToDelete,
+        error: '',
       },
     })
   }
@@ -147,64 +193,82 @@ export const Labels = (props: Props) => {
           onClick={deleteLabel(label)}
           disabled={labels.postingNewLabel || labels.postingDelLabel}
         >
-          {label}
-          <span className={`material-icons ${style.labelDel}`}>close</span>
+          {label.toUpperCase()}
+          <Icon icon="circleX" width={14} cssClass={style.labelDel} />
         </button>
       )
     })
-    return list.length > 0 ? (
-      <div className={style.list}>{list}</div>
-    ) : (
-      <span>No labels assigned</span>
-    )
+    return list.length > 0 ? <div className={style.list}>{list}</div> : null
   }
 
-  const renderLabelsToAdd = () => {
-    const existingLabels = Object.keys(trial.labels || {})
-    return getAllLabelsFromTrials(trials)
-      .filter(l => existingLabels.indexOf(l) < 0)
-      .map(label => {
-        return (
-          <button
-            key={label}
-            className={`${style.label} ${style.labelAssign}`}
-            onClick={onAddLabelClick(label)}
-          >
-            {label}
-            <span className={`material-icons ${style.labelDel}`}>add</span>
-          </button>
-        )
-      })
+  const handleFocus = () => {
+    clearInterval(interval)
+    setShowMenu(true)
+  }
+
+  const handleBlur = () => {
+    clearInterval(interval)
+    interval = setTimeout(() => setShowMenu(false), 150)
+  }
+
+  const onMenuItemClick = label => e => {
+    e.preventDefault()
+    clearInterval(interval)
+    setShowMenu(false)
+    updateState({
+      labels: {
+        ...labels,
+        newLabel: label,
+        postingNewLabel: true,
+      },
+    })
+  }
+
+  useEffect(() => () => clearInterval(interval))
+
+  if (!experimentId || !trial) {
+    return null
   }
 
   return (
     <div className={style.labels}>
-      <div className={style.section} data-dom-id="labels-assigned">
-        <h4 className={style.h4}>Assigned labels</h4>
-        {renderLabels()}
-      </div>
-      <div className={style.section} data-dom-id="labels-new">
-        <h4 className={style.h4}>Assign label</h4>
-        {renderLabelsToAdd()}
-      </div>
-      <div className={style.section}>
-        <h4 className={style.h4}>Create new label</h4>
-        <form onSubmit={onAddFormSubmit}>
-          <input
-            type="text"
-            className={style.labelInput}
-            value={labels.newLabel}
-            onChange={e =>
-              updateState({
-                labels: {
-                  ...labels,
-                  newLabel: e.target.value,
-                },
-              })
-            }
-          />
-        </form>
-      </div>
+      {renderLabels()}
+      <form onSubmit={onAddFormSubmit} className={style.form}>
+        <input
+          type="text"
+          className={style.labelInput}
+          value={labels.newLabel}
+          placeholder="Assign Label"
+          onChange={e =>
+            updateState({
+              labels: {
+                ...labels,
+                newLabel: e.target.value,
+              },
+            })
+          }
+          onFocus={handleFocus}
+          onBlur={handleBlur}
+        />
+        {showMenu && (
+          <div className={style.menu}>
+            {activeExperiment.labelsList
+              .filter(l => !(l in trial.labels))
+              .filter(l => new RegExp(labels.newLabel, 'gi').test(l))
+              .map(label => (
+                <button
+                  className={style.menuItem}
+                  key={label}
+                  onClick={onMenuItemClick(label)}
+                >
+                  {label.toUpperCase()}
+                </button>
+              ))}
+          </div>
+        )}
+        {labels.error && <div className={style.error}>{labels.error}</div>}
+        <button className={style.submit}>SUBMIT</button>
+      </form>
     </div>
   )
 }

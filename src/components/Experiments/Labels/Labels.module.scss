@@ -1,75 +1,68 @@
 @import '../../../styles/colors';
 @import '../../../styles/vars';
+@import '../../../styles/mixins';
 
 .labels {
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   justify-content: space-between;
 }
 
-.section {
-  flex: 1;
-  padding: 0 $size-2x;
+.form {
+  display: block;
+  position: relative;
 
-  &:first-child {
-    padding-left: 0;
-  }
-
-  &:last-child {
-    flex: 0;
-    width: 200px;
-  }
-}
-
-.h4 {
-  margin-bottom: $size-2x;
+  width: 100%;
 }
 
 .labelInput {
-  background-color: $white;
+  background-color: transparent;
   border: 0;
+  border-bottom: 1px solid $color-8;
+  margin: $size-4x 0 $size-2x;
   outline: 0;
-  padding: $size-1x $size-2x;
+  padding: 2px 4px;
+  width: 100%;
+}
+
+.submit {
+  background-color: $color-7;
+  border: 0;
+  border-radius: 10px;
+  color: $white;
+  display: block;
+  float: right;
+  line-height: 26px;
+  outline: 0;
+  padding: 0 $size-2x;
 }
 
 .list {
-  margin-bottom: $size-2x;
+  margin-top: $size-2x;
 }
 
 .label {
+  @include default-shadow;
   align-items: center;
   background-color: $white;
-  border: 1px solid $gray;
-  border-radius: $size-4x / 2;
+  border: 0;
   cursor: pointer;
   display: inline-block;
-  line-height: $size-4x;
+  font-size: 14px;
   margin-bottom: $size-1x;
   margin-right: $size-1x;
   outline: 0;
-  padding: 0 $size-4x 0 $size-2x;
+  padding: $size-1x $size-4x $size-1x $size-2x;
   position: relative;
   width: auto;
 }
 
-.labelAssign {
-  &:hover {
-    border-color: $cr-green;
-    color: $cr-green;
-
-    .labelDel {
-      color: $cr-green;
-    }
-  }
-}
-
 .labelRemove {
   &:hover {
-    border-color: $cr-pink;
-    color: $cr-pink;
-
     .labelDel {
-      color: $cr-pink;
+      path {
+        fill: $color-7;
+      }
     }
   }
 }
@@ -81,4 +74,39 @@
   right: 5px;
   top: 50%;
   transform: translateY(-50%);
+
+  path {
+    fill: $color-8;
+  }
+}
+
+.menu {
+  @include default-shadow;
+  background-color: $white;
+  position: absolute;
+  left: 0;
+  top: 48px;
+  width: 100%;
+  z-index: 10;
+}
+
+.menuItem {
+  background-color: transparent;
+  border: 0;
+  border-bottom: 1px solid $gray-light;
+  cursor: pointer;
+  font-size: 14px;
+  padding: $size-1x $size-2x;
+  text-align: left;
+  width: 100%;
+
+  &:last-child {
+    border-bottom: 0;
+  }
+}
+
+.error {
+  clear: both;
+  color: $color-7;
+  text-transform: uppercase;
 }
