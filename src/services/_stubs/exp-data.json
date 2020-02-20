@@ -4,9 +4,9 @@
       "_metadata": {
         "Last-Modified": "Thu, 24 Oct 2019 20:48:30 GMT",
         "Link": [
-          "<https://latest-master.carbonrelay.dev/api/experiments/postgres-ofer>;rel=self",
-          "<https://latest-master.carbonrelay.dev/api/experiments/postgres-ofer/trials/>;rel=https://carbonrelay.com/rel/trials",
-          "<https://latest-master.carbonrelay.dev/api/experiments/postgres-ofer/trials/next>;rel=https://carbonrelay.com/rel/nextTrial"
+          "<https://latest-master.carbonrelay.dev/v1/experiments/postgres-ofer>;rel=self",
+          "<https://latest-master.carbonrelay.dev/v1/experiments/postgres-ofer/trials/>;rel=https://carbonrelay.com/rel/trials",
+          "<https://latest-master.carbonrelay.dev/v1/experiments/postgres-ofer/trials/next>;rel=https://carbonrelay.com/rel/nextTrial"
         ]
       },
       "displayName": "postgres-ofer",
@@ -49,9 +49,9 @@
       "_metadata": {
         "Last-Modified": "Thu, 24 Oct 2019 18:20:51 GMT",
         "Link": [
-          "<https://latest-master.carbonrelay.dev/api/experiments/check-defaults-GCWMYKBZ>;rel=self",
-          "<https://latest-master.carbonrelay.dev/api/experiments/check-defaults-GCWMYKBZ/trials/>;rel=https://carbonrelay.com/rel/trials",
-          "<https://latest-master.carbonrelay.dev/api/experiments/check-defaults-GCWMYKBZ/trials/next>;rel=https://carbonrelay.com/rel/nextTrial"
+          "<https://latest-master.carbonrelay.dev/v1/experiments/check-defaults-GCWMYKBZ>;rel=self",
+          "<https://latest-master.carbonrelay.dev/v1/experiments/check-defaults-GCWMYKBZ/trials/>;rel=https://carbonrelay.com/rel/trials",
+          "<https://latest-master.carbonrelay.dev/v1/experiments/check-defaults-GCWMYKBZ/trials/next>;rel=https://carbonrelay.com/rel/nextTrial"
         ]
       },
       "displayName": "ELK demo",
@@ -106,9 +106,9 @@
       "_metadata": {
         "Last-Modified": "Thu, 24 Oct 2019 18:20:47 GMT",
         "Link": [
-          "<https://latest-master.carbonrelay.dev/api/experiments/too-many-trials-GCWMYKBZ>;rel=self",
-          "<https://latest-master.carbonrelay.dev/api/experiments/too-many-trials-GCWMYKBZ/trials/>;rel=https://carbonrelay.com/rel/trials",
-          "<https://latest-master.carbonrelay.dev/api/experiments/too-many-trials-GCWMYKBZ/trials/next>;rel=https://carbonrelay.com/rel/nextTrial"
+          "<https://latest-master.carbonrelay.dev/v1/experiments/too-many-trials-GCWMYKBZ>;rel=self",
+          "<https://latest-master.carbonrelay.dev/v1/experiments/too-many-trials-GCWMYKBZ/trials/>;rel=https://carbonrelay.com/rel/trials",
+          "<https://latest-master.carbonrelay.dev/v1/experiments/too-many-trials-GCWMYKBZ/trials/next>;rel=https://carbonrelay.com/rel/nextTrial"
         ]
       },
       "displayName": "ELK demo",
@@ -163,9 +163,9 @@
       "_metadata": {
         "Last-Modified": "Thu, 24 Oct 2019 18:20:46 GMT",
         "Link": [
-          "<https://latest-master.carbonrelay.dev/api/experiments/too-many-params-GCWMYKBZ>;rel=self",
-          "<https://latest-master.carbonrelay.dev/api/experiments/too-many-params-GCWMYKBZ/trials/>;rel=https://carbonrelay.com/rel/trials",
-          "<https://latest-master.carbonrelay.dev/api/experiments/too-many-params-GCWMYKBZ/trials/next>;rel=https://carbonrelay.com/rel/nextTrial"
+          "<https://latest-master.carbonrelay.dev/v1/experiments/too-many-params-GCWMYKBZ>;rel=self",
+          "<https://latest-master.carbonrelay.dev/v1/experiments/too-many-params-GCWMYKBZ/trials/>;rel=https://carbonrelay.com/rel/trials",
+          "<https://latest-master.carbonrelay.dev/v1/experiments/too-many-params-GCWMYKBZ/trials/next>;rel=https://carbonrelay.com/rel/nextTrial"
         ]
       },
       "displayName": "ELK demo",
@@ -380,9 +380,9 @@
       "_metadata": {
         "Last-Modified": "Thu, 24 Oct 2019 18:20:46 GMT",
         "Link": [
-          "<https://latest-master.carbonrelay.dev/api/experiments/too-many-metrics-GCWMYKBZ>;rel=self",
-          "<https://latest-master.carbonrelay.dev/api/experiments/too-many-metrics-GCWMYKBZ/trials/>;rel=https://carbonrelay.com/rel/trials",
-          "<https://latest-master.carbonrelay.dev/api/experiments/too-many-metrics-GCWMYKBZ/trials/next>;rel=https://carbonrelay.com/rel/nextTrial"
+          "<https://latest-master.carbonrelay.dev/v1/experiments/too-many-metrics-GCWMYKBZ>;rel=self",
+          "<https://latest-master.carbonrelay.dev/v1/experiments/too-many-metrics-GCWMYKBZ/trials/>;rel=https://carbonrelay.com/rel/trials",
+          "<https://latest-master.carbonrelay.dev/v1/experiments/too-many-metrics-GCWMYKBZ/trials/next>;rel=https://carbonrelay.com/rel/nextTrial"
         ]
       },
       "displayName": "ELK demo",
@@ -461,9 +461,9 @@
       "_metadata": {
         "Last-Modified": "Thu, 24 Oct 2019 18:20:46 GMT",
         "Link": [
-          "<https://latest-master.carbonrelay.dev/api/experiments/valid-experiment-GCWMYKBZ>;rel=self",
-          "<https://latest-master.carbonrelay.dev/api/experiments/valid-experiment-GCWMYKBZ/trials/>;rel=https://carbonrelay.com/rel/trials",
-          "<https://latest-master.carbonrelay.dev/api/experiments/valid-experiment-GCWMYKBZ/trials/next>;rel=https://carbonrelay.com/rel/nextTrial"
+          "<https://latest-master.carbonrelay.dev/v1/experiments/valid-experiment-GCWMYKBZ>;rel=self",
+          "<https://latest-master.carbonrelay.dev/v1/experiments/valid-experiment-GCWMYKBZ/trials/>;rel=https://carbonrelay.com/rel/trials",
+          "<https://latest-master.carbonrelay.dev/v1/experiments/valid-experiment-GCWMYKBZ/trials/next>;rel=https://carbonrelay.com/rel/nextTrial"
         ]
       },
       "displayName": "ELK demo",
@@ -518,9 +518,9 @@
       "_metadata": {
         "Last-Modified": "Thu, 24 Oct 2019 18:19:33 GMT",
         "Link": [
-          "<https://latest-master.carbonrelay.dev/api/experiments/check-defaults-QXMBAGFH>;rel=self",
-          "<https://latest-master.carbonrelay.dev/api/experiments/check-defaults-QXMBAGFH/trials/>;rel=https://carbonrelay.com/rel/trials",
-          "<https://latest-master.carbonrelay.dev/api/experiments/check-defaults-QXMBAGFH/trials/next>;rel=https://carbonrelay.com/rel/nextTrial"
+          "<https://latest-master.carbonrelay.dev/v1/experiments/check-defaults-QXMBAGFH>;rel=self",
+          "<https://latest-master.carbonrelay.dev/v1/experiments/check-defaults-QXMBAGFH/trials/>;rel=https://carbonrelay.com/rel/trials",
+          "<https://latest-master.carbonrelay.dev/v1/experiments/check-defaults-QXMBAGFH/trials/next>;rel=https://carbonrelay.com/rel/nextTrial"
         ]
       },
       "displayName": "ELK demo",
@@ -575,9 +575,9 @@
       "_metadata": {
         "Last-Modified": "Thu, 24 Oct 2019 18:19:32 GMT",
         "Link": [
-          "<https://latest-master.carbonrelay.dev/api/experiments/too-many-trials-QXMBAGFH>;rel=self",
-          "<https://latest-master.carbonrelay.dev/api/experiments/too-many-trials-QXMBAGFH/trials/>;rel=https://carbonrelay.com/rel/trials",
-          "<https://latest-master.carbonrelay.dev/api/experiments/too-many-trials-QXMBAGFH/trials/next>;rel=https://carbonrelay.com/rel/nextTrial"
+          "<https://latest-master.carbonrelay.dev/v1/experiments/too-many-trials-QXMBAGFH>;rel=self",
+          "<https://latest-master.carbonrelay.dev/v1/experiments/too-many-trials-QXMBAGFH/trials/>;rel=https://carbonrelay.com/rel/trials",
+          "<https://latest-master.carbonrelay.dev/v1/experiments/too-many-trials-QXMBAGFH/trials/next>;rel=https://carbonrelay.com/rel/nextTrial"
         ]
       },
       "displayName": "ELK demo",
@@ -632,9 +632,9 @@
       "_metadata": {
         "Last-Modified": "Thu, 24 Oct 2019 18:19:31 GMT",
         "Link": [
-          "<https://latest-master.carbonrelay.dev/api/experiments/too-many-params-QXMBAGFH>;rel=self",
-          "<https://latest-master.carbonrelay.dev/api/experiments/too-many-params-QXMBAGFH/trials/>;rel=https://carbonrelay.com/rel/trials",
-          "<https://latest-master.carbonrelay.dev/api/experiments/too-many-params-QXMBAGFH/trials/next>;rel=https://carbonrelay.com/rel/nextTrial"
+          "<https://latest-master.carbonrelay.dev/v1/experiments/too-many-params-QXMBAGFH>;rel=self",
+          "<https://latest-master.carbonrelay.dev/v1/experiments/too-many-params-QXMBAGFH/trials/>;rel=https://carbonrelay.com/rel/trials",
+          "<https://latest-master.carbonrelay.dev/v1/experiments/too-many-params-QXMBAGFH/trials/next>;rel=https://carbonrelay.com/rel/nextTrial"
         ]
       },
       "displayName": "ELK demo",
@@ -849,9 +849,9 @@
       "_metadata": {
         "Last-Modified": "Thu, 24 Oct 2019 18:19:31 GMT",
         "Link": [
-          "<https://latest-master.carbonrelay.dev/api/experiments/too-many-metrics-QXMBAGFH>;rel=self",
-          "<https://latest-master.carbonrelay.dev/api/experiments/too-many-metrics-QXMBAGFH/trials/>;rel=https://carbonrelay.com/rel/trials",
-          "<https://latest-master.carbonrelay.dev/api/experiments/too-many-metrics-QXMBAGFH/trials/next>;rel=https://carbonrelay.com/rel/nextTrial"
+          "<https://latest-master.carbonrelay.dev/v1/experiments/too-many-metrics-QXMBAGFH>;rel=self",
+          "<https://latest-master.carbonrelay.dev/v1/experiments/too-many-metrics-QXMBAGFH/trials/>;rel=https://carbonrelay.com/rel/trials",
+          "<https://latest-master.carbonrelay.dev/v1/experiments/too-many-metrics-QXMBAGFH/trials/next>;rel=https://carbonrelay.com/rel/nextTrial"
         ]
       },
       "displayName": "ELK demo",
