@@ -8,7 +8,7 @@ export class ExperimentsService {
         return {
           experiments: expData.experiments.map(exp => {
             const id = exp._metadata.Link[0].match(
-              /.+?\/api\/experiments\/(.*)>.*/,
+              /.+?\/experiments\/(.*)>.*/,
             )[1]
             return {
               ...exp,
