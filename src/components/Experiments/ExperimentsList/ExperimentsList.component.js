@@ -5,6 +5,8 @@ import {ExperimentsService} from '../../../services/ExperimentsService'
 import {connectWithState} from '../../../context/StateContext'
 import useApiCallEffect from '../../../hooks/useApiCallEffect'
 
+const FIRST_METRIC_NAME = 'cost'
+
 type Props = {
   experiments: Object,
   activeExperiment: Object,
@@ -13,7 +15,7 @@ type Props = {
 
 const getMetricsList = experiment => {
   return (experiment.metrics || [])
-    .sort(m => (m.minimize ? 1 : -1))
+    .sort(m => (m.name === FIRST_METRIC_NAME ? -1 : 1))
     .map(({name}) => name)
 }
 
@@ -56,6 +58,7 @@ export const ExperimentsList = (props: Props) => {
   const setActiveExperiment = index => () => {
     const metricsList = getMetricsList(experiments.list[index])
     const parametersList = getParametersList(experiments.list[index])
+
     updateState({
       activeExperiment: {
         ...activeExperiment,
@@ -95,6 +98,7 @@ export const ExperimentsList = (props: Props) => {
       )}
       <div className={style.list}>
         {experiments.list
+          .map((exp, index) => ({...exp, index}))
           .filter(ex => {
             return (
               !filter ||
@@ -103,19 +107,19 @@ export const ExperimentsList = (props: Props) => {
                 new RegExp(filter.name, 'ig').test(ex.displayName))
             )
           })
-          .map((e, i) => {
+          .map(exp => {
             let classes = style.btn
             classes +=
-              activeExperiment && i === activeExperiment.index
+              activeExperiment && exp.index === activeExperiment.index
                 ? ` ${style.active}`
                 : ''
             return (
               <button
                 className={classes}
-                key={e.id}
-                onClick={setActiveExperiment(i)}
+                key={exp.id}
+                onClick={setActiveExperiment(exp.index)}
               >
-                {e.displayName.replace(/-/g, ' ')}
+                {exp.displayName.replace(/-/g, ' ')}
               </button>
             )
           })}

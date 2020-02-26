@@ -55,6 +55,7 @@ export const ExperimentResults = (props: TypeProps) => {
     labelsFilter: activeExperiment.labelsFilter,
     xAxisMetricName: activeExperiment.xAxisMetric,
     xAxisMinValue: 0,
+    yAxisMinValue: 0,
     ...(numOfMertics >= 2 && {
       yAxisMetricName: activeExperiment.yAxisMetric,
     }),

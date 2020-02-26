@@ -127,8 +127,8 @@ describe('Component: ExperimentList', () => {
         index: 0,
         isLoading: true,
         metricParameterChart: null,
-        xAxisMetric: 'duration',
-        yAxisMetric: 'cost',
+        xAxisMetric: 'cost',
+        yAxisMetric: 'duration',
       },
       experiments: {
         ...localProps.experiments,
@@ -164,7 +164,7 @@ describe('Component: ExperimentList', () => {
         index: 0,
         isLoading: true,
         metricParameterChart: null,
-        xAxisMetric: 'duration',
+        xAxisMetric: 'cost',
       },
     })
     expect(
@@ -201,8 +201,8 @@ describe('Component: ExperimentList', () => {
         index: 0,
         isLoading: true,
         metricParameterChart: null,
-        xAxisMetric: 'throughput',
-        yAxisMetric: 'cost',
+        xAxisMetric: 'cost',
+        yAxisMetric: 'throughput',
         zAxisMetric: 'duration',
       },
       experiments: {
