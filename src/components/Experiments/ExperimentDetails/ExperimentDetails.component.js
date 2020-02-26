@@ -49,7 +49,7 @@ export const ExperimentDetails = (props: Props) => {
     activeExperiment.isLoading &&
     experiments.list[activeExperiment.index] &&
     experiments.list[activeExperiment.index].metrics &&
-    experiments.list[activeExperiment.index].metrics.length > 1
+    experiments.list[activeExperiment.index].metrics.length >= 1
       ? expService.getTrialsFactory({
           name: experiments.list[activeExperiment.index].id, // eslint-disable-line indent
         }) // eslint-disable-line indent

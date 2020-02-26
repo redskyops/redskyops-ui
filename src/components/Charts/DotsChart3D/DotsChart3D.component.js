@@ -261,7 +261,7 @@ export class DotsChart3D extends React.Component<ChartPropsType> {
       .filter(t => t.status === 'completed')
 
     this.filteredTrials = this.completedTrials.filter(
-      ({labels}) =>
+      ({labels = {}}) =>
         this.props.labelsFilter.length === 0 ||
         this.props.labelsFilter.reduce((acc, l) => acc || l in labels, false),
     )
