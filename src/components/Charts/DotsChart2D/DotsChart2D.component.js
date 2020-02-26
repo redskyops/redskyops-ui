@@ -6,7 +6,11 @@ import style from '../Charts.module.scss'
 import {AXIS_TYPE, TypeAxisType} from '../../../constants'
 
 export class DotsChart2D extends React.Component<
-  ChartPropsType & {xAxisValueType: TypeAxisType, xAxisMinValue: number},
+  ChartPropsType & {
+    xAxisValueType: TypeAxisType,
+    xAxisMinValue: number,
+    yAxisMinValue: number,
+  },
 > {
   constructor(props) {
     super(props)
@@ -62,6 +66,11 @@ export class DotsChart2D extends React.Component<
     const minXValue = (min => (!isNaN(min) ? min : minCost))(
       parseInt(this.props.xAxisMinValue, 10),
     )
+
+    const minYValue = (min => (!isNaN(min) ? min : minDuration))(
+      parseInt(this.props.yAxisMinValue, 10),
+    )
+
     const xScale = d3
       .scaleLinear()
       .domain([minXValue, maxCost])
@@ -69,7 +78,7 @@ export class DotsChart2D extends React.Component<
 
     const yScale = d3
       .scaleLinear()
-      .domain([minDuration, maxDuration])
+      .domain([minYValue, maxDuration])
       .range([height, 0])
 
     d3.select(`#chart-${this.chartId} svg`).remove()
