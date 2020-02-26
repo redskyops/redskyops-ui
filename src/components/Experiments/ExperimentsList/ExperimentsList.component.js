@@ -5,6 +5,8 @@ import {ExperimentsService} from '../../../services/ExperimentsService'
 import {connectWithState} from '../../../context/StateContext'
 import useApiCallEffect from '../../../hooks/useApiCallEffect'
 
+const FIRST_METRIC_NAME = 'cost'
+
 type Props = {
   experiments: Object,
   activeExperiment: Object,
@@ -13,7 +15,7 @@ type Props = {
 
 const getMetricsList = experiment => {
   return (experiment.metrics || [])
-    .sort(m => (m.minimize ? 1 : -1))
+    .sort(m => (m.name === FIRST_METRIC_NAME ? -1 : 1))
     .map(({name}) => name)
 }
 
@@ -56,6 +58,7 @@ export const ExperimentsList = (props: Props) => {
   const setActiveExperiment = index => () => {
     const metricsList = getMetricsList(experiments.list[index])
     const parametersList = getParametersList(experiments.list[index])
+
     updateState({
       activeExperiment: {
         ...activeExperiment,
