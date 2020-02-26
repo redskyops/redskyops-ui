@@ -95,6 +95,7 @@ export const ExperimentsList = (props: Props) => {
       )}
       <div className={style.list}>
         {experiments.list
+          .map((exp, index) => ({...exp, index}))
           .filter(ex => {
             return (
               !filter ||
@@ -103,19 +104,19 @@ export const ExperimentsList = (props: Props) => {
                 new RegExp(filter.name, 'ig').test(ex.displayName))
             )
           })
-          .map((e, i) => {
+          .map(exp => {
             let classes = style.btn
             classes +=
-              activeExperiment && i === activeExperiment.index
+              activeExperiment && exp.index === activeExperiment.index
                 ? ` ${style.active}`
                 : ''
             return (
               <button
                 className={classes}
-                key={e.id}
-                onClick={setActiveExperiment(i)}
+                key={exp.id}
+                onClick={setActiveExperiment(exp.index)}
               >
-                {e.displayName.replace(/-/g, ' ')}
+                {exp.displayName.replace(/-/g, ' ')}
               </button>
             )
           })}
