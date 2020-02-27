@@ -23,7 +23,7 @@ export class DotsChart1D extends React.Component<ChartPropsType> {
       .filter(t => t.status === 'completed')
 
     const filteredTrials = completedTrials.filter(
-      ({labels}) =>
+      ({labels = {}}) =>
         this.props.labelsFilter.length === 0 ||
         this.props.labelsFilter.reduce((acc, l) => acc || l in labels, false),
     )
@@ -80,7 +80,6 @@ export class DotsChart1D extends React.Component<ChartPropsType> {
 
     const circleOver = ({hoverTrialHandler, xAxisMetricName}) =>
       function _circleOver(dataPoint) {
-        console.log('>>>>')
         var xValue = dataPoint.values.filter(
           v => v.metricName === xValueName,
         )[0].value
@@ -144,7 +143,7 @@ export class DotsChart1D extends React.Component<ChartPropsType> {
       )
       .attr('class', style.circle)
       .classed(style.best, d => {
-        if ('best' in d.labels) {
+        if (d.labels && 'best' in d.labels) {
           return true
         }
         return false

@@ -253,7 +253,7 @@ export const Labels = (props: Props) => {
         {showMenu && (
           <div className={style.menu}>
             {activeExperiment.labelsList
-              .filter(l => !(l in trial.labels))
+              .filter(l => !trial.labels || !(l in trial.labels))
               .filter(l => new RegExp(labels.newLabel, 'gi').test(l))
               .map(label => (
                 <button

@@ -40,7 +40,7 @@ export class DotsChart2D extends React.Component<
       .filter(t => t.status === 'completed')
 
     const filteredTrials = completedTrials.filter(
-      ({labels}) =>
+      ({labels = {}}) =>
         this.props.labelsFilter.length === 0 ||
         this.props.labelsFilter.reduce((acc, l) => acc || l in labels, false),
     )
@@ -253,7 +253,7 @@ export class DotsChart2D extends React.Component<
       )
       .attr('class', style.circle)
       .classed(style.best, d => {
-        if ('best' in d.labels) {
+        if (d.labels && 'best' in d.labels) {
           return true
         }
         return false
