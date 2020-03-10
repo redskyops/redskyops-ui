@@ -130,6 +130,8 @@ describe('Component: MetricParameterChart', () => {
     expect(chartProps).toHaveProperty('xAxisValueType', 'parameter')
     expect(chartProps).toHaveProperty('xAxisMetricName', 'memory')
     expect(chartProps).toHaveProperty('yAxisMetricName', 'cost')
+    expect(chartProps).toHaveProperty('xAxisMinValue', 0)
+    expect(chartProps).toHaveProperty('yAxisMinValue', 0)
     expect(chartProps).toHaveProperty(
       'selectTrialHandler',
       props.selectTrialHandler,
