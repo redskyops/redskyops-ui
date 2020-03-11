@@ -93,6 +93,8 @@ export const MetricParameterChart = (props: Props) => {
           hoverTrialHandler={props.hoverTrialHandler}
           activeTrial={props.activeTrial}
           labelsFilter={props.labelsFilter}
+          xAxisMinValue={0}
+          yAxisMinValue={0}
         />
       )}
     </div>
