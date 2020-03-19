@@ -7,12 +7,13 @@ import Layout from './components/Layout/Layout.component'
 import {StateProvider} from './context/StateContext'
 import Page404 from './components/Page404/Page404.component'
 import BackendHealthCheck from './components/BackendHealthCheck/BackendHealthCheck.component'
+import {BASE_URL} from './constants'
 
 class App extends Component {
   render() {
     return (
       <div className="App">
-        <Router basename={process.env.REACT_APP_BASE_FOLDER || '/'}>
+        <Router basename={BASE_URL}>
           <StateProvider>
             <BackendHealthCheck>
               <Switch>
