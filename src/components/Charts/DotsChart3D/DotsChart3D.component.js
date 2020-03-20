@@ -33,7 +33,7 @@ export class DotsChart3D extends React.Component<ChartPropsType> {
 
     const loader = new THREE.FontLoader()
     loader.load(
-      `${BASE_URL}fonts/helvetiker_regular.typeface.json`,
+      `${BASE_URL}/fonts/helvetiker_regular.typeface.json`,
       this.fontLoaded,
     )
 

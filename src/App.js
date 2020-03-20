@@ -13,7 +13,7 @@ class App extends Component {
   render() {
     return (
       <div className="App">
-        <Router basename={BASE_URL}>
+        <Router basename={BASE_URL ? BASE_URL : '/'}>
           <StateProvider>
             <BackendHealthCheck>
               <Switch>
