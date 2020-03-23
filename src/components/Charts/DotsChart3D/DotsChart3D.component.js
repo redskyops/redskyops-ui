@@ -2,6 +2,7 @@ import React from 'react'
 import * as d3 from 'd3'
 import * as THREE from 'three'
 
+import {BASE_URL} from '../../../constants'
 import ChartPropsType from '../ChartProps.type'
 import style from '../Charts.module.scss'
 
@@ -31,7 +32,10 @@ export class DotsChart3D extends React.Component<ChartPropsType> {
     const {size} = this
 
     const loader = new THREE.FontLoader()
-    loader.load('/fonts/helvetiker_regular.typeface.json', this.fontLoaded)
+    loader.load(
+      `${BASE_URL}/fonts/helvetiker_regular.typeface.json`,
+      this.fontLoaded,
+    )
 
     this.scene = new THREE.Scene()
     this.scene.background = new THREE.Color(0xffffff)
