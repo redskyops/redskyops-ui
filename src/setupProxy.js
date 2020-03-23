@@ -6,7 +6,7 @@ module.exports = function(app) {
     proxy({
       target: 'http://localhost:8000',
       router: {
-        '/api/experiments': 'http://localhost:8000/api/experiments',
+        '/api/experiments': 'http://localhost:8000/experiments',
       },
     }),
   )

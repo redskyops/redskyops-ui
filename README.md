@@ -55,9 +55,10 @@ go generate ./ui
 You need below environment variables to connect to Redsky backend server
 
 ```sh
-REDSKY_ADDRESS={url-to-backend-server}
-REDSKY_OAUTH2_CLIENT_ID={API-Key}
-REDSKY_OAUTH2_CLIENT_SECRET={API-Secret}
+REDSKY_SERVER_IDENTIFIER={url-to-backend-server}
+REDSKY_SERVER_ISSUER={url-to-oauth-server}
+REDSKY_AUTHORIZATION_CLIENT_ID={API-Key}
+REDSKY_AUTHORIZATION_CLIENT_SECRET={API-Secret}
 ```
 
 You can make a copy of `.env.example` and rename it to `.env` and define these variables there.
@@ -65,7 +66,7 @@ You can make a copy of `.env.example` and rename it to `.env` and define these v
 In addition to the development server, you must run a local proxy to access the Red Sky Server:
 
 ```sh
-node src/proxy.js
+npm run proxy
 npm start
 ```
 
