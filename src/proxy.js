@@ -9,38 +9,53 @@ const bodyParser = require('body-parser')
 dotenv.config()
 
 if (
-  !process.env.REDSKY_ADDRESS ||
-  !process.env.REDSKY_OAUTH2_CLIENT_ID ||
-  !process.env.REDSKY_OAUTH2_CLIENT_SECRET
+  !process.env.REDSKY_SERVER_IDENTIFIER ||
+  !process.env.REDSKY_SERVER_ISSUER ||
+  !process.env.REDSKY_AUTHORIZATION_CLIENT_ID ||
+  !process.env.REDSKY_AUTHORIZATION_CLIENT_SECRET
 ) {
   throw new Error('Proxy cannot run without required environment variables')
 }
 
 app.use(bodyParser.json())
 
-const REDSKY_ADDRESS = process.env.REDSKY_ADDRESS
-const REDSKY_OAUTH2_CLIENT_ID = process.env.REDSKY_OAUTH2_CLIENT_ID
-const REDSKY_OAUTH2_CLIENT_SECRET = process.env.REDSKY_OAUTH2_CLIENT_SECRET
+const REDSKY_SERVER_IDENTIFIER = process.env.REDSKY_SERVER_IDENTIFIER
+const REDSKY_SERVER_ISSUER = process.env.REDSKY_SERVER_ISSUER
+const REDSKY_AUTHORIZATION_CLIENT_ID =
+  process.env.REDSKY_AUTHORIZATION_CLIENT_ID
+const REDSKY_AUTHORIZATION_CLIENT_SECRET =
+  process.env.REDSKY_AUTHORIZATION_CLIENT_SECRET
 
 let token
 let tokenType
 
-fetch(`${REDSKY_ADDRESS}/auth/token/`, {
+fetch(`${REDSKY_SERVER_ISSUER}/oauth/token`, {
   method: 'POST',
   headers: {
     'Content-Type': 'application/x-www-form-urlencoded',
   },
-  body: `client_id=${REDSKY_OAUTH2_CLIENT_ID}&client_secret=${REDSKY_OAUTH2_CLIENT_SECRET}`,
+  body: [
+    `client_id=${REDSKY_AUTHORIZATION_CLIENT_ID}`,
+    `client_secret=${REDSKY_AUTHORIZATION_CLIENT_SECRET}`,
+    'grant_type=client_credentials',
+    `audience=https://api.carbonrelay.io/v1/`,
+  ].join('&'),
 })
-  .then(res => res.json())
+  .then(res => {
+    return res.json()
+  })
   .then(tokenRes => {
     console.log(`[PROXY] Auth token obtained successfully`)
     token = tokenRes.access_token
     tokenType = tokenRes.token_type
   })
+  .catch(error => console.log(`[PROXY:ERROR] ${error}`))
 
 const proxyRequest = (req, res) => {
-  let url = process.env.DOCKER_ENV ? req.originalUrl : req.path
+  let url = (process.env.DOCKER_ENV ? req.originalUrl : req.path).replace(
+    /\/api/g,
+    '',
+  )
   const queryStr = Object.keys(req.query).map(
     param => `${param}=${req.query[param]}`,
   )
@@ -53,7 +68,7 @@ const proxyRequest = (req, res) => {
   delete newHeaders['host']
 
   const options = {
-    url: `${REDSKY_ADDRESS}${url.replace(/\/\//g, '/')}`,
+    url: `${REDSKY_SERVER_IDENTIFIER}${url.replace(/\/\//g, '/')}`,
     method: req.method,
     json: true,
     ...(['POST', 'PATCH', 'PUT'].indexOf(req.method) > -1
@@ -88,7 +103,7 @@ const proxyRequest = (req, res) => {
   })
 }
 
-app.use('/api/experiments', proxyRequest)
+app.use('/experiments', proxyRequest)
 app.use('/shutdown', (req, res) => {
   console.log(`[PROXY] Requesting /shutdown`)
   res.send('shutdown')
