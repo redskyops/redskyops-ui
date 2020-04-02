@@ -11,7 +11,7 @@ type TypeProps = {
   experiments: TypeExperiments,
   updateState: () => {},
 }
-
+console.log('slsll')
 export const LeftPanel = (props: TypeProps) => {
   const {experiments, updateState} = props
   return (
