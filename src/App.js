@@ -4,6 +4,7 @@ import {BrowserRouter as Router, Switch, Route} from 'react-router-dom'
 
 import './App.scss'
 import Layout from './components/Layout/Layout.component'
+import HelpDocs from './components/Layout/LayoutHelpDocs.component'
 import {StateProvider} from './context/StateContext'
 import Page404 from './components/Page404/Page404.component'
 import BackendHealthCheck from './components/BackendHealthCheck/BackendHealthCheck.component'
@@ -18,6 +19,7 @@ class App extends Component {
             <BackendHealthCheck>
               <Switch>
                 <Route exact path="/" component={Layout} />
+                <Route exact path="/helpDocs" component={HelpDocs} />
                 <Route path="*" component={Page404} />
               </Switch>
             </BackendHealthCheck>

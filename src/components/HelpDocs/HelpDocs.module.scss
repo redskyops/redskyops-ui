@@ -1,0 +1,53 @@
+@import '../../styles/colors';
+@import '../../styles/vars';
+
+.layout {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+
+.header {
+  width: 100%;
+}
+.footer {
+  width: 100%;
+}
+.grid {
+  align-items: stretch;
+  display: flex;
+  flex-direction: row;
+}
+
+.panel {
+  background-color: $color-7;
+  width: $left-panel-width;
+}
+
+.content {
+  flex: 1;
+  min-height: calc(100vh - #{$header-height});
+}
+.docsDetails {
+    color: $cr-navy;
+    display: block;
+    padding: $size-6x;
+    padding-bottom: 200px;
+}
+.generalSection {
+    align-items: center;
+    display: flex;
+    height: calc(100vh - #{$header-height});
+    justify-content: center;
+    min-width: 1280px;
+    width: 100%;
+}
+.generalTitle {
+    color: $color-8;
+    text-align: center;
+}
+.links{
+    color: $color-8;
+    font-size: 18px;
+    text-align: center;
+}

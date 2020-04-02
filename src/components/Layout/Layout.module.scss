@@ -10,7 +10,9 @@
 .header {
   width: 100%;
 }
-
+.footer {
+  width: 100%;
+}
 .grid {
   align-items: stretch;
   display: flex;
@@ -25,4 +27,8 @@
 .content {
   flex: 1;
   min-height: calc(100vh - #{$header-height});
+}
+.arrow {
+  cursor: pointer;
+  margin-right: 5px;
 }
