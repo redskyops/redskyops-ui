@@ -1,10 +1,52 @@
 @import '../../styles/colors';
 @import '../../styles/vars';
 
+@keyframes collapse {
+  from {
+    max-width: $left-panel-width;
+  }
+
+  to {
+    max-width: 0;
+  }
+}
+
+@keyframes expand {
+  from {
+    max-width: 0;
+  }
+
+  to {
+    max-width: $left-panel-width;
+  }
+}
+
 .leftPanel {
   background-color: $color-7;
   color: $white;
-  height: calc(100vh - #{$header-height});
+  flex: 1;
+  // height: calc(100vh - #{$header-height});
+  position: relative;
+  // width: $left-panel-width;
+}
+
+.outter {
+  animation-duration: .3s;
+  animation-timing-function: ease-in-out;
+  overflow: hidden;
+
+  &.collapse {
+    animation-name: collapse;
+    max-width: 0;
+  }
+
+  &.expand {
+    animation-name: expand;
+    width: $left-panel-width;
+  }
+}
+
+.inner {
   padding: $size-5x $size-4x;
   width: $left-panel-width;
 }
@@ -51,4 +93,14 @@
   right: $size-1x;
   top: 5px;
   padding: 0;
+}
+
+.button {
+  background-color: $white;
+  border: 0;
+  position: absolute;
+  width: 30px;
+  height: 40px;
+  top: $size-1x;
+  right: -30px;
 }

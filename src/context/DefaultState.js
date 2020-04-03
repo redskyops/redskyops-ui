@@ -48,6 +48,10 @@ export type TypeHoveredTrial = {
   zData?: {name: string, value: number, type: string},
 }
 
+export type TypeLeftPanel = {
+  show: boolean,
+}
+
 const experimentsList: TypeExperimentsList = []
 
 const trials: TypeTrials = null
@@ -78,6 +82,10 @@ const labels: TypeLabels = {
 
 const hoveredTrial: TypeHoveredTrial = null
 
+const leftPanel: TypeLeftPanel = {
+  show: true,
+}
+
 export const DEFAULT_STATE = {
   experiments,
   activeExperiment,
@@ -87,4 +95,5 @@ export const DEFAULT_STATE = {
   initialBackendCheck: false,
   backendHealthy: true,
   hoveredTrial,
+  leftPanel,
 }
