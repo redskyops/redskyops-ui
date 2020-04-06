@@ -4,9 +4,9 @@
 .header {
   align-items: center;
   background-color: $white;
-  // display: flex;
+  display: flex;
   justify-content: space-between;
-  // padding-right: 24px;
+  padding-right: 24px;
   padding-top: 10px;
 }
 
@@ -16,7 +16,7 @@
 .h1 {
   font-size: 28px;
   font-weight: bold;
-  text-align: center;
+  text-align: left;
 }
 
 .h4 {
