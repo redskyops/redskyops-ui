@@ -1,8 +1,7 @@
 import React from 'react'
 
 import Header from '../Header/Header.component'
-import Main from '../Main/Main.component'
-import LeftPanel from '../LeftPanel/LeftPanel.component'
+import LeftPanel from '../LeftPanel/LeftPanelHomeMenu.component'
 import Footer from '../Footer/Footer.component'
 import HelpDocs from '../HelpDocs/HelpDocs.component'
 import style from './Layout.module.scss'

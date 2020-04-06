@@ -26,7 +26,12 @@ export const LeftPanel = (props: TypeProps) => {
   return (
     <div className={style.leftPanel}>
       <button
-        style={{fontSize: '24px', paddingLeft: '8px', marginTop: '15px'}}
+        style={{
+          fontSize: '24px',
+          paddingLeft: '6px',
+          marginTop: '15px',
+          backgroundColor: '#F8F8F8',
+        }}
         className={`${style.button} fa fa-angle-double-${
           leftPanel.show ? 'left' : 'right'
         }`}

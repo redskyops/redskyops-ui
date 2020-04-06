@@ -15,11 +15,9 @@ export const Layout = () => {
         <Header />
       </div>
       <div className={style.grid}>
-        {/* <Collapse isOpen={isOpen}> */}
         <div className={style.panel}>
           <LeftPanel />
         </div>
-        {/* </Collapse> */}
         <div className={style.content}>
           <Main />
         </div>

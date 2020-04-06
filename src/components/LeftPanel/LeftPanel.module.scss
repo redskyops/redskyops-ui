@@ -80,6 +80,14 @@
   width: 100%;
 }
 
+.title {
+  border: 0;
+  height: 40px;
+  padding: 0 $size-6x 0 $size-2x;
+  outline: 0;
+  width: 100%;
+  font-size: 20px;
+}
 .icon {
   position: absolute;
   right: $size-1x;
