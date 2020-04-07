@@ -25,9 +25,7 @@
   background-color: $color-7;
   color: $white;
   flex: 1;
-  // height: calc(100vh - #{$header-height});
   position: relative;
-  // width: $left-panel-width;
 }
 
 .outter {
@@ -88,6 +86,7 @@
   width: 100%;
   font-size: 20px;
 }
+
 .icon {
   position: absolute;
   right: $size-1x;

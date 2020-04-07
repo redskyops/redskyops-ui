@@ -3,20 +3,18 @@
 
 .footer {
     align-items: center;
-    background-color: white;
-    // display: flex;
+    background-color: $white;
     justify-content: space-between;
-    // padding-right: 24px;
-    padding-top: 10px;
+    padding-top: $size-2x;
 }
 .logo {
-    height: 60px;
+    height: $size-10;
     display: block;
     margin-right: auto;
     margin-left: auto;
 }
 .h1 { 
-    font-size: 30px;
+    font-size: $size-5x;
     font-weight: bold;
     text-align: center;
 }

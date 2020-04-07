@@ -1,5 +1,4 @@
 import React from 'react'
-// import {Collapse} from 'reactstrap'
 
 import Header from '../Header/Header.component'
 import Main from '../Main/Main.component'

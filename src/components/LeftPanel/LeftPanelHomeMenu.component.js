@@ -1,5 +1,6 @@
 import React from 'react'
 
+import {Link} from 'react-router-dom'
 import {connectWithState} from '../../context/StateContext'
 import {TypeLeftPanel} from '../../context/DefaultState'
 
@@ -10,7 +11,7 @@ type TypeProps = {
   updateState: () => {},
 }
 
-export const LeftPanel = (props: TypeProps) => {
+export const LeftPanelHomeMenu = (props: TypeProps) => {
   const {leftPanel, updateState} = props
   const togglePanel = () => {
     updateState({
@@ -41,13 +42,13 @@ export const LeftPanel = (props: TypeProps) => {
       >
         <div className={style.inner}>
           <div className={style.title}>
-            <a
+            <Link
               style={{color: '#000000', fontWeight: 'bold'}}
-              href="/"
+              to="/"
               className="button"
             >
               My Experiments
-            </a>
+            </Link>
           </div>
         </div>
       </div>
@@ -55,4 +56,4 @@ export const LeftPanel = (props: TypeProps) => {
   )
 }
 
-export default connectWithState(LeftPanel, ['leftPanel'])
+export default connectWithState(LeftPanelHomeMenu, ['leftPanel'])

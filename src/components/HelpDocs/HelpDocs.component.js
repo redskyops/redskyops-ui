@@ -1,5 +1,5 @@
 import React from 'react'
-import {withRouter, Link} from 'react-router-dom'
+import {withRouter} from 'react-router-dom'
 
 import style from './HelpDocs.module.scss'
 
@@ -10,24 +10,24 @@ export const HelpDocs = () => {
         <div>
           <h1 className={style.generalTitle}>Resources and Helpful Links:</h1>
           <div className={style.links}>
-            <Link
+            <a
               style={{color: '#000000'}}
-              to="//redskyops.dev/docs/"
+              href="//redskyops.dev/docs/"
               className="button"
               target="_blank"
             >
               Red Sky Ops General Information
-            </Link>
+            </a>
           </div>
           <div className={style.links}>
-            <Link
+            <a
               style={{color: '#000000'}}
-              to="//github.com/redskyops/redskyops-recipes"
+              href="//github.com/redskyops/redskyops-recipes"
               className="button"
               target="_blank"
             >
               Red Sky Ops Recipes
-            </Link>
+            </a>
           </div>
         </div>
       </div>
