@@ -1,4 +1,5 @@
 import React from 'react'
+import {Switch, Route, Link} from 'react-router-dom'
 
 import ExperimentsList from '../Experiments/ExperimentsList/ExperimentsList.component'
 import {connectWithState} from '../../context/StateContext'
@@ -23,15 +24,68 @@ export const LeftPanel = (props: TypeProps) => {
       },
     })
   }
+
+  const renderSearchList = () => (
+    <>
+      <div className={style.search}>
+        <input
+          type="text"
+          className={style.searchInput}
+          placeholder="FILTER EXPERIMENTS"
+          value={experiments.filter.name}
+          onChange={e => {
+            updateState({
+              experiments: {
+                ...experiments,
+                filter: {
+                  ...experiments.filter,
+                  name: e.target.value,
+                },
+              },
+            })
+          }}
+        />
+        {!experiments.filter.name && (
+          <Icon icon="search" width={24} cssClass={style.icon} />
+        )}
+        {experiments.filter.name && (
+          <button
+            className={style.searchClearBtn}
+            data-dom-id="left-panel-clear"
+            onClick={() => {
+              updateState({
+                experiments: {
+                  ...experiments,
+                  filter: {
+                    ...experiments.filter,
+                    name: '',
+                  },
+                },
+              })
+            }}
+          >
+            <Icon icon="circleX" width={24} cssClass={style.icon} />
+          </button>
+        )}
+      </div>
+      <ExperimentsList />
+    </>
+  )
+
+  const renderLink = () => (
+    <div className={style.title}>
+      <Link
+        style={{color: '#000000', fontWeight: 'bold'}}
+        to="/"
+        className="button"
+      >
+        My Experiments
+      </Link>
+    </div>
+  )
   return (
     <div className={style.leftPanel}>
       <button
-        style={{
-          fontSize: '24px',
-          paddingLeft: '6px',
-          marginTop: '15px',
-          backgroundColor: '#F8F8F8',
-        }}
         className={`${style.button} fa fa-angle-double-${
           leftPanel.show ? 'left' : 'right'
         }`}
@@ -43,48 +97,10 @@ export const LeftPanel = (props: TypeProps) => {
         }`}
       >
         <div className={style.inner}>
-          <div className={style.search}>
-            <input
-              type="text"
-              className={style.searchInput}
-              placeholder="FILTER EXPERIMENTS"
-              value={experiments.filter.name}
-              onChange={e => {
-                updateState({
-                  experiments: {
-                    ...experiments,
-                    filter: {
-                      ...experiments.filter,
-                      name: e.target.value,
-                    },
-                  },
-                })
-              }}
-            />
-            {!experiments.filter.name && (
-              <Icon icon="search" width={24} cssClass={style.icon} />
-            )}
-            {experiments.filter.name && (
-              <button
-                className={style.searchClearBtn}
-                data-dom-id="left-panel-clear"
-                onClick={() => {
-                  updateState({
-                    experiments: {
-                      ...experiments,
-                      filter: {
-                        ...experiments.filter,
-                        name: '',
-                      },
-                    },
-                  })
-                }}
-              >
-                <Icon icon="circleX" width={24} cssClass={style.icon} />
-              </button>
-            )}
-          </div>
-          <ExperimentsList />
+          <Switch>
+            <Route exact path="/" render={renderSearchList} />
+            <Route exact path="/helpDocs" render={renderLink} />
+          </Switch>
         </div>
       </div>
     </div>
