@@ -103,11 +103,13 @@
 }
 
 .button {
-  background-color: $white;
+  background-color: $color-7;
   border: 0;
+  color: $white;
   position: absolute;
   width: 30px;
   height: 40px;
-  top: $size-1x;
+  font-size: 24px;
+  top: 15px;
   right: -30px;
 }
