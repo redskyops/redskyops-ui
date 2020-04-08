@@ -12,7 +12,10 @@
 .logo {
   height: $size-9x;
 }
+
 .h1 {
+  align-items: flex-end;
+  display: flex;
   font-size: $size-5x;
   font-weight: bold;
   text-align: left;
@@ -26,7 +29,6 @@
 
 .a {
   text-align: right;
-  color: #000000;
-  padding-bottom: $size-2x;
-  background-color: white;
+  color: $black;
+  background-color: $white;
 }
