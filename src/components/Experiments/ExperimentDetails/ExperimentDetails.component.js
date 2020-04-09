@@ -175,7 +175,6 @@ export const ExperimentDetails = (props: Props) => {
         <div className={style.noExp}>
           <div>
             <h1 className={style.noExpTitle}>RED SKY OPS</h1>
-            <h3 className={style.noExpSubTitle}>VERSION 2.0</h3>
             <h2 className={style.h1}>
               <img
                 src={arrowImage}
