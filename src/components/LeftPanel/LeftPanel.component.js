@@ -1,23 +1,32 @@
 import React from 'react'
+import {Switch, Route, Link} from 'react-router-dom'
 
 import ExperimentsList from '../Experiments/ExperimentsList/ExperimentsList.component'
 import {connectWithState} from '../../context/StateContext'
-import {TypeExperiments} from '../../context/DefaultState'
+import {TypeExperiments, TypeLeftPanel} from '../../context/DefaultState'
 
 import style from './LeftPanel.module.scss'
 import Icon from '../Icon/Icon.component'
 
 type TypeProps = {
   experiments: TypeExperiments,
+  leftPanel: TypeLeftPanel,
   updateState: () => {},
 }
 
 export const LeftPanel = (props: TypeProps) => {
-  const {experiments, updateState} = props
-  return (
-    <div className={style.leftPanel}>
-      <h1 className={style.h1}>RED SKY OPS</h1>
-      <h4 className={style.h4}>VERSION 2.0</h4>
+  const {leftPanel, experiments, updateState} = props
+  const togglePanel = () => {
+    updateState({
+      leftPanel: {
+        ...leftPanel,
+        show: !leftPanel.show,
+      },
+    })
+  }
+
+  const renderSearchList = () => (
+    <>
       <div className={style.search}>
         <input
           type="text"
@@ -60,8 +69,42 @@ export const LeftPanel = (props: TypeProps) => {
         )}
       </div>
       <ExperimentsList />
+    </>
+  )
+
+  const renderLink = () => (
+    <div className={style.title}>
+      <Link
+        style={{color: '#000000', fontWeight: 'bold'}}
+        to="/"
+        className="button"
+      >
+        My Experiments
+      </Link>
+    </div>
+  )
+  return (
+    <div className={style.leftPanel}>
+      <button
+        className={`${style.button} fa fa-angle-double-${
+          leftPanel.show ? 'left' : 'right'
+        }`}
+        onClick={togglePanel}
+      />
+      <div
+        className={`${style.outter} ${
+          leftPanel.show ? style.expand : style.collapse
+        }`}
+      >
+        <div className={style.inner}>
+          <Switch>
+            <Route exact path="/" render={renderSearchList} />
+            <Route exact path="/helpDocs" render={renderLink} />
+          </Switch>
+        </div>
+      </div>
     </div>
   )
 }
 
-export default connectWithState(LeftPanel, [])
+export default connectWithState(LeftPanel, ['experiments', 'leftPanel'])

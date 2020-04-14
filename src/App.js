@@ -18,6 +18,7 @@ class App extends Component {
             <BackendHealthCheck>
               <Switch>
                 <Route exact path="/" component={Layout} />
+                <Route exact path="/helpDocs" component={Layout} />
                 <Route path="*" component={Page404} />
               </Switch>
             </BackendHealthCheck>

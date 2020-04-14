@@ -1,0 +1,29 @@
+@import '../../styles/colors';
+@import '../../styles/vars';
+
+.docsDetails {
+    color: $cr-navy;
+    display: block;
+    padding: $size-6x;
+    padding-bottom: 200px;
+}
+
+.generalSection {
+    align-items: center;
+    display: flex;
+    height: calc(100vh - #{$header-height});
+    justify-content: center;
+    min-width: 1280px;
+    width: 100%;
+}
+
+.generalTitle {
+    color: $color-8;
+    text-align: center;
+}
+
+.links{
+    color: $color-8;
+    font-size: 18px;
+    text-align: center;
+}

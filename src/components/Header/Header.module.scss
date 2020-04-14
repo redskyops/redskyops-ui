@@ -6,9 +6,29 @@
   background-color: $white;
   display: flex;
   justify-content: space-between;
-  padding-right: 24px;
+  padding-right: $size-4x;
 }
 
 .logo {
-  height: $header-height;
+  height: $size-9x;
+}
+
+.h1 {
+  align-items: flex-end;
+  display: flex;
+  font-size: $size-5x;
+  font-weight: bold;
+  text-align: left;
+  margin-bottom: $size-0x;
+}
+
+.h4 {
+  font-size: $size-2x;
+  text-align: center;
+}
+
+.a {
+  text-align: right;
+  color: $black;
+  background-color: $white;
 }
