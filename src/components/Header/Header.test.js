@@ -20,6 +20,6 @@ describe('Component: Header', () => {
 
   it('should render logo', () => {
     expect(wrapper.find('img')).toHaveLength(1)
-    expect(wrapper.find('img').props()).toHaveProperty('alt', 'Carbon Relay')
+    expect(wrapper.find('img').prop('alt')).toBeTruthy()
   })
 })
