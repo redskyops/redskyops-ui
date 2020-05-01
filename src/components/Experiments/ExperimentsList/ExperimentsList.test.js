@@ -202,8 +202,8 @@ describe('Component: ExperimentList', () => {
         isLoading: true,
         metricParameterChart: null,
         xAxisMetric: 'cost',
-        yAxisMetric: 'throughput',
-        zAxisMetric: 'duration',
+        yAxisMetric: 'duration',
+        zAxisMetric: 'throughput',
       },
       experiments: {
         ...localProps.experiments,
@@ -361,7 +361,7 @@ describe('Component: ExperimentList', () => {
     expect(props.updateState.mock.calls[0][0]).toMatchObject({
       activeExperiment: {
         index: 4,
-        metricsList: ['cost', 'throughput', 'latency'],
+        metricsList: ['cost', 'latency', 'throughput'],
       },
     })
     wrapper.unmount()

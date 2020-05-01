@@ -7,15 +7,17 @@ services:
       args:
         - REDSKY_UI_SUBFOLDER=$REDSKY_UI_SUBFOLDER
         - REACT_APP_BASE_FOLDER=$REDSKY_UI_SUBFOLDER
+        - REACT_APP_BACKEND_URL=/api
   apiproxy:
     restart: always
     build:
       context: .
       dockerfile: docker/proxy/Dockerfile
     environment:
-      - REDSKY_ADDRESS
-      - REDSKY_OAUTH2_CLIENT_ID
-      - REDSKY_OAUTH2_CLIENT_SECRET
+      - REDSKY_SERVER_IDENTIFIER
+      - REDSKY_SERVER_ISSUER
+      - REDSKY_AUTHORIZATION_CLIENT_ID
+      - REDSKY_AUTHORIZATION_CLIENT_SECRET
       - DOCKER_ENV=1
   nginx:
     build:

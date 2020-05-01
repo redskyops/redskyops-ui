@@ -1,5 +1,6 @@
 import React from 'react'
-import {shallow} from 'enzyme'
+import {StaticRouter as Router} from 'react-router-dom'
+import {shallow, mount} from 'enzyme'
 
 import {Layout} from './Layout.component'
 
@@ -19,7 +20,11 @@ describe('Component: Layout', () => {
   })
 
   it('should render Header and Main components', () => {
-    wrapper = shallow(<Layout />)
+    wrapper = mount(
+      <Router>
+        <Layout />
+      </Router>,
+    )
     expect(wrapper.find(Header)).toHaveLength(1)
     expect(wrapper.find(Main)).toHaveLength(1)
     expect(wrapper.find(LeftPanel)).toHaveLength(1)

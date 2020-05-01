@@ -1,5 +1,6 @@
 import React from 'react'
-import {shallow} from 'enzyme'
+import {shallow, mount} from 'enzyme'
+import {StaticRouter as Router} from 'react-router-dom'
 
 import {LeftPanel} from './LeftPanel.component'
 
@@ -11,6 +12,9 @@ describe('Component: LeftPanel', () => {
       filter: {
         name: '',
       },
+    },
+    leftPanel: {
+      show: true,
     },
     updateState: jest.fn(),
   }
@@ -27,16 +31,23 @@ describe('Component: LeftPanel', () => {
   })
 
   it('should render right content', () => {
-    wrapper = shallow(<LeftPanel {...props} />)
-    expect(wrapper.find('h1')).toHaveLength(1)
-    expect(wrapper.find('h4')).toHaveLength(1)
+    wrapper = mount(
+      <Router>
+        <LeftPanel {...props} />
+      </Router>,
+    )
+
     expect(wrapper.find('input[type="text"]')).toHaveLength(1)
     expect(wrapper.find('ExperimentsList')).toHaveLength(1)
     wrapper.unmount()
   })
 
   it('should update state when filter text box changed', () => {
-    wrapper = shallow(<LeftPanel {...props} />)
+    wrapper = mount(
+      <Router>
+        <LeftPanel {...props} />
+      </Router>,
+    )
     wrapper.find('input[type="text"]').simulate('change', {
       target: {value: 'new_filter'},
     })
@@ -54,7 +65,11 @@ describe('Component: LeftPanel', () => {
   })
 
   it('should show search icon if not search is set', () => {
-    wrapper = shallow(<LeftPanel {...props} />)
+    wrapper = mount(
+      <Router>
+        <LeftPanel {...props} />
+      </Router>,
+    )
     expect(wrapper.find('Icon')).toHaveLength(1)
     expect(wrapper.find('button[data-dom-id="left-panel-clear"]')).toHaveLength(
       0,
@@ -73,7 +88,11 @@ describe('Component: LeftPanel', () => {
         },
       },
     }
-    wrapper = shallow(<LeftPanel {...localProps} />)
+    wrapper = mount(
+      <Router>
+        <LeftPanel {...localProps} />
+      </Router>,
+    )
     expect(wrapper.find('button[data-dom-id="left-panel-clear"]')).toHaveLength(
       1,
     )
@@ -91,7 +110,11 @@ describe('Component: LeftPanel', () => {
         },
       },
     }
-    wrapper = shallow(<LeftPanel {...localProps} />)
+    wrapper = mount(
+      <Router>
+        <LeftPanel {...localProps} />
+      </Router>,
+    )
     wrapper.find('button[data-dom-id="left-panel-clear"]').simulate('click')
     expect(props.updateState).toHaveBeenCalledTimes(1)
     expect(props.updateState.mock.calls[0][0]).toMatchObject({
