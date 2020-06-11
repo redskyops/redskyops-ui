@@ -36,7 +36,7 @@ export const TrialDetails = (props: Props) => {
           <ValueDisplay
             key={metric.metricName}
             name={metric.metricName}
-            value={metric.value}
+            value={metric.value.toPrecision(6)}
           />
         ))}
 
