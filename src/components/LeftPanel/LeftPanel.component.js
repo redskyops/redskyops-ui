@@ -73,15 +73,11 @@ export const LeftPanel = (props: TypeProps) => {
   )
 
   const renderLink = () => (
-    <div className={style.title}>
-      <Link
-        style={{color: '#000000', fontWeight: 'bold'}}
-        to="/"
-        className="button"
-      >
-        My Experiments
-      </Link>
-    </div>
+    // <div className={style.title}>
+    <Link to="/" className={style.homeLink}>
+      My Experiments
+    </Link>
+    // </div>
   )
   return (
     <div className={style.leftPanel}>

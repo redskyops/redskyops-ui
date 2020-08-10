@@ -28,7 +28,7 @@ describe('Component: TrialDetails', () => {
     wrapper.find('.metricsCol ValueDisplay').forEach((comp, i) => {
       const compProps = comp.props()
       expect(compProps.name).toBe(props.trial.values[i].metricName)
-      expect(compProps.value).toBe(props.trial.values[i].value)
+      expect(parseInt(compProps.value)).toBe(props.trial.values[i].value)
     })
     wrapper.unmount()
   })
