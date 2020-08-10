@@ -72,7 +72,7 @@ $min-width: 100px;
   outline: 0;
   padding: $size-1x;
   text-align: left;
-  min-width: 100%;
+  width: 100%;
 
   &.active {
     color: $color-6;

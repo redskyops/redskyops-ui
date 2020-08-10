@@ -73,11 +73,9 @@ export const LeftPanel = (props: TypeProps) => {
   )
 
   const renderLink = () => (
-    // <div className={style.title}>
     <Link to="/" className={style.homeLink}>
       My Experiments
     </Link>
-    // </div>
   )
   return (
     <div className={style.leftPanel}>
