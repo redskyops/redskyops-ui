@@ -33,7 +33,7 @@ $min-width: 100px;
   cursor: pointer;
   outline: 0;
   position: absolute;
-  top: 6px;
+  top: 3px;
   right: 5px;
 
   path {
@@ -55,18 +55,22 @@ $min-width: 100px;
   z-index: 100;
 }
 
+.listInner {
+  display: block;
+}
+
 .item {
   align-items: center;
   background-color: $white;
   border: 0;
+  border-bottom: 1px solid $color-8;
   color: $black;
   cursor: pointer;
   display: flex;
   flex-direction: row;
   font-size: 12px;
-  line-height: $size-5x;
   outline: 0;
-  padding: 0 $size-1x;
+  padding: $size-1x;
   text-align: left;
   width: 100%;
 
@@ -77,6 +81,14 @@ $min-width: 100px;
 
   &:hover {
     color: $color-7;
+  }
+
+  &:focus {
+    outline: 0;
+  }
+
+  &:last-child {
+    border-bottom: 0;
   }
 
   &.selected {
@@ -112,4 +124,8 @@ $min-width: 100px;
   height: 14px;
   margin-right: $size-1x;
   width: 14px;
+}
+
+.text {
+  flex: 1;
 }

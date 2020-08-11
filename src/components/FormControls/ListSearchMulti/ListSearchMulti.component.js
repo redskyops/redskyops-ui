@@ -158,7 +158,7 @@ export const ListSearchMulti = (props: Props) => {
                     onClick={itemClick(item.index)}
                   >
                     <span className={style.circle} />
-                    {item.label}
+                    <span className={style.text}>{item.label}</span>
                   </button>
                 )
               })}
