@@ -43,6 +43,7 @@ export const ExperimentDetails = (props: Props) => {
     hoveredTrial,
   } = props
   const expService = new ExperimentsService()
+  let interval = null
 
   const requestFactory = () =>
     activeExperiment &&
@@ -96,6 +97,7 @@ export const ExperimentDetails = (props: Props) => {
   }
 
   const hoverTrial = ({trial, index, domBox, xData, yData}) => {
+    clearInterval(interval)
     if (trial) {
       updateState({
         hoveredTrial: {
@@ -111,7 +113,17 @@ export const ExperimentDetails = (props: Props) => {
       return
     }
 
-    updateState({hoveredTrial: null})
+    interval = setTimeout(() => {
+      updateState({hoveredTrial: null})
+    }, 300)
+  }
+
+  const onPopupHover = () => {
+    clearInterval(interval)
+  }
+
+  const baselineClick = set => () => {
+    console.log(set)
   }
 
   const filterChange = ({items}) => {
@@ -276,7 +288,11 @@ export const ExperimentDetails = (props: Props) => {
       <h1 className={style.h1}>{experiment.displayName.replace(/-/g, ' ')}</h1>
       {renderTrials()}
       {renderTrialDetails()}
-      <TrialPopup />
+      <TrialPopup
+        mouseOver={onPopupHover}
+        mouseOut={() => hoverTrial({trial: null})}
+        baselineClick={baselineClick}
+      />
     </div>
   )
 }

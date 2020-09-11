@@ -6,3 +6,5 @@ export const AXIS_TYPE: TypeAxisType = {
   PARAMETER: 'parameter',
   METRIC: 'metric',
 }
+
+export const BASELINE_LABEL = 'baseline'

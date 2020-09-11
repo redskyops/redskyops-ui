@@ -182,6 +182,10 @@ export class DotsChart2D extends React.Component<
           .classed(style.active, true)
           .attr('r', 6)
 
+        d3.select(this.parentNode)
+          .select('text')
+          .classed(style.hidden, false)
+
         const domBox = d3
           .select(this)
           .node()
@@ -205,6 +209,9 @@ export class DotsChart2D extends React.Component<
             'r',
             activeTrial && dataPoint.index === activeTrial.index ? 6 : 3,
           )
+        d3.select(this.parentNode)
+          .select('text')
+          .classed(style.hidden, true)
         hoverTrialHandler({trial: null, domBox: null, index: -1})
       }
 
@@ -244,8 +251,14 @@ export class DotsChart2D extends React.Component<
         }
         return `translate(${xScale(cost.value)}, ${yScale(duration.value)})`
       })
-      .append('circle')
       .attr('class', 'point')
+      .classed('baseline', d => {
+        if (d.labels && 'baseline' in d.labels) {
+          return true
+        }
+        return false
+      })
+      .append('circle')
       .attr('r', d =>
         this.props.activeTrial && d.index === this.props.activeTrial.index
           ? 10
@@ -285,6 +298,27 @@ export class DotsChart2D extends React.Component<
           this.props.hoverTrialHandler,
         ),
       )
+
+    svg
+      .selectAll('g.point.baseline')
+      .append('polygon')
+      .lower()
+      .attr('points', '-6,6 6,6, 0,-6 ')
+      .attr('class', style.triangle)
+
+    // svg
+    //   .selectAll('g.point.baseline')
+    //   .append('text')
+    //   .attr(
+    //     'transform',
+    //     `translate(0, 20)`,
+    //   )
+    //   .attr('font-size', '12px')
+    //   .attr('font-family', "'Montserrat', sans-serif")
+    //   .style('text-anchor', 'middle')
+    //   .style('fill', '#000')
+    //   .attr('class', style.hidden)
+    //   .text('BASELINE')
 
     svg
       .append('g')

@@ -33,6 +33,16 @@
   }
 }
 
+.triangle {
+  cursor: pointer;
+  fill: $color-9;
+}
+
+:global(.baseline) {
+  .circle {
+    fill: rgba($color-9, 0);
+  }
+}
 
 .grid {
   line {
