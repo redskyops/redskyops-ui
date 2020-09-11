@@ -114,7 +114,7 @@ export const ExperimentResults = (props: TypeProps) => {
         {activeExperiment.metricsList.length >= 3 && (
           <div className={style.metric}>
             <Icon icon="zAxis" width={18} cssClass={style.metricIcon} />
-            Y-AXIS METRIC
+            Z-AXIS METRIC
             <div className={style.dropdown}>
               <ListSearch
                 value={activeExperiment.zAxisMetric}
