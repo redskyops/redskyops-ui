@@ -21,7 +21,9 @@ import MetricParameterChart from '../MetricParameterChart/MetricParameterChart.c
 import Tabs from '../../Tabs/Tabs.component'
 import arrowImage from '../../../assets/images/ArrowLeft.png'
 import TrialPopup from '../TrialPopup/TrialPopup.component'
-import {DEFAULT_LABEL_VALUE} from '../../../constants'
+import {DEFAULT_LABEL_VALUE, BASELINE_LABEL} from '../../../constants'
+
+const POPUP_HIDE_DELAY = 300
 
 type Props = {
   activeExperiment: TypeActiveExperiment,
@@ -51,9 +53,10 @@ export const ExperimentDetails = (props: Props) => {
       ? experiments.list[activeExperiment.index]
       : null
   const experimentId = experiment ? experiment.id : null
-  const trial = activeTrial ? trials[activeTrial.index] : null
   const expService = new ExperimentsService()
   let interval = null
+
+  React.useEffect(() => () => clearInterval(interval), [experimentId])
 
   const trialsRequestFactory = () =>
     experiment &&
@@ -64,6 +67,7 @@ export const ExperimentDetails = (props: Props) => {
           name: experimentId, // eslint-disable-line indent
         }) // eslint-disable-line indent
       : null
+
   const trialsRequestSuccess = ({trials}) => {
     const labelsList = getAllLabelsFromTrials(trials)
     updateState({
@@ -75,6 +79,7 @@ export const ExperimentDetails = (props: Props) => {
       trials,
     })
   }
+
   const triallsRequestError = () => {
     updateState({
       activeExperiment: {
@@ -87,24 +92,27 @@ export const ExperimentDetails = (props: Props) => {
     trialsRequestFactory,
     trialsRequestSuccess,
     triallsRequestError,
-    [activeExperiment],
+    [experimentId],
   )
 
   /* eslint-disable indent */
-  const postLabelFactory = () =>
-    labels.postingNewLabel === true &&
-    labels.postingDelLabel === false &&
-    !!labels.newLabel === true
+  const postLabelFactory = () => {
+    return labels.baselineAddNumber > -1 &&
+      labels.postingNewLabel === true &&
+      labels.postingDelLabel === false &&
+      !!labels.newLabel === true
       ? expService.postLabelToTrialFactory({
           experimentId,
-          trialId: trial.number,
+          trialId: labels.baselineAddNumber,
           labels: {[labels.newLabel.trim().toLowerCase()]: DEFAULT_LABEL_VALUE},
         })
       : null
+  }
   /* eslint-enable indent */
 
   const postLabelSuccess = () => {
-    const trialIndex = trials.findIndex(t => t.number === trial.number)
+    const targetTrialNumber = labels.baselineAddNumber
+    const trialIndex = trials.findIndex(t => t.number === targetTrialNumber)
     const trialWithNewLables = {
       ...trials[trialIndex],
       labels: {
@@ -120,6 +128,7 @@ export const ExperimentDetails = (props: Props) => {
         ...labels,
         postingNewLabel: false,
         newLabel: '',
+        baselineAddNumber: -1,
       },
       /* eslint-disable indent */
       ...(label => {
@@ -139,6 +148,7 @@ export const ExperimentDetails = (props: Props) => {
           l => l.toLowerCase() === labels.newLabel.trim().toLowerCase(),
         ),
       ),
+      hoveredTrial: null,
       /* eslint-enable indent */
     })
   }
@@ -149,6 +159,8 @@ export const ExperimentDetails = (props: Props) => {
         ...labels,
         postingNewLabel: false,
         postingDelLabel: false,
+        baselineAddNumber: -1,
+        baselineDelNumber: -1,
         labelToDelete: '',
         error: e.message,
       },
@@ -157,10 +169,56 @@ export const ExperimentDetails = (props: Props) => {
 
   useApiCallEffect(postLabelFactory, postLabelSuccess, onBackendError, [
     labels.postingNewLabel,
+    labels.postingDelLabel,
+  ])
+
+  /* eslint-disable indent */
+  const deleteLabelFactory = () => {
+    return labels.baselineDelNumber > -1 &&
+      labels.labelToDelete &&
+      labels.postingDelLabel === true
+      ? // labels.postingNewLabel === false
+        expService.postLabelToTrialFactory({
+          experimentId,
+          trialId: labels.baselineDelNumber,
+          labels: {[labels.labelToDelete.trim().toLowerCase()]: ''},
+        })
+      : null
+  }
+  /* eslint-enable indent */
+
+  const deleteLabelSuccess = () => {
+    const targetTrialNumber = labels.baselineDelNumber
+    const trialIndex = trials.findIndex(t => t.number === targetTrialNumber)
+    const newLabels = {...trials[trialIndex].labels}
+    delete newLabels[labels.labelToDelete]
+    const trialWithNewLables = {
+      ...trials[trialIndex],
+      labels: newLabels,
+    }
+    const updatedTrials = [...trials]
+    updatedTrials.splice(trialIndex, 1, trialWithNewLables)
+    updateState({
+      trials: updatedTrials,
+      labels: {
+        ...labels,
+        postingDelLabel: false,
+        labelToDelete: '',
+        baselineDelNumber: -1,
+      },
+      activeExperiment: {
+        ...activeExperiment,
+        labelsList: getAllLabelsFromTrials(updatedTrials),
+      },
+      ...(labels.baselineAddNumber === -1 && {hoveredTrial: null}),
+    })
+  }
+
+  useApiCallEffect(deleteLabelFactory, deleteLabelSuccess, onBackendError, [
+    labels.postingDelLabel,
   ])
 
   const selectTrial = ({index, trial}) => {
-    console.log('>>>', activeTrial)
     if (activeTrial && activeTrial.index === index) {
       updateState({
         activeTrial: null,
@@ -204,15 +262,36 @@ export const ExperimentDetails = (props: Props) => {
 
     interval = setTimeout(() => {
       updateState({hoveredTrial: null})
-    }, 300)
+    }, POPUP_HIDE_DELAY)
   }
 
   const onPopupHover = () => {
     clearInterval(interval)
   }
 
-  const baselineClick = set => () => {
-    console.log(set)
+  const baselineClick = (set, targetTrial) => () => {
+    const currentBaselineNumber = trials.reduce((acc, t) => {
+      if (t.labels && BASELINE_LABEL in t.labels) {
+        return t.number
+      }
+      return acc
+    }, -1)
+
+    updateState({
+      labels: {
+        ...labels,
+        ...(set && {
+          postingNewLabel: true,
+          newLabel: BASELINE_LABEL,
+          baselineAddNumber: targetTrial.number,
+        }),
+        ...(currentBaselineNumber > -1 && {
+          postingDelLabel: true,
+          labelToDelete: BASELINE_LABEL,
+          baselineDelNumber: currentBaselineNumber,
+        }),
+      },
+    })
   }
 
   const filterChange = ({items}) => {
@@ -390,4 +469,5 @@ export default connectWithState(ExperimentDetails, [
   'experiments',
   'trials',
   'activeTrial',
+  'labels',
 ])

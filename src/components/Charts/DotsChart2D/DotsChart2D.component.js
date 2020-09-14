@@ -211,7 +211,6 @@ export class DotsChart2D extends React.Component<
 
     const circleClick = selectTrialHandler =>
       function _circleClick(dataPoint) {
-        console.log('>>>>s')
         selectTrialHandler({
           index: dataPoint.index,
           trial: dataPoint,

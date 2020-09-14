@@ -11,6 +11,7 @@ import {
   TypeExperiments,
 } from '../../../context/DefaultState'
 import getAllLabelsFromTrials from '../../../utilities/getAllLabelsFromTrials'
+import {DEFAULT_LABEL_VALUE} from '../../../constants'
 
 import style from './Labels.module.scss'
 import Icon from '../../Icon/Icon.component'
@@ -46,58 +47,58 @@ export const Labels = (props: Props) => {
   const [showMenu, setShowMenu] = useState(false)
   let interval
 
-  // /* eslint-disable indent */
-  // const postLabelFactory = () =>
-  //   labels.postingNewLabel === true &&
-  //   labels.postingDelLabel === false &&
-  //   !!labels.newLabel === true
-  //     ? expService.postLabelToTrialFactory({
-  //         experimentId,
-  //         trialId: trial.number,
-  //         labels: {[labels.newLabel.trim().toLowerCase()]: DEFAULT_LABEL_VALUE},
-  //       })
-  //     : null
-  // /* eslint-enable indent */
+  /* eslint-disable indent */
+  const postLabelFactory = () =>
+    labels.postingNewLabel === true &&
+    labels.postingDelLabel === false &&
+    !!labels.newLabel === true
+      ? expService.postLabelToTrialFactory({
+          experimentId,
+          trialId: trial.number,
+          labels: {[labels.newLabel.trim().toLowerCase()]: DEFAULT_LABEL_VALUE},
+        })
+      : null
+  /* eslint-enable indent */
 
-  // const postLabelSuccess = () => {
-  //   const trialIndex = trials.findIndex(t => t.number === trial.number)
-  //   const trialWithNewLables = {
-  //     ...trials[trialIndex],
-  //     labels: {
-  //       ...trials[trialIndex].labels,
-  //       [labels.newLabel.trim().toLowerCase()]: DEFAULT_LABEL_VALUE,
-  //     },
-  //   }
-  //   const updatedTrials = [...trials]
-  //   updatedTrials.splice(trialIndex, 1, trialWithNewLables)
-  //   updateState({
-  //     trials: updatedTrials,
-  //     labels: {
-  //       ...labels,
-  //       postingNewLabel: false,
-  //       newLabel: '',
-  //     },
-  //     /* eslint-disable indent */
-  //     ...(label => {
-  //       return label
-  //         ? null
-  //         : {
-  //             activeExperiment: {
-  //               ...activeExperiment,
-  //               labelsList: [
-  //                 ...activeExperiment.labelsList,
-  //                 labels.newLabel.trim().toLowerCase(),
-  //               ],
-  //             },
-  //           }
-  //     })(
-  //       activeExperiment.labelsList.find(
-  //         l => l.toLowerCase() === labels.newLabel.trim().toLowerCase(),
-  //       ),
-  //     ),
-  //     /* eslint-enable indent */
-  //   })
-  // }
+  const postLabelSuccess = () => {
+    const trialIndex = trials.findIndex(t => t.number === trial.number)
+    const trialWithNewLables = {
+      ...trials[trialIndex],
+      labels: {
+        ...trials[trialIndex].labels,
+        [labels.newLabel.trim().toLowerCase()]: DEFAULT_LABEL_VALUE,
+      },
+    }
+    const updatedTrials = [...trials]
+    updatedTrials.splice(trialIndex, 1, trialWithNewLables)
+    updateState({
+      trials: updatedTrials,
+      labels: {
+        ...labels,
+        postingNewLabel: false,
+        newLabel: '',
+      },
+      /* eslint-disable indent */
+      ...(label => {
+        return label
+          ? null
+          : {
+              activeExperiment: {
+                ...activeExperiment,
+                labelsList: [
+                  ...activeExperiment.labelsList,
+                  labels.newLabel.trim().toLowerCase(),
+                ],
+              },
+            }
+      })(
+        activeExperiment.labelsList.find(
+          l => l.toLowerCase() === labels.newLabel.trim().toLowerCase(),
+        ),
+      ),
+      /* eslint-enable indent */
+    })
+  }
 
   const onBackendError = e => {
     updateState({
@@ -111,9 +112,9 @@ export const Labels = (props: Props) => {
     })
   }
 
-  // useApiCallEffect(postLabelFactory, postLabelSuccess, onBackendError, [
-  //   labels.postingNewLabel,
-  // ])
+  useApiCallEffect(postLabelFactory, postLabelSuccess, onBackendError, [
+    labels.postingNewLabel,
+  ])
 
   const onAddFormSubmit = e => {
     e.preventDefault()

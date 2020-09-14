@@ -73,13 +73,19 @@ export const TrialPopup = (props: TypeProps) => {
         </div>
       )}
       {!isBaselineTrial && (
-        <button className={style.btn} onClick={props.baselineClick(true)}>
+        <button
+          className={style.btn}
+          onClick={props.baselineClick(true, trial)}
+        >
           SET BASELINE
         </button>
       )}
       {isBaselineTrial && (
         <>
-          <button className={style.btn} onClick={props.baselineClick(false)}>
+          <button
+            className={style.btn}
+            onClick={props.baselineClick(false, trial)}
+          >
             REMOVE BASELINE
           </button>
           <div className={style.baselineLabel}>BASELINE</div>
