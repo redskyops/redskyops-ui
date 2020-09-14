@@ -8,3 +8,5 @@ export const AXIS_TYPE: TypeAxisType = {
 }
 
 export const BASELINE_LABEL = 'baseline'
+
+export const DEFAULT_LABEL_VALUE = 'true'

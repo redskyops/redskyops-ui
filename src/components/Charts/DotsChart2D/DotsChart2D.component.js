@@ -182,14 +182,11 @@ export class DotsChart2D extends React.Component<
           .classed(style.active, true)
           .attr('r', 6)
 
-        d3.select(this.parentNode)
-          .select('text')
-          .classed(style.hidden, false)
-
         const domBox = d3
           .select(this)
           .node()
           .getBoundingClientRect()
+
         const hoverData = {
           trial: dataPoint,
           domBox,
@@ -197,7 +194,6 @@ export class DotsChart2D extends React.Component<
           xData: {name: xAxisMetricName, type: xAxisValueType, value: xValue},
           yData: {name: yAxisMetricName, type: AXIS_TYPE.METRIC, value: yValue},
         }
-
         hoverTrialHandler(hoverData)
       }
 
@@ -209,14 +205,13 @@ export class DotsChart2D extends React.Component<
             'r',
             activeTrial && dataPoint.index === activeTrial.index ? 6 : 3,
           )
-        d3.select(this.parentNode)
-          .select('text')
-          .classed(style.hidden, true)
+
         hoverTrialHandler({trial: null, domBox: null, index: -1})
       }
 
     const circleClick = selectTrialHandler =>
       function _circleClick(dataPoint) {
+        console.log('>>>>s')
         selectTrialHandler({
           index: dataPoint.index,
           trial: dataPoint,
@@ -305,20 +300,6 @@ export class DotsChart2D extends React.Component<
       .lower()
       .attr('points', '-6,6 6,6, 0,-6 ')
       .attr('class', style.triangle)
-
-    // svg
-    //   .selectAll('g.point.baseline')
-    //   .append('text')
-    //   .attr(
-    //     'transform',
-    //     `translate(0, 20)`,
-    //   )
-    //   .attr('font-size', '12px')
-    //   .attr('font-family', "'Montserrat', sans-serif")
-    //   .style('text-anchor', 'middle')
-    //   .style('fill', '#000')
-    //   .attr('class', style.hidden)
-    //   .text('BASELINE')
 
     svg
       .append('g')

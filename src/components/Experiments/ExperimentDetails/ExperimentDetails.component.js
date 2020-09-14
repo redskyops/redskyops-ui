@@ -21,6 +21,7 @@ import MetricParameterChart from '../MetricParameterChart/MetricParameterChart.c
 import Tabs from '../../Tabs/Tabs.component'
 import arrowImage from '../../../assets/images/ArrowLeft.png'
 import TrialPopup from '../TrialPopup/TrialPopup.component'
+import {DEFAULT_LABEL_VALUE} from '../../../constants'
 
 type Props = {
   activeExperiment: TypeActiveExperiment,
@@ -42,20 +43,28 @@ export const ExperimentDetails = (props: Props) => {
     labels,
     hoveredTrial,
   } = props
+  const experiment =
+    experiments &&
+    experiments.list &&
+    activeExperiment &&
+    experiments.list[activeExperiment.index]
+      ? experiments.list[activeExperiment.index]
+      : null
+  const experimentId = experiment ? experiment.id : null
+  const trial = activeTrial ? trials[activeTrial.index] : null
   const expService = new ExperimentsService()
   let interval = null
 
-  const requestFactory = () =>
-    activeExperiment &&
-    activeExperiment.isLoading &&
-    experiments.list[activeExperiment.index] &&
-    experiments.list[activeExperiment.index].metrics &&
-    experiments.list[activeExperiment.index].metrics.length >= 1
+  const trialsRequestFactory = () =>
+    experiment &&
+    experiment.metrics &&
+    experiment.metrics.length >= 1 &&
+    experimentId
       ? expService.getTrialsFactory({
-          name: experiments.list[activeExperiment.index].id, // eslint-disable-line indent
+          name: experimentId, // eslint-disable-line indent
         }) // eslint-disable-line indent
       : null
-  const requestSuccess = ({trials}) => {
+  const trialsRequestSuccess = ({trials}) => {
     const labelsList = getAllLabelsFromTrials(trials)
     updateState({
       activeExperiment: {
@@ -66,19 +75,99 @@ export const ExperimentDetails = (props: Props) => {
       trials,
     })
   }
-  const requestError = e => console.log(e)
+  const triallsRequestError = () => {
+    updateState({
+      activeExperiment: {
+        isLoading: false,
+      },
+    })
+  }
 
-  useApiCallEffect(requestFactory, requestSuccess, requestError, [
-    activeExperiment,
+  useApiCallEffect(
+    trialsRequestFactory,
+    trialsRequestSuccess,
+    triallsRequestError,
+    [activeExperiment],
+  )
+
+  /* eslint-disable indent */
+  const postLabelFactory = () =>
+    labels.postingNewLabel === true &&
+    labels.postingDelLabel === false &&
+    !!labels.newLabel === true
+      ? expService.postLabelToTrialFactory({
+          experimentId,
+          trialId: trial.number,
+          labels: {[labels.newLabel.trim().toLowerCase()]: DEFAULT_LABEL_VALUE},
+        })
+      : null
+  /* eslint-enable indent */
+
+  const postLabelSuccess = () => {
+    const trialIndex = trials.findIndex(t => t.number === trial.number)
+    const trialWithNewLables = {
+      ...trials[trialIndex],
+      labels: {
+        ...trials[trialIndex].labels,
+        [labels.newLabel.trim().toLowerCase()]: DEFAULT_LABEL_VALUE,
+      },
+    }
+    const updatedTrials = [...trials]
+    updatedTrials.splice(trialIndex, 1, trialWithNewLables)
+    updateState({
+      trials: updatedTrials,
+      labels: {
+        ...labels,
+        postingNewLabel: false,
+        newLabel: '',
+      },
+      /* eslint-disable indent */
+      ...(label => {
+        return label
+          ? null
+          : {
+              activeExperiment: {
+                ...activeExperiment,
+                labelsList: [
+                  ...activeExperiment.labelsList,
+                  labels.newLabel.trim().toLowerCase(),
+                ],
+              },
+            }
+      })(
+        activeExperiment.labelsList.find(
+          l => l.toLowerCase() === labels.newLabel.trim().toLowerCase(),
+        ),
+      ),
+      /* eslint-enable indent */
+    })
+  }
+
+  const onBackendError = e => {
+    updateState({
+      labels: {
+        ...labels,
+        postingNewLabel: false,
+        postingDelLabel: false,
+        labelToDelete: '',
+        error: e.message,
+      },
+    })
+  }
+
+  useApiCallEffect(postLabelFactory, postLabelSuccess, onBackendError, [
+    labels.postingNewLabel,
   ])
 
   const selectTrial = ({index, trial}) => {
+    console.log('>>>', activeTrial)
     if (activeTrial && activeTrial.index === index) {
       updateState({
         activeTrial: null,
       })
       return
     }
+
     updateState({
       activeTrial: {
         ...activeTrial,
@@ -201,7 +290,6 @@ export const ExperimentDetails = (props: Props) => {
       </div>
     )
   }
-  const experiment = experiments.list[activeExperiment.index]
 
   const renderTrials = () => {
     if (

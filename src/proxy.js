@@ -45,7 +45,6 @@ fetch(`${REDSKY_SERVER_ISSUER}/oauth/token`, {
     return res.json()
   })
   .then(tokenRes => {
-    console.log(tokenRes)
     token = tokenRes.access_token
     tokenType = tokenRes.token_type
     if (!token) {
