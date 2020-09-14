@@ -39,7 +39,7 @@
     "http-proxy-middleware": "^0.20.0",
     "husky": "4.0.10",
     "lint-staged": "9.5.0",
-    "node-fetch": "2.6.0",
+    "node-fetch": "2.6.1",
     "prettier": "1.19.1",
     "request": "2.88.0",
     "sass": "^1.26.10",
