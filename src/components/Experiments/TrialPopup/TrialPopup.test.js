@@ -18,8 +18,17 @@ describe('Component: TrialPopup', () => {
         },
       },
     },
+    mouseOver: jest.fn(),
+    mouseOut: jest.fn(),
+    baselineClick: jest.fn(),
   }
   let wrapper
+
+  beforeEach(() => {
+    props.mouseOver.mockReset()
+    props.mouseOut.mockReset()
+    props.baselineClick.mockReset()
+  })
 
   it('should render TrialPopup', () => {
     wrapper = shallow(<TrialPopup {...props} />)
@@ -57,6 +66,7 @@ describe('Component: TrialPopup', () => {
     const widthOriginal = window.innerWidth
     window.innerWidth = 1000
     const localProps = {
+      ...props,
       hoveredTrial: {
         ...props.hoveredTrial,
         left: 900,
@@ -78,9 +88,12 @@ describe('Component: TrialPopup', () => {
 
   it("should NOT render list of trail if doesn't exists", () => {
     const localProps = {
+      ...props,
       hoveredTrial: {
         ...props.hoveredTrial,
-        trial: {},
+        trial: {
+          labels: {},
+        },
       },
     }
     wrapper = shallow(<TrialPopup {...localProps} />)
