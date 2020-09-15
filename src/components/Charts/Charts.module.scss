@@ -27,10 +27,6 @@
 .circle {
   cursor: pointer;
   fill: $color-9;
-
-  &.best {
-    fill: $color-7;
-  }
 }
 
 .triangle {
@@ -38,9 +34,23 @@
   fill: $color-9;
 }
 
+:global(.point) {
+  &.best {
+    .circle {
+      fill: $color-7;
+    }
+
+    .triangle {
+      fill: $color-7;
+    }
+  }
+}
+
 :global(.baseline) {
-  .circle {
-    fill: rgba($color-9, 0);
+  &.best {
+    .circle {
+      fill: rgba($color-9, 0);
+    }
   }
 }
 
