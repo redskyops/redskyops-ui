@@ -186,6 +186,7 @@ export class DotsChart2D extends React.Component<
           .select(this)
           .node()
           .getBoundingClientRect()
+
         const hoverData = {
           trial: dataPoint,
           domBox,
@@ -193,7 +194,6 @@ export class DotsChart2D extends React.Component<
           xData: {name: xAxisMetricName, type: xAxisValueType, value: xValue},
           yData: {name: yAxisMetricName, type: AXIS_TYPE.METRIC, value: yValue},
         }
-
         hoverTrialHandler(hoverData)
       }
 
@@ -205,6 +205,7 @@ export class DotsChart2D extends React.Component<
             'r',
             activeTrial && dataPoint.index === activeTrial.index ? 6 : 3,
           )
+
         hoverTrialHandler({trial: null, domBox: null, index: -1})
       }
 
@@ -244,8 +245,14 @@ export class DotsChart2D extends React.Component<
         }
         return `translate(${xScale(cost.value)}, ${yScale(duration.value)})`
       })
-      .append('circle')
       .attr('class', 'point')
+      .classed('baseline', d => {
+        if (d.labels && 'baseline' in d.labels) {
+          return true
+        }
+        return false
+      })
+      .append('circle')
       .attr('r', d =>
         this.props.activeTrial && d.index === this.props.activeTrial.index
           ? 10
@@ -285,6 +292,13 @@ export class DotsChart2D extends React.Component<
           this.props.hoverTrialHandler,
         ),
       )
+
+    svg
+      .selectAll('g.point.baseline')
+      .append('polygon')
+      .lower()
+      .attr('points', '-6,6 6,6, 0,-6 ')
+      .attr('class', style.triangle)
 
     svg
       .append('g')

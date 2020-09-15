@@ -45,11 +45,17 @@ fetch(`${REDSKY_SERVER_ISSUER}/oauth/token`, {
     return res.json()
   })
   .then(tokenRes => {
-    console.log(`[PROXY] Auth token obtained successfully`)
     token = tokenRes.access_token
     tokenType = tokenRes.token_type
+    if (!token) {
+      throw new Error('Error in token')
+    }
+    console.log(`[PROXY] Auth token obtained successfully`)
   })
-  .catch(error => console.log(`[PROXY:ERROR] ${error}`))
+  .catch(error => {
+    console.log(`[PROXY:ERROR] ${error}`)
+    process.exit()
+  })
 
 const proxyRequest = (req, res) => {
   let url = (process.env.DOCKER_ENV ? req.originalUrl : req.path).replace(

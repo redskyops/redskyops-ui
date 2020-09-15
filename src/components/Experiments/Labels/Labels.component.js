@@ -11,11 +11,10 @@ import {
   TypeExperiments,
 } from '../../../context/DefaultState'
 import getAllLabelsFromTrials from '../../../utilities/getAllLabelsFromTrials'
+import {DEFAULT_LABEL_VALUE} from '../../../constants'
 
 import style from './Labels.module.scss'
 import Icon from '../../Icon/Icon.component'
-
-const DEFAULT_LABEL_VALUE = 'true'
 
 type Props = {
   activeTrial: TypeActiveTrial,

@@ -36,6 +36,8 @@ export type TypeLabels = {
   postingDelLabel: boolean,
   newLabel: string,
   labelToDelete: string,
+  baselineDelNumber: number,
+  baselineAddNumber: number,
   error: string,
 }
 
@@ -77,6 +79,8 @@ const labels: TypeLabels = {
   postingDelLabel: false,
   newLabel: '',
   labelToDelete: '',
+  baselineAddNumber: -1,
+  baselineDelNumber: -1,
   error: '',
 }
 

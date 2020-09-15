@@ -14,6 +14,7 @@ jest.mock('../ExperimentResults/ExperimentResults.component')
 jest.mock('../../Tabs/Tabs.component')
 jest.mock('../MetricParameterChart/MetricParameterChart.component')
 jest.mock('../Labels/Labels.component')
+jest.mock('../TrialPopup/TrialPopup.component')
 
 describe('Component: ExperimentsDetails', () => {
   const expService = new ExperimentsService()
@@ -31,6 +32,15 @@ describe('Component: ExperimentsDetails', () => {
     },
     trials: trialsStub.trials,
     activeTrial: null,
+    labels: {
+      postingNewLabel: false,
+      postingDelLabel: false,
+      newLabel: '',
+      labelToDelete: '',
+      baselineAddNumber: -1,
+      baselineDelNumber: -1,
+      error: '',
+    },
     updateState: jest.fn(),
   }
 

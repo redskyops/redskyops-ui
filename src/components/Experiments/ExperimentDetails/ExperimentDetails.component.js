@@ -21,6 +21,9 @@ import MetricParameterChart from '../MetricParameterChart/MetricParameterChart.c
 import Tabs from '../../Tabs/Tabs.component'
 import arrowImage from '../../../assets/images/ArrowLeft.png'
 import TrialPopup from '../TrialPopup/TrialPopup.component'
+import {DEFAULT_LABEL_VALUE, BASELINE_LABEL} from '../../../constants'
+
+const POPUP_HIDE_DELAY = 300
 
 type Props = {
   activeExperiment: TypeActiveExperiment,
@@ -42,19 +45,30 @@ export const ExperimentDetails = (props: Props) => {
     labels,
     hoveredTrial,
   } = props
-  const expService = new ExperimentsService()
-
-  const requestFactory = () =>
+  const experiment =
+    experiments &&
+    experiments.list &&
     activeExperiment &&
-    activeExperiment.isLoading &&
-    experiments.list[activeExperiment.index] &&
-    experiments.list[activeExperiment.index].metrics &&
-    experiments.list[activeExperiment.index].metrics.length >= 1
+    experiments.list[activeExperiment.index]
+      ? experiments.list[activeExperiment.index]
+      : null
+  const experimentId = experiment ? experiment.id : null
+  const expService = new ExperimentsService()
+  let interval = null
+
+  React.useEffect(() => () => clearInterval(interval), [experimentId])
+
+  const trialsRequestFactory = () =>
+    experiment &&
+    experiment.metrics &&
+    experiment.metrics.length >= 1 &&
+    experimentId
       ? expService.getTrialsFactory({
-          name: experiments.list[activeExperiment.index].id, // eslint-disable-line indent
+          name: experimentId, // eslint-disable-line indent
         }) // eslint-disable-line indent
       : null
-  const requestSuccess = ({trials}) => {
+
+  const trialsRequestSuccess = ({trials}) => {
     const labelsList = getAllLabelsFromTrials(trials)
     updateState({
       activeExperiment: {
@@ -65,10 +79,143 @@ export const ExperimentDetails = (props: Props) => {
       trials,
     })
   }
-  const requestError = e => console.log(e)
 
-  useApiCallEffect(requestFactory, requestSuccess, requestError, [
-    activeExperiment,
+  const triallsRequestError = () => {
+    updateState({
+      activeExperiment: {
+        isLoading: false,
+      },
+    })
+  }
+
+  useApiCallEffect(
+    trialsRequestFactory,
+    trialsRequestSuccess,
+    triallsRequestError,
+    [experimentId],
+  )
+
+  /* eslint-disable indent */
+  const postLabelFactory = () => {
+    return labels.baselineAddNumber > -1 &&
+      labels.postingNewLabel === true &&
+      labels.postingDelLabel === false &&
+      !!labels.newLabel === true
+      ? expService.postLabelToTrialFactory({
+          experimentId,
+          trialId: labels.baselineAddNumber,
+          labels: {[labels.newLabel.trim().toLowerCase()]: DEFAULT_LABEL_VALUE},
+        })
+      : null
+  }
+  /* eslint-enable indent */
+
+  const postLabelSuccess = () => {
+    const targetTrialNumber = labels.baselineAddNumber
+    const trialIndex = trials.findIndex(t => t.number === targetTrialNumber)
+    const trialWithNewLables = {
+      ...trials[trialIndex],
+      labels: {
+        ...trials[trialIndex].labels,
+        [labels.newLabel.trim().toLowerCase()]: DEFAULT_LABEL_VALUE,
+      },
+    }
+    const updatedTrials = [...trials]
+    updatedTrials.splice(trialIndex, 1, trialWithNewLables)
+    updateState({
+      trials: updatedTrials,
+      labels: {
+        ...labels,
+        postingNewLabel: false,
+        newLabel: '',
+        baselineAddNumber: -1,
+      },
+      /* eslint-disable indent */
+      ...(label => {
+        return label
+          ? null
+          : {
+              activeExperiment: {
+                ...activeExperiment,
+                labelsList: [
+                  ...activeExperiment.labelsList,
+                  labels.newLabel.trim().toLowerCase(),
+                ],
+              },
+            }
+      })(
+        activeExperiment.labelsList.find(
+          l => l.toLowerCase() === labels.newLabel.trim().toLowerCase(),
+        ),
+      ),
+      hoveredTrial: null,
+      /* eslint-enable indent */
+    })
+  }
+
+  const onBackendError = e => {
+    updateState({
+      labels: {
+        ...labels,
+        postingNewLabel: false,
+        postingDelLabel: false,
+        baselineAddNumber: -1,
+        baselineDelNumber: -1,
+        labelToDelete: '',
+        error: e.message,
+      },
+    })
+  }
+
+  useApiCallEffect(postLabelFactory, postLabelSuccess, onBackendError, [
+    labels.postingNewLabel,
+    labels.postingDelLabel,
+  ])
+
+  /* eslint-disable indent */
+  const deleteLabelFactory = () => {
+    return labels.baselineDelNumber > -1 &&
+      labels.labelToDelete &&
+      labels.postingDelLabel === true
+      ? // labels.postingNewLabel === false
+        expService.postLabelToTrialFactory({
+          experimentId,
+          trialId: labels.baselineDelNumber,
+          labels: {[labels.labelToDelete.trim().toLowerCase()]: ''},
+        })
+      : null
+  }
+  /* eslint-enable indent */
+
+  const deleteLabelSuccess = () => {
+    const targetTrialNumber = labels.baselineDelNumber
+    const trialIndex = trials.findIndex(t => t.number === targetTrialNumber)
+    const newLabels = {...trials[trialIndex].labels}
+    delete newLabels[labels.labelToDelete]
+    const trialWithNewLables = {
+      ...trials[trialIndex],
+      labels: newLabels,
+    }
+    const updatedTrials = [...trials]
+    updatedTrials.splice(trialIndex, 1, trialWithNewLables)
+    updateState({
+      trials: updatedTrials,
+      labels: {
+        ...labels,
+        postingDelLabel: false,
+        labelToDelete: '',
+        baselineDelNumber: -1,
+      },
+      activeExperiment: {
+        ...activeExperiment,
+        labelsList: getAllLabelsFromTrials(updatedTrials),
+      },
+      ...(labels.baselineAddNumber === -1 && {hoveredTrial: null}),
+    })
+  }
+
+  useApiCallEffect(deleteLabelFactory, deleteLabelSuccess, onBackendError, [
+    labels.postingDelLabel,
   ])
 
   const selectTrial = ({index, trial}) => {
@@ -78,6 +225,7 @@ export const ExperimentDetails = (props: Props) => {
       })
       return
     }
+
     updateState({
       activeTrial: {
         ...activeTrial,
@@ -96,6 +244,7 @@ export const ExperimentDetails = (props: Props) => {
   }
 
   const hoverTrial = ({trial, index, domBox, xData, yData}) => {
+    clearInterval(interval)
     if (trial) {
       updateState({
         hoveredTrial: {
@@ -111,7 +260,38 @@ export const ExperimentDetails = (props: Props) => {
       return
     }
 
-    updateState({hoveredTrial: null})
+    interval = setTimeout(() => {
+      updateState({hoveredTrial: null})
+    }, POPUP_HIDE_DELAY)
+  }
+
+  const onPopupHover = () => {
+    clearInterval(interval)
+  }
+
+  const baselineClick = (set, targetTrial) => () => {
+    const currentBaselineNumber = trials.reduce((acc, t) => {
+      if (t.labels && BASELINE_LABEL in t.labels) {
+        return t.number
+      }
+      return acc
+    }, -1)
+
+    updateState({
+      labels: {
+        ...labels,
+        ...(set && {
+          postingNewLabel: true,
+          newLabel: BASELINE_LABEL,
+          baselineAddNumber: targetTrial.number,
+        }),
+        ...(currentBaselineNumber > -1 && {
+          postingDelLabel: true,
+          labelToDelete: BASELINE_LABEL,
+          baselineDelNumber: currentBaselineNumber,
+        }),
+      },
+    })
   }
 
   const filterChange = ({items}) => {
@@ -189,7 +369,6 @@ export const ExperimentDetails = (props: Props) => {
       </div>
     )
   }
-  const experiment = experiments.list[activeExperiment.index]
 
   const renderTrials = () => {
     if (
@@ -276,7 +455,11 @@ export const ExperimentDetails = (props: Props) => {
       <h1 className={style.h1}>{experiment.displayName.replace(/-/g, ' ')}</h1>
       {renderTrials()}
       {renderTrialDetails()}
-      <TrialPopup />
+      <TrialPopup
+        mouseOver={onPopupHover}
+        mouseOut={() => hoverTrial({trial: null})}
+        baselineClick={baselineClick}
+      />
     </div>
   )
 }
@@ -286,4 +469,5 @@ export default connectWithState(ExperimentDetails, [
   'experiments',
   'trials',
   'activeTrial',
+  'labels',
 ])

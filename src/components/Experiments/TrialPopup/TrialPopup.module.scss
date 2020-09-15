@@ -1,5 +1,6 @@
 @import '../../../styles/vars';
 @import '../../../styles/mixins';
+@import '../../../styles/colors';
 
 .trialPopup {
   background-color: $color-1;
@@ -16,14 +17,43 @@
 
   &.toRightSide {
     transform: translate(10px, calc(-100% - 10px));
+
+    .baselineLabel {
+      transform: translateX(calc(-50% - 15px));
+    }
   }
 
   &.toLeftSide {
     transform: translate(calc(-100% - 10px), calc(-100% - 10px));
+
+    .baselineLabel {
+
+      transform: translateX(calc(100% + 100px));
+    }
   }
 }
 
 .title {
   font-size: 14px;
   margin-bottom: $size-2x;
+}
+
+.btn {
+  background-color: $color-7;
+  border: 0;
+  border-radius: 12px;
+  color: $white;
+  font-size: 15px;
+  line-height: 30px;
+  margin-top: $size-2x;
+  padding: 0 $size-2x;
+}
+
+.baselineLabel {
+  background-color: $white;
+  font-size: 12px;
+  padding: 1px;
+  position: absolute;
+  top: calc(100% + 30px);
+  width: auto;
 }
