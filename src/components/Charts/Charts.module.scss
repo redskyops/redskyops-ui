@@ -47,6 +47,10 @@
 }
 
 :global(.baseline) {
+  .circle {
+    fill: rgba($color-9, 0);
+  }
+
   &.best {
     .circle {
       fill: rgba($color-9, 0);

@@ -144,6 +144,12 @@ export class DotsChart1D extends React.Component<ChartPropsType> {
         }
         return false
       })
+      .classed(style.best, d => {
+        if (d.labels && 'best' in d.labels) {
+          return true
+        }
+        return false
+      })
       .append('circle')
       .attr('r', d =>
         this.props.activeTrial && d.index === this.props.activeTrial.index
@@ -151,12 +157,7 @@ export class DotsChart1D extends React.Component<ChartPropsType> {
           : 3,
       )
       .attr('class', style.circle)
-      .classed(style.best, d => {
-        if (d.labels && 'best' in d.labels) {
-          return true
-        }
-        return false
-      })
+
       .classed(
         style.selected,
         d => this.props.activeTrial && d.index === this.props.activeTrial.index,
