@@ -5,6 +5,7 @@ import {ExperimentDetails} from './ExperimentDetails.component'
 import expStub from '../../../services/_stubs/exp-data'
 import trialsStub from '../../../services/_stubs/trials-data'
 import {ExperimentsService} from '../../../services/ExperimentsService'
+import {BASELINE_LABEL, DEFAULT_LABEL_VALUE} from '../../../constants'
 
 jest.mock('../../../services/ExperimentsService', () =>
   jest.requireActual('../../../services/__mocks__/ExperimentsService'),
@@ -47,6 +48,7 @@ describe('Component: ExperimentsDetails', () => {
   beforeEach(() => {
     props.updateState.mockClear()
     expService.getTrialsFactory.mockReset()
+    expService.postLabelToTrialFactory.mockReset()
   })
 
   it('should render ExperimentDetails', () => {
@@ -306,7 +308,7 @@ describe('Component: ExperimentsDetails', () => {
     wrapper.unmount()
   })
 
-  it('should update state filter is change in one of chart components', async () => {
+  it('should update state filter if change in one of chart components', async () => {
     wrapper = await mount(<ExperimentDetails {...props} />)
     expect(wrapper.find('MetricParameterChart')).toHaveLength(1)
     wrapper.find('MetricParameterChart').prop('filterChangeHandler')({
@@ -357,5 +359,291 @@ describe('Component: ExperimentsDetails', () => {
       activeTrial: null,
     })
     wrapper.unmount()
+  })
+
+  it('should render TrialPopup component', async () => {
+    wrapper = await mount(<ExperimentDetails {...props} />)
+    expect(wrapper.find('TrialPopup')).toHaveLength(1)
+    expect(typeof wrapper.find('TrialPopup').prop('mouseOver')).toBe('function')
+    expect(typeof wrapper.find('TrialPopup').prop('mouseOut')).toBe('function')
+    expect(typeof wrapper.find('TrialPopup').prop('baselineClick')).toBe(
+      'function',
+    )
+    wrapper.unmount()
+  })
+
+  it('should hide trial popup after delay for mouse sensitivity', async () => {
+    jest.useFakeTimers()
+    wrapper = mount(<ExperimentDetails {...props} />)
+    wrapper.find('ExperimentResults').prop('hoverTrialHandler')({
+      trial: null,
+    })
+    jest.runAllTimers()
+    expect(props.updateState).toHaveBeenCalledTimes(1)
+    expect(props.updateState.mock.calls[0][0]).toEqual({
+      hoveredTrial: null,
+    })
+    wrapper.unmount()
+    jest.useRealTimers()
+  })
+
+  it('should top hiding trial popup if it hovered', async () => {
+    const clearIntMock = jest.spyOn(window, 'clearInterval')
+    wrapper = await mount(<ExperimentDetails {...props} />)
+    expect(wrapper.find('TrialPopup')).toHaveLength(1)
+    wrapper.find('TrialPopup').prop('mouseOver')()
+    expect(clearIntMock).toHaveBeenCalledTimes(1)
+    wrapper.unmount()
+    clearIntMock.mockRestore()
+  })
+
+  it('should trigger hiding of popup if popup mouse out', async () => {
+    const setTimeMock = jest.spyOn(window, 'setTimeout')
+    wrapper = await mount(<ExperimentDetails {...props} />)
+    expect(wrapper.find('TrialPopup')).toHaveLength(1)
+    wrapper.find('TrialPopup').prop('mouseOut')()
+    expect(setTimeMock).toHaveBeenCalledTimes(1)
+    wrapper.unmount()
+    setTimeMock.mockRestore()
+  })
+
+  it('should update state and set ADD new label flag if set baseline clicked in trial popup', async () => {
+    wrapper = await mount(<ExperimentDetails {...props} />)
+    expect(wrapper.find('TrialPopup')).toHaveLength(1)
+    wrapper.find('TrialPopup').prop('baselineClick')(true, props.trials[3])()
+    expect(props.updateState).toHaveBeenCalledTimes(1)
+    expect(props.updateState.mock.calls[0][0]).toEqual({
+      labels: {
+        ...props.labels,
+        postingNewLabel: true,
+        newLabel: BASELINE_LABEL,
+        baselineAddNumber: props.trials[3].number,
+      },
+    })
+    wrapper.unmount()
+  })
+
+  it('should update state and set REMOVE label flag if set baseline clicked in trial popup', async () => {
+    const localProps = {
+      ...props,
+      trials: [...props.trials],
+    }
+    localProps.trials[5] = {
+      ...localProps.trials[5],
+      labels: {[BASELINE_LABEL]: true},
+    }
+
+    wrapper = await mount(<ExperimentDetails {...localProps} />)
+    expect(wrapper.find('TrialPopup')).toHaveLength(1)
+    wrapper.find('TrialPopup').prop('baselineClick')(true, props.trials[3])()
+    expect(props.updateState).toHaveBeenCalledTimes(1)
+    expect(props.updateState.mock.calls[0][0]).toEqual({
+      labels: {
+        ...props.labels,
+        postingNewLabel: true,
+        newLabel: BASELINE_LABEL,
+        baselineAddNumber: props.trials[3].number,
+        postingDelLabel: true,
+        labelToDelete: BASELINE_LABEL,
+        baselineDelNumber: localProps.trials[5].number,
+      },
+    })
+    wrapper.unmount()
+  })
+
+  it('should call back end to remove current baseline trial if new one selected', async () => {
+    expService.postLabelToTrialFactory.mockImplementationOnce(() => [
+      () => Promise.resolve({}),
+      () => {},
+    ])
+    const localProps = {
+      ...props,
+      labels: {
+        ...props.labels,
+        postingNewLabel: true,
+        newLabel: BASELINE_LABEL,
+        baselineAddNumber: props.trials[3].number,
+        postingDelLabel: true,
+        labelToDelete: BASELINE_LABEL,
+        baselineDelNumber: props.trials[5].number,
+      },
+    }
+    wrapper = await mount(<ExperimentDetails {...localProps} />)
+    expect(expService.postLabelToTrialFactory).toHaveBeenCalledTimes(1)
+    expect(expService.postLabelToTrialFactory.mock.calls[0][0]).toEqual({
+      experimentId: props.experiments.list[props.activeExperiment.index].id,
+      trialId: localProps.labels.baselineDelNumber,
+      labels: {[BASELINE_LABEL]: ''},
+    })
+    wrapper.unmount()
+  })
+
+  it('should update state on successful baseline label delete', async done => {
+    expService.postLabelToTrialFactory.mockImplementationOnce(() => [
+      () => Promise.resolve({}),
+      () => {},
+    ])
+    const localProps = {
+      ...props,
+      labels: {
+        ...props.labels,
+        postingNewLabel: true,
+        newLabel: BASELINE_LABEL,
+        baselineAddNumber: props.trials[3].number,
+        postingDelLabel: true,
+        labelToDelete: BASELINE_LABEL,
+        baselineDelNumber: props.trials[5].number,
+      },
+    }
+    wrapper = await mount(<ExperimentDetails {...localProps} />)
+    expect(expService.postLabelToTrialFactory).toHaveBeenCalledTimes(1)
+    setImmediate(() => {
+      expect(props.updateState).toHaveBeenCalledTimes(1)
+      expect(props.updateState.mock.calls[0][0].labels).toEqual({
+        ...localProps.labels,
+        postingDelLabel: false,
+        labelToDelete: '',
+        baselineDelNumber: -1,
+      })
+      expect(props.updateState.mock.calls[0][0]).not.toHaveProperty(
+        'hoveredTrial',
+      )
+      wrapper.unmount()
+      done()
+    })
+  })
+
+  it('should update state and remove popup on successful baseline label delete', async done => {
+    expService.postLabelToTrialFactory.mockImplementationOnce(() => [
+      () => Promise.resolve({}),
+      () => {},
+    ])
+    const localProps = {
+      ...props,
+      labels: {
+        ...props.labels,
+        postingNewLabel: false,
+        newLabel: '',
+        baselineAddNumber: -1,
+        postingDelLabel: true,
+        labelToDelete: BASELINE_LABEL,
+        baselineDelNumber: props.trials[5].number,
+      },
+    }
+    wrapper = await mount(<ExperimentDetails {...localProps} />)
+    expect(expService.postLabelToTrialFactory).toHaveBeenCalledTimes(1)
+    setImmediate(() => {
+      expect(props.updateState).toHaveBeenCalledTimes(1)
+      expect(props.updateState.mock.calls[0][0].labels).toEqual({
+        ...localProps.labels,
+        postingDelLabel: false,
+        labelToDelete: '',
+        baselineDelNumber: -1,
+      })
+      expect(props.updateState.mock.calls[0][0]).toHaveProperty(
+        'hoveredTrial',
+        null,
+      )
+      wrapper.unmount()
+      done()
+    })
+  })
+
+  it('should call back end to ADD current baseline trial', async () => {
+    expService.postLabelToTrialFactory.mockImplementationOnce(() => [
+      () => Promise.resolve({}),
+      () => {},
+    ])
+    const localProps = {
+      ...props,
+      labels: {
+        ...props.labels,
+        postingNewLabel: true,
+        newLabel: BASELINE_LABEL,
+        baselineAddNumber: props.trials[3].number,
+        postingDelLabel: false,
+        labelToDelete: '',
+        baselineDelNumber: -1,
+      },
+    }
+    wrapper = await mount(<ExperimentDetails {...localProps} />)
+    expect(expService.postLabelToTrialFactory).toHaveBeenCalledTimes(1)
+    expect(expService.postLabelToTrialFactory.mock.calls[0][0]).toEqual({
+      experimentId: props.experiments.list[props.activeExperiment.index].id,
+      trialId: localProps.labels.baselineAddNumber,
+      labels: {[BASELINE_LABEL]: DEFAULT_LABEL_VALUE},
+    })
+    wrapper.unmount()
+  })
+
+  it('should update state on successful baseline label post', async done => {
+    expService.postLabelToTrialFactory.mockImplementationOnce(() => [
+      () => Promise.resolve({}),
+      () => {},
+    ])
+    const localProps = {
+      ...props,
+      labels: {
+        ...props.labels,
+        postingNewLabel: true,
+        newLabel: BASELINE_LABEL,
+        baselineAddNumber: props.trials[3].number,
+        postingDelLabel: false,
+        labelToDelete: '',
+        baselineDelNumber: -1,
+      },
+    }
+    wrapper = await mount(<ExperimentDetails {...localProps} />)
+    expect(expService.postLabelToTrialFactory).toHaveBeenCalledTimes(1)
+    setImmediate(() => {
+      expect(props.updateState).toHaveBeenCalledTimes(1)
+      expect(props.updateState.mock.calls[0][0].labels).toEqual({
+        ...localProps.labels,
+        postingNewLabel: false,
+        newLabel: '',
+        baselineAddNumber: -1,
+      })
+      expect(props.updateState.mock.calls[0][0]).toHaveProperty(
+        'hoveredTrial',
+        null,
+      )
+      wrapper.unmount()
+      done()
+    })
+  })
+
+  it('should update state in case of error in baseline label backend calls', async done => {
+    expService.postLabelToTrialFactory.mockImplementationOnce(() => [
+      () => Promise.reject({message: 'test_error'}),
+      () => {},
+    ])
+    const localProps = {
+      ...props,
+      labels: {
+        ...props.labels,
+        postingNewLabel: true,
+        newLabel: BASELINE_LABEL,
+        baselineAddNumber: props.trials[3].number,
+        postingDelLabel: false,
+        labelToDelete: '',
+        baselineDelNumber: -1,
+      },
+    }
+    wrapper = await mount(<ExperimentDetails {...localProps} />)
+    setImmediate(() => {
+      expect(props.updateState).toHaveBeenCalledTimes(1)
+      expect(props.updateState.mock.calls[0][0].labels).toEqual({
+        ...localProps.labels,
+        postingNewLabel: false,
+        newLabel: '',
+        baselineAddNumber: -1,
+        postingDelLabel: false,
+        labelToDelete: '',
+        baselineDelNumber: -1,
+        error: 'test_error',
+      })
+      wrapper.unmount()
+      done()
+    })
   })
 })
