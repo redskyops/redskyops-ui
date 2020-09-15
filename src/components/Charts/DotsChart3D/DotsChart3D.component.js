@@ -2,7 +2,7 @@ import React from 'react'
 import * as d3 from 'd3'
 import * as THREE from 'three'
 
-import {BASE_URL} from '../../../constants'
+import {BASELINE_LABEL, BASE_URL} from '../../../constants'
 import ChartPropsType from '../ChartProps.type'
 import style from '../Charts.module.scss'
 
@@ -267,7 +267,10 @@ export class DotsChart3D extends React.Component<ChartPropsType> {
     this.filteredTrials = this.completedTrials.filter(
       ({labels = {}}) =>
         this.props.labelsFilter.length === 0 ||
-        this.props.labelsFilter.reduce((acc, l) => acc || l in labels, false),
+        this.props.labelsFilter.reduce(
+          (acc, l) => acc || l in labels || BASELINE_LABEL in labels,
+          false,
+        ),
     )
 
     const maxCost = d3.max(

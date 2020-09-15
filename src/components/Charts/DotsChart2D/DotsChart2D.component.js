@@ -3,7 +3,7 @@ import * as d3 from 'd3'
 
 import {ChartPropsType} from '../ChartProps.type'
 import style from '../Charts.module.scss'
-import {AXIS_TYPE, TypeAxisType} from '../../../constants'
+import {AXIS_TYPE, BASELINE_LABEL, TypeAxisType} from '../../../constants'
 
 export class DotsChart2D extends React.Component<
   ChartPropsType & {
@@ -42,7 +42,10 @@ export class DotsChart2D extends React.Component<
     const filteredTrials = completedTrials.filter(
       ({labels = {}}) =>
         this.props.labelsFilter.length === 0 ||
-        this.props.labelsFilter.reduce((acc, l) => acc || l in labels, false),
+        this.props.labelsFilter.reduce(
+          (acc, l) => acc || l in labels || BASELINE_LABEL in labels,
+          false,
+        ),
     )
 
     const [minCost, maxCost] = d3.extent(
@@ -247,7 +250,13 @@ export class DotsChart2D extends React.Component<
       })
       .attr('class', 'point')
       .classed('baseline', d => {
-        if (d.labels && 'baseline' in d.labels) {
+        if (d.labels && BASELINE_LABEL in d.labels) {
+          return true
+        }
+        return false
+      })
+      .classed(style.best, d => {
+        if (d.labels && 'best' in d.labels) {
           return true
         }
         return false
@@ -259,12 +268,6 @@ export class DotsChart2D extends React.Component<
           : 3,
       )
       .attr('class', style.circle)
-      .classed(style.best, d => {
-        if (d.labels && 'best' in d.labels) {
-          return true
-        }
-        return false
-      })
       .classed(
         style.selected,
         d => this.props.activeTrial && d.index === this.props.activeTrial.index,
