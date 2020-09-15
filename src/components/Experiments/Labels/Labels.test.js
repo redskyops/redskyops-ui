@@ -5,6 +5,7 @@ import {shallow, mount} from 'enzyme'
 import {Labels} from './Labels.component'
 import trialsStub from '../../../services/_stubs/trials-data'
 import {ExperimentsService} from '../../../services/ExperimentsService'
+import {BASELINE_LABEL} from '../../../constants'
 
 jest.mock('../../../services/ExperimentsService', () =>
   jest.requireActual('../../../services/__mocks__/ExperimentsService'),
@@ -97,6 +98,33 @@ describe('Component: Lables', () => {
     wrapper.unmount()
   })
 
+  it('should set error message in case baseline label added through form', () => {
+    const localProps = {
+      ...props,
+      labels: {
+        ...props.labels,
+        postingNewLabel: false,
+        newLabel: BASELINE_LABEL,
+      },
+    }
+    wrapper = shallow(<Labels {...localProps} />)
+    wrapper
+      .find('form')
+      .first()
+      .simulate('submit', {
+        preventDefault: () => {},
+      })
+    expect(props.updateState).toHaveBeenCalledTimes(1)
+    expect(props.updateState.mock.calls[0][0]).toEqual({
+      labels: {
+        ...localProps.labels,
+        newLabel: '',
+        error: 'You can set baselines by hovering tirals dots in chart',
+      },
+    })
+    wrapper.unmount()
+  })
+
   it('should NOT set state to posing when user submit form again while posting to delete label', () => {
     const localProps = {
       ...props,
@@ -140,7 +168,7 @@ describe('Component: Lables', () => {
     wrapper.unmount()
   })
 
-  it('make a call to post a new label if posting status is true', () => {
+  it('should make a call to post a new label if posting status is true', () => {
     const request = jest.fn(() =>
       Promise.resolve({labels: {new_label: 'true'}}),
     )
@@ -250,7 +278,7 @@ describe('Component: Lables', () => {
     expect(abort).toHaveBeenCalledTimes(1)
   })
 
-  it('render a list of assigned labels', () => {
+  it('should render a list of assigned labels', () => {
     const localProps = {
       ...props,
       trials: [...props.trials],
@@ -268,7 +296,26 @@ describe('Component: Lables', () => {
     wrapper.unmount()
   })
 
-  it('update state with posting status when user delete label', () => {
+  it('should filter out baseline label from assigned labels', () => {
+    const localProps = {
+      ...props,
+      trials: [...props.trials],
+    }
+    localProps.trials[props.activeTrial.index] = {
+      ...localProps.trials[props.activeTrial.index],
+      labels: {
+        one: 'true',
+        two: 'true',
+        three: 'true',
+        [BASELINE_LABEL]: 'true',
+      },
+    }
+    wrapper = shallow(<Labels {...localProps} />)
+    expect(wrapper.find('button.label')).toHaveLength(3)
+    wrapper.unmount()
+  })
+
+  it('should update state with posting status when user delete label', () => {
     const localProps = {
       ...props,
       trials: [...props.trials],
@@ -295,7 +342,7 @@ describe('Component: Lables', () => {
     wrapper.unmount()
   })
 
-  it('call backend to delete label if posting flag is true', () => {
+  it('should call backend to delete label if posting flag is true', () => {
     const request = jest.fn(() => {
       return Promise.resolve({labels: {some_label: 'true'}})
     })
@@ -336,7 +383,7 @@ describe('Component: Lables', () => {
     wrapper.unmount()
   })
 
-  it('update state in delete label is successful', done => {
+  it('should update state in delete label is successful', done => {
     const request = jest.fn(() => {
       return Promise.resolve({labels: {some_label: 'true'}})
     })
@@ -398,7 +445,7 @@ describe('Component: Lables', () => {
     expect(abort).toHaveBeenCalledTimes(1)
   })
 
-  it('update state in case of backend error', done => {
+  it('should update state in case of backend error', done => {
     const request = jest.fn(() => {
       return Promise.reject({message: 'error_from_backend'})
     })
@@ -480,7 +527,7 @@ describe('Component: Lables', () => {
     wrapper.unmount()
   })
 
-  it('render show/hide menu of labels on input foucs/blur', done => {
+  it('should render show/hide menu of labels on input foucs/blur', done => {
     jest.useFakeTimers()
     const localProps = {
       ...props,
@@ -513,7 +560,7 @@ describe('Component: Lables', () => {
     jest.useRealTimers()
   })
 
-  it('upate state if user clicked one of unassinged labels in popup menu', () => {
+  it('should upate state if user clicked one of unassinged labels in popup menu', () => {
     const localProps = {
       ...props,
       trials: [...props.trials],

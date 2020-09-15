@@ -11,7 +11,7 @@ import {
   TypeExperiments,
 } from '../../../context/DefaultState'
 import getAllLabelsFromTrials from '../../../utilities/getAllLabelsFromTrials'
-import {DEFAULT_LABEL_VALUE} from '../../../constants'
+import {DEFAULT_LABEL_VALUE, BASELINE_LABEL} from '../../../constants'
 
 import style from './Labels.module.scss'
 import Icon from '../../Icon/Icon.component'
@@ -121,6 +121,17 @@ export const Labels = (props: Props) => {
     if (labels.postingNewLabel || labels.postingDelLabel || !labels.newLabel) {
       return
     }
+    if (labels.newLabel.toLowerCase() === BASELINE_LABEL) {
+      updateState({
+        labels: {
+          ...labels,
+          newLabel: '',
+          error: 'You can set baselines by hovering tirals dots in chart',
+        },
+      })
+      setShowMenu(false)
+      return
+    }
     updateState({
       labels: {
         ...labels,
@@ -184,19 +195,21 @@ export const Labels = (props: Props) => {
   }
 
   const renderLabels = () => {
-    const list = Object.keys(trial.labels || {}).map(label => {
-      return (
-        <button
-          key={label}
-          className={`${style.label} ${style.labelRemove}`}
-          onClick={deleteLabel(label)}
-          disabled={labels.postingNewLabel || labels.postingDelLabel}
-        >
-          {label.toUpperCase()}
-          <Icon icon="circleX" width={14} cssClass={style.labelDel} />
-        </button>
-      )
-    })
+    const list = Object.keys(trial.labels || {})
+      .filter(l => l !== BASELINE_LABEL)
+      .map(label => {
+        return (
+          <button
+            key={label}
+            className={`${style.label} ${style.labelRemove}`}
+            onClick={deleteLabel(label)}
+            disabled={labels.postingNewLabel || labels.postingDelLabel}
+          >
+            {label.toUpperCase()}
+            <Icon icon="circleX" width={14} cssClass={style.labelDel} />
+          </button>
+        )
+      })
     return list.length > 0 ? <div className={style.list}>{list}</div> : null
   }
 
