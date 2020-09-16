@@ -75,6 +75,7 @@ export const TrialPopup = (props: TypeProps) => {
       {!isBaselineTrial && (
         <button
           className={style.btn}
+          data-dom-id="popup-set-baseline"
           onClick={props.baselineClick(true, trial)}
         >
           SET BASELINE
@@ -84,6 +85,7 @@ export const TrialPopup = (props: TypeProps) => {
         <>
           <button
             className={style.btn}
+            data-dom-id="popup-remove-baseline"
             onClick={props.baselineClick(false, trial)}
           >
             REMOVE BASELINE

@@ -2,6 +2,7 @@ import React from 'react'
 import {shallow} from 'enzyme'
 
 import {TrialPopup} from './TrialPopup.component'
+import {BASELINE_LABEL} from '../../../constants'
 
 describe('Component: TrialPopup', () => {
   const props = {
@@ -191,6 +192,67 @@ describe('Component: TrialPopup', () => {
     }
     wrapper = shallow(<TrialPopup {...localProps} />)
     expect(wrapper.find('.metric')).toHaveLength(2)
+    wrapper.unmount()
+  })
+
+  it('should render set baseline button', () => {
+    wrapper = shallow(<TrialPopup {...props} />)
+    expect(
+      wrapper.find('button[data-dom-id="popup-set-baseline"]'),
+    ).toHaveLength(1)
+    expect(
+      wrapper.find('button[data-dom-id="popup-set-baseline"]').text(),
+    ).toBe('SET BASELINE')
+    expect(props.baselineClick).toHaveBeenCalledTimes(1)
+    expect(props.baselineClick.mock.calls[0][0]).toEqual(true)
+    expect(props.baselineClick.mock.calls[0][1]).toEqual(
+      props.hoveredTrial.trial,
+    )
+    wrapper.find('button[data-dom-id="popup-set-baseline"]').simulate('click')
+    wrapper.unmount()
+  })
+
+  it('should render remove baseline button', () => {
+    const localProps = {
+      ...props,
+      hoveredTrial: {
+        ...props.hoveredTrial,
+        trial: {
+          ...props.hoveredTrial.trial,
+          labels: {[BASELINE_LABEL]: 'true'},
+        },
+      },
+    }
+    wrapper = shallow(<TrialPopup {...localProps} />)
+    expect(
+      wrapper.find('button[data-dom-id="popup-remove-baseline"]'),
+    ).toHaveLength(1)
+    expect(
+      wrapper.find('button[data-dom-id="popup-remove-baseline"]').text(),
+    ).toBe('REMOVE BASELINE')
+    expect(props.baselineClick).toHaveBeenCalledTimes(1)
+    expect(props.baselineClick.mock.calls[0][0]).toEqual(false)
+    expect(props.baselineClick.mock.calls[0][1]).toEqual(
+      localProps.hoveredTrial.trial,
+    )
+    wrapper
+      .find('button[data-dom-id="popup-remove-baseline"]')
+      .simulate('click')
+    wrapper.unmount()
+  })
+
+  it('should trigger mouseOut and mouseOver', () => {
+    wrapper = shallow(<TrialPopup {...props} />)
+    wrapper
+      .find('div')
+      .first()
+      .simulate('mouseOver')
+    expect(props.mouseOver).toHaveBeenCalledTimes(1)
+    wrapper
+      .find('div')
+      .first()
+      .simulate('mouseOut')
+    expect(props.mouseOut).toHaveBeenCalledTimes(1)
     wrapper.unmount()
   })
 })

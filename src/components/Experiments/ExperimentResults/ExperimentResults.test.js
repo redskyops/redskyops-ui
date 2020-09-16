@@ -2,6 +2,7 @@ import React from 'react'
 import {shallow} from 'enzyme'
 
 import {ExperimentResults} from './ExperimentResults.component'
+import {BASELINE_LABEL} from '../../../constants'
 
 describe('Component: ExperimentResults', () => {
   let wrapper
@@ -271,8 +272,24 @@ describe('Component: ExperimentResults', () => {
     expect(filterProps.selectedValues).toBe(
       localProps.activeExperiment.labelsFilter,
     )
-    expect(filterProps.labelsList).toBe(localProps.activeExperiment.labelsList)
+    expect(filterProps.labelsList).toEqual(['best', 'optimal', 'bad'])
     expect(filterProps.onChange).toBe(localProps.filterChangeHandler)
+    wrapper.unmount()
+  })
+
+  it('should render labels filter and remove baseline label from list', () => {
+    const localProps = {
+      ...props,
+      activeExperiment: {
+        ...props.activeExperiment,
+        labelsList: [BASELINE_LABEL, 'best'],
+        labelsFilter: ['best'],
+      },
+    }
+    wrapper = shallow(<ExperimentResults {...localProps} />)
+    expect(wrapper.find('LabelsFilter')).toHaveLength(1)
+    const filterProps = wrapper.find('LabelsFilter').props()
+    expect(filterProps.labelsList).toEqual(['best'])
     wrapper.unmount()
   })
 })

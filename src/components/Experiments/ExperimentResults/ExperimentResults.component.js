@@ -14,6 +14,7 @@ import {connectWithState} from '../../../context/StateContext'
 
 import style from './ExperimentResults.module.scss'
 import LabelsFilter from '../LabelsFilter/LabelsFilter.component'
+import {BASELINE_LABEL} from '../../../constants'
 
 type TypeProps = {
   activeExperiment: TypeActiveExperiment,
@@ -134,7 +135,9 @@ export const ExperimentResults = (props: TypeProps) => {
           }`}
         >
           <LabelsFilter
-            labelsList={activeExperiment.labelsList}
+            labelsList={activeExperiment.labelsList.filter(
+              l => l !== BASELINE_LABEL,
+            )}
             selectedValues={activeExperiment.labelsFilter}
             onChange={filterChangeHandler}
           />

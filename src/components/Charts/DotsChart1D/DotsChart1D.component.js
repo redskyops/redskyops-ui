@@ -3,7 +3,7 @@ import * as d3 from 'd3'
 
 import {ChartPropsType} from '../ChartProps.type'
 import style from '../Charts.module.scss'
-import {AXIS_TYPE} from '../../../constants'
+import {AXIS_TYPE, BASELINE_LABEL} from '../../../constants'
 
 export class DotsChart1D extends React.Component<ChartPropsType> {
   buildChart() {
@@ -25,7 +25,10 @@ export class DotsChart1D extends React.Component<ChartPropsType> {
     const filteredTrials = completedTrials.filter(
       ({labels = {}}) =>
         this.props.labelsFilter.length === 0 ||
-        this.props.labelsFilter.reduce((acc, l) => acc || l in labels, false),
+        this.props.labelsFilter.reduce(
+          (acc, l) => acc || l in labels || BASELINE_LABEL in labels,
+          false,
+        ),
     )
 
     const maxCost = d3.max(
@@ -134,20 +137,27 @@ export class DotsChart1D extends React.Component<ChartPropsType> {
         }, [])
         return `translate(${xScale(cost.value)}, ${height})`
       })
-      .append('circle')
       .attr('class', 'point')
-      .attr('r', d =>
-        this.props.activeTrial && d.index === this.props.activeTrial.index
-          ? 6
-          : 3,
-      )
-      .attr('class', style.circle)
+      .classed('baseline', d => {
+        if (d.labels && BASELINE_LABEL in d.labels) {
+          return true
+        }
+        return false
+      })
       .classed(style.best, d => {
         if (d.labels && 'best' in d.labels) {
           return true
         }
         return false
       })
+      .append('circle')
+      .attr('r', d =>
+        this.props.activeTrial && d.index === this.props.activeTrial.index
+          ? 6
+          : 3,
+      )
+      .attr('class', style.circle)
+
       .classed(
         style.selected,
         d => this.props.activeTrial && d.index === this.props.activeTrial.index,
@@ -167,6 +177,13 @@ export class DotsChart1D extends React.Component<ChartPropsType> {
         }),
       )
       .on('click', circleClick(this.props.selectTrialHandler))
+
+    svg
+      .selectAll('g.point.baseline')
+      .append('polygon')
+      .lower()
+      .attr('points', '-6,6 6,6, 0,-6 ')
+      .attr('class', style.triangle)
 
     svg
       .append('g')

@@ -162,6 +162,7 @@ export const ExperimentDetails = (props: Props) => {
         baselineAddNumber: -1,
         baselineDelNumber: -1,
         labelToDelete: '',
+        newLabel: '',
         error: e.message,
       },
     })
@@ -177,8 +178,7 @@ export const ExperimentDetails = (props: Props) => {
     return labels.baselineDelNumber > -1 &&
       labels.labelToDelete &&
       labels.postingDelLabel === true
-      ? // labels.postingNewLabel === false
-        expService.postLabelToTrialFactory({
+      ? expService.postLabelToTrialFactory({
           experimentId,
           trialId: labels.baselineDelNumber,
           labels: {[labels.labelToDelete.trim().toLowerCase()]: ''},
