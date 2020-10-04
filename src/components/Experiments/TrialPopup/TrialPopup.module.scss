@@ -57,3 +57,15 @@
   top: calc(100% + 30px);
   width: auto;
 }
+
+.trialName {
+  align-items: center;
+  display: flex;
+  flex-direction: row;
+  font-size: 15px;
+  font-weight: bold;
+}
+
+.nameIcon {
+  margin-left: $size-1x;
+}
