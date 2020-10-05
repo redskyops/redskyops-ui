@@ -7,6 +7,7 @@ import {TypeExperiments, TypeLeftPanel} from '../../context/DefaultState'
 
 import style from './LeftPanel.module.scss'
 import Icon from '../Icon/Icon.component'
+import RangeSlider from '../FormControls/RangeSlider/RangeSllider.component'
 
 type TypeProps = {
   experiments: TypeExperiments,
@@ -91,6 +92,7 @@ export const LeftPanel = (props: TypeProps) => {
         }`}
       >
         <div className={style.inner}>
+          <RangeSlider min={0} max={100} onChange={console.log} />
           <Switch>
             <Route exact path="/" render={renderSearchList} />
             <Route exact path="/helpDocs" render={renderLink} />
