@@ -13,6 +13,7 @@ import {ReactComponent as FilterIcon} from '../../assets/svgs/filter.svg'
 import {ReactComponent as ParametersIcon} from '../../assets/svgs/parameters.svg'
 import {ReactComponent as MetricsIcon} from '../../assets/svgs/metrics.svg'
 import {ReactComponent as PencilIcon} from '../../assets/svgs/pencil.svg'
+import {ReactComponent as HelpIcon} from '../../assets/svgs/help.svg'
 
 import style from './icon.module.scss'
 
@@ -29,6 +30,7 @@ const iconsMap = {
   parameters: ParametersIcon,
   metrics: MetricsIcon,
   pencil: PencilIcon,
+  help: HelpIcon,
 }
 
 const strokeOrFill = {}

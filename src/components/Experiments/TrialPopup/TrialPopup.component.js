@@ -71,7 +71,7 @@ export const TrialPopup = (props: TypeProps) => {
           {`${experiment.displayName}-${hoveredTrial.trial.number}`}
           <a target="_blank" rel="noopener noreferrer" href={trialInfoLink}>
             <Icon
-              icon="filter"
+              icon="help"
               width={20}
               color={ICON_COLOR}
               cssClass={style.nameIcon}
