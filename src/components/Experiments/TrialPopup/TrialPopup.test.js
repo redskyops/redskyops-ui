@@ -261,7 +261,7 @@ describe('Component: TrialPopup', () => {
     wrapper.unmount()
   })
 
-  it('should render tiral name with external link', () => {
+  it('should render trial name with external link', () => {
     wrapper = shallow(<TrialPopup {...props} />)
     expect(wrapper.find('h5')).toHaveLength(1)
     expect(wrapper.find('h5').text()).toContain('test-experiment-120')
@@ -272,7 +272,7 @@ describe('Component: TrialPopup', () => {
     wrapper.unmount()
   })
 
-  it('should NOT render tiral name if no active experiment', () => {
+  it('should NOT render trial name if no active experiment', () => {
     const localProps1 = {...props}
     delete localProps1.activeExperiment
     wrapper = shallow(<TrialPopup {...localProps1} />)
