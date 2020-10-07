@@ -116,15 +116,16 @@ export const RangeSlider = (props: TypeProps) => {
         className={`${style.btn} ${style.left}`}
         ref={leftRef}
         onMouseDown={dragStart(LEFT)}
-      />
+      >
+        <span className={style.valueLabel}>{minValue}</span>
+      </button>
       <button
         className={`${style.btn} ${style.rigth}`}
         ref={rightRef}
         onMouseDown={dragStart(RIGHT)}
-      />
-      <span>
-        {minValue} / {maxValue}
-      </span>
+      >
+        <span className={style.valueLabel}>{maxValue}</span>
+      </button>
     </div>
   )
 }
