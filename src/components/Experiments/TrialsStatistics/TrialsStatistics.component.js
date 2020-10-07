@@ -1,6 +1,7 @@
 import React from 'react'
 
-import {TypeTrials} from '../../../context/DefaultState'
+import {TypeTrials, TypeActiveExperiment} from '../../../context/DefaultState'
+import RangeSlider from '../../FormControls/RangeSlider/RangeSlider.component'
 import Icon from '../../Icon/Icon.component'
 import style from './TrialsStatistics.module.scss'
 
@@ -11,9 +12,10 @@ const TRIALS_TYPES = {
 
 type TypeProps = {
   trials: TypeTrials,
+  activeExperiment: TypeActiveExperiment,
 }
 
-export const TrialsStatistics = ({trials}: TypeProps) => {
+export const TrialsStatistics = ({trials, activeExperiment}: TypeProps) => {
   const trialsStatusMap = trials.reduce((acc, t) => {
     if (t.status in acc) {
       acc[t.status].push(t)
@@ -60,6 +62,21 @@ export const TrialsStatistics = ({trials}: TypeProps) => {
             </strong>
           </span>
         </li>
+
+        {activeExperiment.metricsList.map(key => {
+          return (
+            <li className={style.item} key={key}>
+              <div data-dom-id="statistics-failed-text">{key}</div>
+              <RangeSlider
+                min={activeExperiment.metricsRanges[key].min}
+                max={activeExperiment.metricsRanges[key].max}
+                rangeMin={0}
+                rangeMax={activeExperiment.metricsRanges[key].rangeMax}
+                onChange={console.log}
+              />
+            </li>
+          )
+        })}
       </ul>
     </div>
   )

@@ -47,8 +47,8 @@ export const RangeSlider = (props: TypeProps) => {
       BTN_WIDTH + (width * (max - rangeMin)) / (rangeMax - rangeMin)
     leftRef.current.style.left = `${leftPos}px`
     rightRef.current.style.left = `${rightPos}px`
-    setMinValue(min)
-    setMaxValue(max)
+    _setMinValue(Math.round(min))
+    _setMaxValue(Math.round(max))
   }, [min, max])
 
   const dragStart = side => e => {

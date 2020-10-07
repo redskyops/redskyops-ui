@@ -1,4 +1,5 @@
 import React from 'react'
+import * as d3 from 'd3'
 
 import {connectWithState} from '../../../context/StateContext'
 import useApiCallEffect from '../../../hooks/useApiCallEffect'
@@ -70,10 +71,32 @@ export const ExperimentDetails = (props: Props) => {
 
   const trialsRequestSuccess = ({trials}) => {
     const labelsList = getAllLabelsFromTrials(trials)
+
+    let metricsRanges = {}
+    if (activeExperiment && Array.isArray(activeExperiment.metricsList)) {
+      metricsRanges = activeExperiment.metricsList.reduce((acc, key) => {
+        const [rangeMin, rangeMax] = d3.extent(
+          trials
+            .filter(t => t.status === 'completed')
+            .map(t => (t.values || []).find(v => v.metricName === key).value),
+        )
+        return {
+          ...acc,
+          [key]: {
+            rangeMin,
+            rangeMax,
+            min: 0,
+            max: rangeMax,
+          },
+        }
+      }, {})
+    }
+
     updateState({
       activeExperiment: {
         ...activeExperiment,
         labelsList,
+        metricsRanges,
         isLoading: false,
       },
       trials,
@@ -400,7 +423,10 @@ export const ExperimentDetails = (props: Props) => {
             hoverTrialHandler={hoverTrial}
             filterChangeHandler={filterChange}
           />
-          <TrialsStatistics trials={trials} />
+          <TrialsStatistics
+            trials={trials}
+            activeExperiment={activeExperiment}
+          />
         </div>
         <div data-title="PARAMETER DRILLDOWN">
           <MetricParameterChart
