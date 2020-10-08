@@ -1,27 +1,40 @@
 import React from 'react'
 
 import {connectWithState} from '../../../context/StateContext'
-import {TypeHoveredTrial, TypeActiveTrial} from '../../../context/DefaultState'
+import {
+  TypeHoveredTrial,
+  TypeActiveExperiment,
+  TypeExperiments,
+} from '../../../context/DefaultState'
 import {BASELINE_LABEL} from '../../../constants'
+import Icon from '../../Icon/Icon.component'
+import {trialInfoLink} from '../../../config'
 
 import style from './TrialPopup.module.scss'
 
 type TypeProps = {
   hoveredTrial: TypeHoveredTrial,
-  activeTrial: TypeActiveTrial,
+  activeExperiment: TypeActiveExperiment,
+  experiments: TypeExperiments,
   mouseOver: () => {},
   mouseOut: () => {},
   baselineClick: () => {},
 }
 
+const ICON_COLOR = '#f45266'
+
 export const TrialPopup = (props: TypeProps) => {
-  const {hoveredTrial} = props
+  const {hoveredTrial, activeExperiment, experiments} = props
 
   if (!hoveredTrial) {
     return null
   }
   const {left, top, xData, yData, zData, trial} = hoveredTrial
   const isBaselineTrial = BASELINE_LABEL in trial.labels
+  const experiment =
+    activeExperiment && experiments.list[activeExperiment.index]
+      ? experiments.list[activeExperiment.index]
+      : null
 
   const divPos = {
     left: left + window.scrollX,
@@ -53,6 +66,19 @@ export const TrialPopup = (props: TypeProps) => {
       onFocus={() => {}}
       onBlur={() => {}}
     >
+      {experiment && (
+        <h5 className={style.trialName}>
+          {`${experiment.displayName}-${hoveredTrial.trial.number}`}
+          <a target="_blank" rel="noopener noreferrer" href={trialInfoLink}>
+            <Icon
+              icon="help"
+              width={20}
+              color={ICON_COLOR}
+              cssClass={style.nameIcon}
+            />
+          </a>
+        </h5>
+      )}
       {renderLables()}
       {xData && (
         <div className={style.metric}>

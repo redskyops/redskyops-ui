@@ -13,11 +13,16 @@ describe('Component: TrialPopup', () => {
       yData: {name: 'duration', value: 30},
       zData: {name: 'throughput', value: 120.39},
       trial: {
+        number: 120,
         labels: {
           one: 'true',
           two: 'true',
         },
       },
+    },
+    activeExperiment: {index: 0},
+    experiments: {
+      list: [{displayName: 'test-experiment'}],
     },
     mouseOver: jest.fn(),
     mouseOut: jest.fn(),
@@ -253,6 +258,35 @@ describe('Component: TrialPopup', () => {
       .first()
       .simulate('mouseOut')
     expect(props.mouseOut).toHaveBeenCalledTimes(1)
+    wrapper.unmount()
+  })
+
+  it('should render trial name with external link', () => {
+    wrapper = shallow(<TrialPopup {...props} />)
+    expect(wrapper.find('h5')).toHaveLength(1)
+    expect(wrapper.find('h5').text()).toContain('test-experiment-120')
+    expect(wrapper.find('h5 Icon')).toHaveLength(1)
+    expect(wrapper.find('h5 a')).toHaveLength(1)
+    expect(wrapper.find('h5 a').prop('target')).toBe('_blank')
+    expect(wrapper.find('h5 a').prop('href')).toBeTruthy()
+    wrapper.unmount()
+  })
+
+  it('should NOT render trial name if no active experiment', () => {
+    const localProps1 = {...props}
+    delete localProps1.activeExperiment
+    wrapper = shallow(<TrialPopup {...localProps1} />)
+    expect(wrapper.find('h5')).toHaveLength(0)
+
+    const localProps2 = {
+      ...props,
+      activeExperiment: {
+        ...props.activeExperiment,
+        index: 100000,
+      },
+    }
+    wrapper = shallow(<TrialPopup {...localProps2} />)
+    expect(wrapper.find('h5')).toHaveLength(0)
     wrapper.unmount()
   })
 })
