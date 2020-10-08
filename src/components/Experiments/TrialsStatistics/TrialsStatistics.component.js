@@ -13,9 +13,14 @@ const TRIALS_TYPES = {
 type TypeProps = {
   trials: TypeTrials,
   activeExperiment: TypeActiveExperiment,
+  onSliderChange: () => {},
 }
 
-export const TrialsStatistics = ({trials, activeExperiment}: TypeProps) => {
+export const TrialsStatistics = ({
+  trials,
+  activeExperiment,
+  onSliderChange,
+}: TypeProps) => {
   const trialsStatusMap = trials.reduce((acc, t) => {
     if (t.status in acc) {
       acc[t.status].push(t)
@@ -23,6 +28,10 @@ export const TrialsStatistics = ({trials, activeExperiment}: TypeProps) => {
     }
     return {...acc, ...{[t.status]: [t]}}
   }, {})
+
+  const onChange = metric => range => {
+    onSliderChange({metric, range})
+  }
 
   return (
     <div className={style.stats}>
@@ -72,7 +81,7 @@ export const TrialsStatistics = ({trials, activeExperiment}: TypeProps) => {
                 max={activeExperiment.metricsRanges[key].max}
                 rangeMin={0}
                 rangeMax={activeExperiment.metricsRanges[key].rangeMax}
-                onChange={console.log}
+                onChange={onChange(key)}
               />
             </li>
           )

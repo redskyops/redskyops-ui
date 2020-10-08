@@ -372,6 +372,21 @@ export const ExperimentDetails = (props: Props) => {
     })
   }
 
+  const onMetricRangeChange = ({metric, range}) => {
+    updateState({
+      activeExperiment: {
+        ...activeExperiment,
+        metricsRanges: {
+          ...activeExperiment.metricsRanges,
+          [metric]: {
+            ...activeExperiment.metricsRanges[metric],
+            ...range,
+          },
+        },
+      },
+    })
+  }
+
   if (!activeExperiment) {
     return (
       <div className={style.expDetails} data-dom-id="exp-details-select">
@@ -426,6 +441,7 @@ export const ExperimentDetails = (props: Props) => {
           <TrialsStatistics
             trials={trials}
             activeExperiment={activeExperiment}
+            onSliderChange={onMetricRangeChange}
           />
         </div>
         <div data-title="PARAMETER DRILLDOWN">

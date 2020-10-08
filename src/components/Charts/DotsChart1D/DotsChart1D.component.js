@@ -21,6 +21,16 @@ export class DotsChart1D extends React.Component<ChartPropsType> {
     const completedTrials = this.props.trials
       .map((t, index) => ({...t, index}))
       .filter(t => t.status === 'completed')
+      .filter(t => {
+        const metVals = (t.values || []).reduce(
+          (acc, v) => ({...acc, [v.metricName]: v.value}),
+          {},
+        )
+        return (
+          metVals[xValueName] >= this.props.xAxisRange.min &&
+          metVals[xValueName] <= this.props.xAxisRange.max
+        )
+      })
 
     const filteredTrials = completedTrials.filter(
       ({labels = {}}) =>
@@ -31,15 +41,19 @@ export class DotsChart1D extends React.Component<ChartPropsType> {
         ),
     )
 
-    const maxCost = d3.max(
+    const [minCost, maxCost] = d3.extent(
       completedTrials.map(
         v => v.values.filter(c => c.metricName === xValueName)[0].value,
       ),
     )
 
+    const minXValue = (min => (!isNaN(min) ? min : minCost))(
+      parseInt(this.props.xAxisMinValue, 10),
+    )
+
     const xScale = d3
       .scaleLinear()
-      .domain([0, maxCost])
+      .domain([minXValue, maxCost])
       .range([0, width])
 
     d3.select('#chart svg').remove()
