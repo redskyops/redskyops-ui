@@ -44,7 +44,7 @@ export const RangeSlider = (props: TypeProps) => {
     const width = rect.width - BTN_WIDTH - BTN_WIDTH
     const leftPos = (width * (min - rangeMin)) / (rangeMax - rangeMin)
     const rightPos =
-      BTN_WIDTH + (width * (max - rangeMin)) / (rangeMax - rangeMin)
+      ((width + BTN_WIDTH) * (max - rangeMin)) / (rangeMax - rangeMin)
     leftRef.current.style.left = `${leftPos}px`
     rightRef.current.style.left = `${rightPos}px`
     _setMinValue(Math.round(min))
@@ -87,7 +87,8 @@ export const RangeSlider = (props: TypeProps) => {
       }
       leftRef.current.style.left = `${xPos}px`
       const _minValue = Math.round(
-        (rangeMax - rangeMin) * (xPos / (sliderRect.width - BTN_WIDTH)),
+        (rangeMax - rangeMin) *
+          (xPos / (sliderRect.width - BTN_WIDTH - BTN_WIDTH)),
       )
       _setMinValue(_minValue)
     }
