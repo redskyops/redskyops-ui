@@ -74,7 +74,6 @@ export const RangeSlider = (props: TypeProps) => {
   }
 
   const mouseMove = e => {
-    // console.log(window.scrollX)
     if (isDragging === LEFT) {
       const rightXPos =
         window.scrollX +
@@ -89,7 +88,6 @@ export const RangeSlider = (props: TypeProps) => {
       if (xPos > rightXPos - BTN_WIDTH) {
         xPos = rightXPos - BTN_WIDTH
       }
-      console.log(xPos, window.scrollX)
       leftRef.current.style.left = `${xPos}px`
       const _minValue = Math.round(
         (rangeMax - rangeMin) *

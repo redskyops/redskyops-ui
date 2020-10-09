@@ -46,7 +46,7 @@ export const ExperimentResults = (props: TypeProps) => {
       },
     })
   }
-  console.log(activeExperiment.metricsRanges[activeExperiment.yAxisMetric])
+
   const chartProps = {
     trials,
     activeTrial,

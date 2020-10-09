@@ -80,11 +80,12 @@ export const ExperimentDetails = (props: Props) => {
             .filter(t => t.status === 'completed')
             .map(t => (t.values || []).find(v => v.metricName === key).value),
         )
+
         return {
           ...acc,
           [key]: {
-            rangeMin,
-            rangeMax,
+            rangeMin: rangeMin || null,
+            rangeMax: rangeMax || null,
             min: 0,
             max: rangeMax,
           },

@@ -73,6 +73,12 @@ export const TrialsStatistics = ({
         </li>
 
         {activeExperiment.metricsList.map(key => {
+          if (
+            !activeExperiment.metricsRanges[key].rangeMax ||
+            !activeExperiment.metricsRanges[key].rangeMin
+          ) {
+            return null
+          }
           return (
             <li className={style.item} key={key}>
               <div data-dom-id="statistics-failed-text">{key}</div>
