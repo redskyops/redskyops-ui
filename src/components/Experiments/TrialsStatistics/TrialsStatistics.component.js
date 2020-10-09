@@ -33,6 +33,14 @@ export const TrialsStatistics = ({
     onSliderChange({metric, range})
   }
 
+  const metricSlidersList = [activeExperiment.xAxisMetric]
+  if (activeExperiment.metricsList.length > 1) {
+    metricSlidersList.push(activeExperiment.yAxisMetric)
+  }
+  if (activeExperiment.metricsList.length > 2) {
+    metricSlidersList.push(activeExperiment.zAxisMetric)
+  }
+
   return (
     <div className={style.stats}>
       <div className={style.divider} />
@@ -72,8 +80,9 @@ export const TrialsStatistics = ({
           </span>
         </li>
 
-        {activeExperiment.metricsList.map(key => {
+        {metricSlidersList.map(key => {
           if (
+            !activeExperiment.metricsRanges[key] ||
             !activeExperiment.metricsRanges[key].rangeMax ||
             !activeExperiment.metricsRanges[key].rangeMin
           ) {
