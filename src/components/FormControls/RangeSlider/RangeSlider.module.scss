@@ -21,9 +21,14 @@ $btn-size: 30px;
 
 .btn {
   @include transition('left', .2);
+  align-items: center;
   background-color: $white;
-  border: 1px solid $border-light-gray;
+  border: 1px solid $border-dark-gray;
+  display: flex;
+  flex-direction: row;
   height: 30px;
+  justify-content: space-evenly;
+  padding: 0 2px;
   position: absolute;
   top: 0;
   width: 30px;
@@ -42,4 +47,12 @@ $btn-size: 30px;
   left: 0;
   position: absolute;
   top: 30px;
+}
+
+.btnIconLine {
+  background-color: $border-dark-gray;
+  display: block;
+  height: 16px;
+  margin: 1px;
+  width: 1px;
 }

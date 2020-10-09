@@ -74,17 +74,22 @@ export const RangeSlider = (props: TypeProps) => {
   }
 
   const mouseMove = e => {
+    // console.log(window.scrollX)
     if (isDragging === LEFT) {
       const rightXPos =
-        rightRef.current.getBoundingClientRect().x - sliderRect.x
-      let xPos = e.screenX - sliderRect.x - mouseClickOffset
+        window.scrollX +
+        rightRef.current.getBoundingClientRect().x -
+        sliderRect.x
+      let xPos = window.scrollX + e.screenX - sliderRect.x - mouseClickOffset
 
       if (xPos < 0) {
         xPos = 0
       }
+
       if (xPos > rightXPos - BTN_WIDTH) {
         xPos = rightXPos - BTN_WIDTH
       }
+      console.log(xPos, window.scrollX)
       leftRef.current.style.left = `${xPos}px`
       const _minValue = Math.round(
         (rangeMax - rangeMin) *
@@ -94,8 +99,11 @@ export const RangeSlider = (props: TypeProps) => {
     }
 
     if (isDragging === RIGHT) {
-      const leftXPos = leftRef.current.getBoundingClientRect().x - sliderRect.x
-      let xPos = e.screenX - sliderRect.x - mouseClickOffset
+      const leftXPos =
+        window.scrollX +
+        leftRef.current.getBoundingClientRect().x -
+        sliderRect.x
+      let xPos = window.scrollX + e.screenX - sliderRect.x - mouseClickOffset
       if (xPos > sliderRect.width - BTN_WIDTH) {
         xPos = sliderRect.width - BTN_WIDTH
       }
@@ -119,6 +127,9 @@ export const RangeSlider = (props: TypeProps) => {
         onMouseDown={dragStart(LEFT)}
       >
         <span className={style.valueLabel}>{minValue}</span>
+        <span className={style.btnIconLine} />
+        <span className={style.btnIconLine} />
+        <span className={style.btnIconLine} />
       </button>
       <button
         className={`${style.btn} ${style.rigth}`}
@@ -126,6 +137,9 @@ export const RangeSlider = (props: TypeProps) => {
         onMouseDown={dragStart(RIGHT)}
       >
         <span className={style.valueLabel}>{maxValue}</span>
+        <span className={style.btnIconLine} />
+        <span className={style.btnIconLine} />
+        <span className={style.btnIconLine} />
       </button>
     </div>
   )
