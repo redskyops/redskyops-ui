@@ -259,10 +259,25 @@ export class DotsChart3D extends React.Component<ChartPropsType> {
     const xValueName = this.props.xAxisMetricName
     const yValueName = this.props.yAxisMetricName
     const zValueName = this.props.zAxisMetricName
+    // const {xAxisRange, yAxisRange, zAxisRange} = this.props
 
     this.completedTrials = this.props.trials
       .map((t, index) => ({...t, index}))
       .filter(t => t.status === 'completed')
+      .filter(t => {
+        const metVals = (t.values || []).reduce(
+          (acc, v) => ({...acc, [v.metricName]: v.value}),
+          {},
+        )
+        return (
+          metVals[xValueName] >= this.props.xAxisRange.min &&
+          metVals[xValueName] <= this.props.xAxisRange.max &&
+          metVals[yValueName] >= this.props.yAxisRange.min &&
+          metVals[yValueName] <= this.props.yAxisRange.max &&
+          metVals[zValueName] >= this.props.zAxisRange.min &&
+          metVals[zValueName] <= this.props.zAxisRange.max
+        )
+      })
 
     this.filteredTrials = this.completedTrials.filter(
       ({labels = {}}) =>
@@ -273,7 +288,7 @@ export class DotsChart3D extends React.Component<ChartPropsType> {
         ),
     )
 
-    const maxCost = d3.max(
+    const [minCost, maxCost] = d3.extent(
       this.completedTrials.map(
         v => v.values.filter(c => c.metricName === xValueName)[0].value,
       ),
@@ -289,19 +304,29 @@ export class DotsChart3D extends React.Component<ChartPropsType> {
       }),
     )
 
+    const minXValue = (min => (!isNaN(min) ? min : minCost))(
+      parseInt(this.props.xAxisMinValue, 10),
+    )
+    const minYValue = (min => (!isNaN(min) ? min : minDuration))(
+      parseInt(this.props.yAxisMinValue, 10),
+    )
+    const minZValue = (min => (!isNaN(min) ? min : minThroughput))(
+      parseInt(this.props.zAxisMinValue, 10),
+    )
+
     const xScale = d3
       .scaleLinear()
-      .domain([0, maxCost])
+      .domain([minXValue, maxCost])
       .range([-size / 2, size / 2])
 
     const yScale = d3
       .scaleLinear()
-      .domain([minDuration, maxDuration])
+      .domain([minYValue, maxDuration])
       .range([0, size])
 
     const zScale = d3
       .scaleLinear()
-      .domain([minThroughput, maxThroughput])
+      .domain([minZValue, maxThroughput])
       .range([-size / 2, size / 2])
 
     this.scales = [
@@ -388,7 +413,10 @@ export class DotsChart3D extends React.Component<ChartPropsType> {
       prevProps.labelsFilter !== this.props.labelsFilter ||
       prevProps.xAxisMetricName !== this.props.xAxisMetricName ||
       prevProps.yAxisMetricName !== this.props.yAxisMetricName ||
-      prevProps.zAxisMetricName !== this.props.zAxisMetricName
+      prevProps.zAxisMetricName !== this.props.zAxisMetricName ||
+      prevProps.xAxisRange !== this.props.xAxisRange ||
+      prevProps.yAxisRange !== this.props.yAxisRange ||
+      prevProps.zAxisRange !== this.props.zAxisRange
     ) {
       this.clearChart()
       this.setScales()
