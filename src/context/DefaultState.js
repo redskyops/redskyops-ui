@@ -18,6 +18,7 @@ export type TypeActiveExperiment = {
   parametersList: Array<string>,
   labelsList: Array<string>,
   labelsFilter: Array<string>,
+  tab: number,
   metricParameterChart?: {
     metric: string,
     parameter: string,

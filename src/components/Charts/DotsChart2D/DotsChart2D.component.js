@@ -47,9 +47,13 @@ export class DotsChart2D extends React.Component<
       .map((t, index) => ({...t, index}))
       .filter(t => t.status === 'completed')
       .filter(t => {
-        const metVals = (t.values || []).reduce(
+        let metVals = (t.values || []).reduce(
           (acc, v) => ({...acc, [v.metricName]: v.value}),
           {},
+        )
+        metVals = (t.assignments || []).reduce(
+          (acc, v) => ({...acc, [v.parameterName]: v.value}),
+          metVals,
         )
         return (
           metVals[xValueName] >= this.props.xAxisRange.min &&

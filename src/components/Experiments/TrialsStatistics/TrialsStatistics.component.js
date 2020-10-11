@@ -9,6 +9,7 @@ const TRIALS_TYPES = {
   COMPLETED: 'completed',
   FAILED: 'failed',
 }
+const METRIC_PARAMETER_TAB = 1
 
 type TypeProps = {
   trials: TypeTrials,
@@ -33,12 +34,28 @@ export const TrialsStatistics = ({
     onSliderChange({metric, range})
   }
 
-  const metricSlidersList = [activeExperiment.xAxisMetric]
-  if (activeExperiment.metricsList.length > 1) {
-    metricSlidersList.push(activeExperiment.yAxisMetric)
-  }
-  if (activeExperiment.metricsList.length > 2) {
-    metricSlidersList.push(activeExperiment.zAxisMetric)
+  const axisNames = ['X', 'Y', 'Z']
+  let slidersList = []
+  if (activeExperiment.tab === METRIC_PARAMETER_TAB) {
+    if (
+      activeExperiment.tab === METRIC_PARAMETER_TAB &&
+      activeExperiment.metricParameterChart &&
+      activeExperiment.metricParameterChart.metric &&
+      activeExperiment.metricParameterChart.parameter
+    ) {
+      slidersList = [
+        activeExperiment.metricParameterChart.metric,
+        activeExperiment.metricParameterChart.parameter,
+      ]
+    }
+  } else {
+    slidersList = [activeExperiment.xAxisMetric]
+    if (activeExperiment.metricsList.length > 1) {
+      slidersList.push(activeExperiment.yAxisMetric)
+    }
+    if (activeExperiment.metricsList.length > 2) {
+      slidersList.push(activeExperiment.zAxisMetric)
+    }
   }
 
   return (
@@ -80,7 +97,7 @@ export const TrialsStatistics = ({
           </span>
         </li>
 
-        {metricSlidersList.map(key => {
+        {slidersList.map((key, i) => {
           if (
             !activeExperiment.metricsRanges[key] ||
             !activeExperiment.metricsRanges[key].rangeMax ||
@@ -88,9 +105,15 @@ export const TrialsStatistics = ({
           ) {
             return null
           }
+
           return (
-            <li className={style.item} key={key}>
-              <div data-dom-id="statistics-failed-text">{key}</div>
+            <li className={style.item} key={`${axisNames[i]}-${key}`}>
+              <div
+                data-dom-id="statistics-failed-text"
+                className={style.sliderCaption}
+              >
+                {key}
+              </div>
               <RangeSlider
                 min={activeExperiment.metricsRanges[key].min}
                 max={activeExperiment.metricsRanges[key].max}

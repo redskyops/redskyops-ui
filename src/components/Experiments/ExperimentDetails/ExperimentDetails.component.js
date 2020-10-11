@@ -80,7 +80,6 @@ export const ExperimentDetails = (props: Props) => {
             .filter(t => t.status === 'completed')
             .map(t => (t.values || []).find(v => v.metricName === key).value),
         )
-
         return {
           ...acc,
           [key]: {
@@ -91,6 +90,29 @@ export const ExperimentDetails = (props: Props) => {
           },
         }
       }, {})
+
+      if (activeExperiment && Array.isArray(activeExperiment.parametersList)) {
+        metricsRanges = activeExperiment.parametersList.reduce((acc, key) => {
+          const [rangeMin, rangeMax] = d3.extent(
+            trials
+              .filter(t => t.status === 'completed')
+              .map(
+                t =>
+                  (t.assignments || []).find(v => v.parameterName === key)
+                    .value,
+              ),
+          )
+          return {
+            ...acc,
+            [key]: {
+              rangeMin: rangeMin || null,
+              rangeMax: rangeMax || null,
+              min: 0,
+              max: rangeMax,
+            },
+          }
+        }, metricsRanges)
+      }
     }
 
     updateState({
@@ -388,6 +410,28 @@ export const ExperimentDetails = (props: Props) => {
     })
   }
 
+  const onTabChange = index => {
+    updateState({
+      activeExperiment: {
+        ...activeExperiment,
+        tab: index,
+        metricsRanges: Object.keys(activeExperiment.metricsRanges).reduce(
+          (acc, key) => {
+            return {
+              ...acc,
+              [key]: {
+                ...activeExperiment.metricsRanges[key],
+                min: 0,
+                max: activeExperiment.metricsRanges[key].rangeMax,
+              },
+            }
+          },
+          {},
+        ),
+      },
+    })
+  }
+
   if (!activeExperiment) {
     return (
       <div className={style.expDetails} data-dom-id="exp-details-select">
@@ -432,7 +476,7 @@ export const ExperimentDetails = (props: Props) => {
     const {metricParameterChart} = activeExperiment
 
     return (
-      <Tabs>
+      <Tabs onTabChange={onTabChange}>
         <div data-title="EXPERIMENT RESULTS">
           <ExperimentResults
             selectTrialHandler={selectTrial}
@@ -468,6 +512,12 @@ export const ExperimentDetails = (props: Props) => {
             selectTrialHandler={selectTrial}
             hoverTrialHandler={hoverTrial}
             filterChangeHandler={filterChange}
+            metricsRanges={activeExperiment.metricsRanges}
+          />
+          <TrialsStatistics
+            trials={trials}
+            activeExperiment={activeExperiment}
+            onSliderChange={onMetricRangeChange}
           />
         </div>
       </Tabs>
