@@ -8,7 +8,22 @@ describe('Component: TrialsStatistics', () => {
   let wrapper
   const props = {
     trials: trialsStub.trials,
+    activeExperiment: {
+      tab: 0,
+      metricsList: ['cost', 'duration'],
+      metricsRanges: {
+        cost: {min: 0, max: 100, rangeMin: 0, rangeMax: 100},
+        duration: {min: 0, max: 200, rangeMin: 0, rangeMax: 200},
+        cpu: {min: 0, max: 500, rangeMin: 0, rangeMax: 400},
+        memory: {min: 0, max: 100, rangeMin: 0, rangeMax: 1000},
+      },
+    },
+    onSliderChange: jest.fn(),
   }
+
+  beforeEach(() => {
+    props.onSliderChange.mockClear()
+  })
 
   it('should render TrailsStatistics', () => {
     wrapper = shallow(<TrialsStatistics {...props} />)

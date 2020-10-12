@@ -18,6 +18,11 @@ describe('Component: ExperimentResults', () => {
       xAxisMetric: 'cost',
       yAxisMetric: 'duration',
       zAxisMetric: 'throughput',
+      metricsRanges: {
+        cost: {min: 0, max: 100, rangeMin: 0, rangeMax: 100},
+        duration: {min: 0, max: 200, rangeMin: 0, rangeMax: 200},
+        throughput: {min: 0, max: 500, rangeMin: 0, rangeMax: 400},
+      },
     },
     selectTrialHandler: jest.fn(),
     filterChangeHandler: jest.fn(),
