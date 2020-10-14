@@ -7,16 +7,22 @@ $btn-size: 30px;
 .rangeSlider {
   display: block;
   height: 30px;
+  padding-left: $btn-size;
+  padding-right: $btn-size;
+}
+
+.sliderInner {
+  height: $btn-size;
   padding-top: 13px;
   position: relative;
+  width: 100%;
 }
 
 .line {
   background-color: $border-light-gray;
   display: block;
   height: 3px;
-  margin-left: calc(#{$btn-size} / 2);
-  width: calc(100% - #{$btn-size});
+  width: 100%;
 }
 
 .btn {
@@ -35,10 +41,11 @@ $btn-size: 30px;
 
   &.left {
     left: 0;
+    transform: translateX(-100%);
   }
 
   &.rigth {
-    right: 0;
+    left: 100%;
   }
 }
 

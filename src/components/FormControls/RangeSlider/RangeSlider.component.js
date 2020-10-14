@@ -41,10 +41,9 @@ export const RangeSlider = (props: TypeProps) => {
 
   useEffect(() => {
     const rect = sliderRef.current.getBoundingClientRect()
-    const width = rect.width - BTN_WIDTH - BTN_WIDTH
+    const width = rect.width
     const leftPos = (width * (min - rangeMin)) / (rangeMax - rangeMin)
-    const rightPos =
-      ((width + BTN_WIDTH) * (max - rangeMin)) / (rangeMax - rangeMin)
+    const rightPos = (width * (max - rangeMin)) / (rangeMax - rangeMin)
     leftRef.current.style.left = `${leftPos}px`
     rightRef.current.style.left = `${rightPos}px`
     _setMinValue(Math.round(min))
@@ -79,19 +78,19 @@ export const RangeSlider = (props: TypeProps) => {
         window.scrollX +
         rightRef.current.getBoundingClientRect().x -
         sliderRect.x
-      let xPos = window.scrollX + e.screenX - sliderRect.x - mouseClickOffset
+      let xPos =
+        window.scrollX + BTN_WIDTH + e.screenX - sliderRect.x - mouseClickOffset
 
       if (xPos < 0) {
         xPos = 0
       }
 
-      if (xPos > rightXPos - BTN_WIDTH) {
-        xPos = rightXPos - BTN_WIDTH
+      if (xPos > rightXPos) {
+        xPos = rightXPos
       }
       leftRef.current.style.left = `${xPos}px`
       const _minValue = Math.round(
-        (rangeMax - rangeMin) *
-          (xPos / (sliderRect.width - BTN_WIDTH - BTN_WIDTH)),
+        (rangeMax - rangeMin) * (xPos / sliderRect.width),
       )
       _setMinValue(_minValue)
     }
@@ -99,46 +98,49 @@ export const RangeSlider = (props: TypeProps) => {
     if (isDragging === RIGHT) {
       const leftXPos =
         window.scrollX +
-        leftRef.current.getBoundingClientRect().x -
+        leftRef.current.getBoundingClientRect().x +
+        BTN_WIDTH -
         sliderRect.x
       let xPos = window.scrollX + e.screenX - sliderRect.x - mouseClickOffset
-      if (xPos > sliderRect.width - BTN_WIDTH) {
-        xPos = sliderRect.width - BTN_WIDTH
+      if (xPos > sliderRect.width) {
+        xPos = sliderRect.width
       }
-      if (xPos < leftXPos + BTN_WIDTH) {
-        xPos = leftXPos + BTN_WIDTH
+      if (xPos < leftXPos) {
+        xPos = leftXPos
       }
       rightRef.current.style.left = `${xPos}px`
       const _maxValue = Math.round(
-        (rangeMax - rangeMin) * (xPos / (sliderRect.width - BTN_WIDTH)),
+        (rangeMax - rangeMin) * (xPos / sliderRect.width),
       )
       _setMaxValue(_maxValue)
     }
   }
 
   return (
-    <div className={style.rangeSlider} ref={sliderRef} onMouseMove={mouseMove}>
-      <div className={style.line} />
-      <button
-        className={`${style.btn} ${style.left}`}
-        ref={leftRef}
-        onMouseDown={dragStart(LEFT)}
-      >
-        <span className={style.valueLabel}>{minValue}</span>
-        <span className={style.btnIconLine} />
-        <span className={style.btnIconLine} />
-        <span className={style.btnIconLine} />
-      </button>
-      <button
-        className={`${style.btn} ${style.rigth}`}
-        ref={rightRef}
-        onMouseDown={dragStart(RIGHT)}
-      >
-        <span className={style.valueLabel}>{maxValue}</span>
-        <span className={style.btnIconLine} />
-        <span className={style.btnIconLine} />
-        <span className={style.btnIconLine} />
-      </button>
+    <div className={style.rangeSlider} onMouseMove={mouseMove}>
+      <div className={style.sliderInner} ref={sliderRef}>
+        <div className={style.line} />
+        <button
+          className={`${style.btn} ${style.left}`}
+          ref={leftRef}
+          onMouseDown={dragStart(LEFT)}
+        >
+          <span className={style.valueLabel}>{minValue}</span>
+          <span className={style.btnIconLine} />
+          <span className={style.btnIconLine} />
+          <span className={style.btnIconLine} />
+        </button>
+        <button
+          className={`${style.btn} ${style.rigth}`}
+          ref={rightRef}
+          onMouseDown={dragStart(RIGHT)}
+        >
+          <span className={style.valueLabel}>{maxValue}</span>
+          <span className={style.btnIconLine} />
+          <span className={style.btnIconLine} />
+          <span className={style.btnIconLine} />
+        </button>
+      </div>
     </div>
   )
 }
