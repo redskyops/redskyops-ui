@@ -244,6 +244,19 @@ export class DotsChart2D extends React.Component<
         })
       }
 
+    if (filteredTrials.length < 1) {
+      svg
+        .append('text')
+        .attr('transform', `translate(${width / 2}, ${height / 2})`)
+        .attr('font-size', '1.5em')
+        .attr('font-family', "'Montserrat', sans-serif")
+        .attr('font-weight', 'bold')
+        .style('text-anchor', 'middle')
+        .style('fill', '#000')
+        .text('No Results')
+      return
+    }
+
     svg
       .selectAll('g.point')
       .data(filteredTrials)

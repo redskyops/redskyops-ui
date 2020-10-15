@@ -259,7 +259,6 @@ export class DotsChart3D extends React.Component<ChartPropsType> {
     const xValueName = this.props.xAxisMetricName
     const yValueName = this.props.yAxisMetricName
     const zValueName = this.props.zAxisMetricName
-    // const {xAxisRange, yAxisRange, zAxisRange} = this.props
 
     this.completedTrials = this.props.trials
       .map((t, index) => ({...t, index}))
@@ -352,6 +351,17 @@ export class DotsChart3D extends React.Component<ChartPropsType> {
   }
 
   buildChart = () => {
+    if (this.filteredTrials.length < 1) {
+      const label = this.getText('No Results', 'right')
+
+      label.position.x = 0.6
+      label.position.y = 1.3
+      label.position.z = 0.3
+      label.rotation.y = Math.PI / 4
+
+      this.scene.add(label)
+      return
+    }
     this.dots = []
     this.filteredTrials.forEach(d => {
       const [xPoint, yPoint, zPoint] = d.values.reduce((acc, v) => {
