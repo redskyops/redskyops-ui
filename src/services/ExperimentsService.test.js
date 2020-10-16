@@ -191,5 +191,19 @@ describe('Service: ExperimentsService', () => {
         'Error in ExperimentsService.postLabelToTrialFactory',
       )
     })
+
+    it('should throw error if response status is not 200', async () => {
+      http.post.mockImplementationOnce(() => {
+        return [() => Promise.resolve({status: 400}), () => {}]
+      })
+      const [request] = expService.postLabelToTrialFactory({
+        experimentId: 'postgres-experiment',
+        trialId: 4,
+        labels: {
+          test: 'true',
+        },
+      })
+      await expect(request()).rejects.toThrow('Error creating/deleting label')
+    })
   })
 })

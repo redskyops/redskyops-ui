@@ -1,0 +1,65 @@
+@import '../../../styles/vars';
+@import '../../../styles/mixins';
+@import '../../../styles/colors';
+
+$btn-size: 30px;
+
+.rangeSlider {
+  display: block;
+  height: 30px;
+  padding-left: $btn-size;
+  padding-right: $btn-size;
+}
+
+.sliderInner {
+  height: $btn-size;
+  padding-top: 13px;
+  position: relative;
+  width: 100%;
+}
+
+.line {
+  background-color: $border-light-gray;
+  display: block;
+  height: 3px;
+  width: 100%;
+}
+
+.btn {
+  @include transition('left', .2);
+  align-items: center;
+  background-color: $white;
+  border: 1px solid $border-dark-gray;
+  display: flex;
+  flex-direction: row;
+  height: 30px;
+  justify-content: space-evenly;
+  padding: 0 2px;
+  position: absolute;
+  top: 0;
+  width: 30px;
+
+  &.left {
+    left: 0;
+    transform: translateX(-100%);
+  }
+
+  &.rigth {
+    left: 100%;
+  }
+}
+
+.valueLabel {
+  font-size: 13px;
+  left: 0;
+  position: absolute;
+  top: 30px;
+}
+
+.btnIconLine {
+  background-color: $border-dark-gray;
+  display: block;
+  height: 16px;
+  margin: 1px;
+  width: 1px;
+}

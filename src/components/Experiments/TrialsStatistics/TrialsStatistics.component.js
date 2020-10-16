@@ -1,6 +1,7 @@
 import React from 'react'
 
-import {TypeTrials} from '../../../context/DefaultState'
+import {TypeTrials, TypeActiveExperiment} from '../../../context/DefaultState'
+import RangeSlider from '../../FormControls/RangeSlider/RangeSlider.component'
 import Icon from '../../Icon/Icon.component'
 import style from './TrialsStatistics.module.scss'
 
@@ -8,12 +9,19 @@ const TRIALS_TYPES = {
   COMPLETED: 'completed',
   FAILED: 'failed',
 }
+const METRIC_PARAMETER_TAB = 1
 
 type TypeProps = {
   trials: TypeTrials,
+  activeExperiment: TypeActiveExperiment,
+  onSliderChange: () => {},
 }
 
-export const TrialsStatistics = ({trials}: TypeProps) => {
+export const TrialsStatistics = ({
+  trials,
+  activeExperiment,
+  onSliderChange,
+}: TypeProps) => {
   const trialsStatusMap = trials.reduce((acc, t) => {
     if (t.status in acc) {
       acc[t.status].push(t)
@@ -21,6 +29,34 @@ export const TrialsStatistics = ({trials}: TypeProps) => {
     }
     return {...acc, ...{[t.status]: [t]}}
   }, {})
+
+  const onChange = metric => range => {
+    onSliderChange({metric, range})
+  }
+
+  const axisNames = ['X', 'Y', 'Z']
+  let slidersList = []
+  if (activeExperiment.tab === METRIC_PARAMETER_TAB) {
+    if (
+      activeExperiment.tab === METRIC_PARAMETER_TAB &&
+      activeExperiment.metricParameterChart &&
+      activeExperiment.metricParameterChart.metric &&
+      activeExperiment.metricParameterChart.parameter
+    ) {
+      slidersList = [
+        activeExperiment.metricParameterChart.metric,
+        activeExperiment.metricParameterChart.parameter,
+      ]
+    }
+  } else {
+    slidersList = [activeExperiment.xAxisMetric]
+    if (activeExperiment.metricsList.length > 1) {
+      slidersList.push(activeExperiment.yAxisMetric)
+    }
+    if (activeExperiment.metricsList.length > 2) {
+      slidersList.push(activeExperiment.zAxisMetric)
+    }
+  }
 
   return (
     <div className={style.stats}>
@@ -60,6 +96,34 @@ export const TrialsStatistics = ({trials}: TypeProps) => {
             </strong>
           </span>
         </li>
+
+        {slidersList.map((key, i) => {
+          if (
+            !activeExperiment.metricsRanges[key] ||
+            !activeExperiment.metricsRanges[key].rangeMax ||
+            !activeExperiment.metricsRanges[key].rangeMin
+          ) {
+            return null
+          }
+
+          return (
+            <li className={style.item} key={`${axisNames[i]}-${key}`}>
+              <div
+                data-dom-id="statistics-failed-text"
+                className={style.sliderCaption}
+              >
+                {key}
+              </div>
+              <RangeSlider
+                min={activeExperiment.metricsRanges[key].min}
+                max={activeExperiment.metricsRanges[key].max}
+                rangeMin={0}
+                rangeMax={activeExperiment.metricsRanges[key].rangeMax}
+                onChange={onChange(key)}
+              />
+            </li>
+          )
+        })}
       </ul>
     </div>
   )

@@ -10,6 +10,14 @@ export class DotsChart2D extends React.Component<
     xAxisValueType: TypeAxisType,
     xAxisMinValue: number,
     yAxisMinValue: number,
+    xAxisRange: {
+      min: number,
+      max: Number,
+    },
+    yAxisRange: {
+      min: number,
+      max: Number,
+    },
   },
 > {
   constructor(props) {
@@ -38,6 +46,22 @@ export class DotsChart2D extends React.Component<
     const completedTrials = this.props.trials
       .map((t, index) => ({...t, index}))
       .filter(t => t.status === 'completed')
+      .filter(t => {
+        let metVals = (t.values || []).reduce(
+          (acc, v) => ({...acc, [v.metricName]: v.value}),
+          {},
+        )
+        metVals = (t.assignments || []).reduce(
+          (acc, v) => ({...acc, [v.parameterName]: v.value}),
+          metVals,
+        )
+        return (
+          metVals[xValueName] >= this.props.xAxisRange.min &&
+          metVals[xValueName] <= this.props.xAxisRange.max &&
+          metVals[yValueName] >= this.props.yAxisRange.min &&
+          metVals[yValueName] <= this.props.yAxisRange.max
+        )
+      })
 
     const filteredTrials = completedTrials.filter(
       ({labels = {}}) =>
@@ -219,6 +243,19 @@ export class DotsChart2D extends React.Component<
           trial: dataPoint,
         })
       }
+
+    if (filteredTrials.length < 1) {
+      svg
+        .append('text')
+        .attr('transform', `translate(${width / 2}, ${height / 2})`)
+        .attr('font-size', '1.5em')
+        .attr('font-family', "'Montserrat', sans-serif")
+        .attr('font-weight', 'bold')
+        .style('text-anchor', 'middle')
+        .style('fill', '#000')
+        .text('No Results')
+      return
+    }
 
     svg
       .selectAll('g.point')

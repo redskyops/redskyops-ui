@@ -17,6 +17,7 @@ type Props = {
   parameter: string,
   activeTrial: TypeActiveTrial,
   labelsFilter: Array<string>,
+  metricsRanges: Object,
   onMetricChange: () => {},
   onParameterChange: () => {},
   selectTrialHandler: () => {},
@@ -93,8 +94,16 @@ export const MetricParameterChart = (props: Props) => {
           hoverTrialHandler={props.hoverTrialHandler}
           activeTrial={props.activeTrial}
           labelsFilter={props.labelsFilter}
-          xAxisMinValue={0}
-          yAxisMinValue={0}
+          xAxisRange={{
+            min: props.metricsRanges[props.parameter].min,
+            max: props.metricsRanges[props.parameter].max,
+          }}
+          xAxisMinValue={props.metricsRanges[props.parameter].min}
+          yAxisRange={{
+            min: props.metricsRanges[props.metric].min,
+            max: props.metricsRanges[props.metric].max,
+          }}
+          yAxisMinValue={props.metricsRanges[props.metric].min}
         />
       )}
     </div>

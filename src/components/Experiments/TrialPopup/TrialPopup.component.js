@@ -7,8 +7,8 @@ import {
   TypeExperiments,
 } from '../../../context/DefaultState'
 import {BASELINE_LABEL} from '../../../constants'
-import Icon from '../../Icon/Icon.component'
-import {trialInfoLink} from '../../../config'
+// import Icon from '../../Icon/Icon.component'
+// import {trialInfoLink} from '../../../config'
 
 import style from './TrialPopup.module.scss'
 
@@ -21,7 +21,7 @@ type TypeProps = {
   baselineClick: () => {},
 }
 
-const ICON_COLOR = '#f45266'
+// const ICON_COLOR = '#f45266'
 
 export const TrialPopup = (props: TypeProps) => {
   const {hoveredTrial, activeExperiment, experiments} = props
@@ -69,14 +69,14 @@ export const TrialPopup = (props: TypeProps) => {
       {experiment && (
         <h5 className={style.trialName}>
           {`${experiment.displayName}-${hoveredTrial.trial.number}`}
-          <a target="_blank" rel="noopener noreferrer" href={trialInfoLink}>
+          {/* <a target="_blank" rel="noopener noreferrer" href={trialInfoLink}>
             <Icon
               icon="help"
               width={20}
               color={ICON_COLOR}
               cssClass={style.nameIcon}
             />
-          </a>
+          </a> */}
         </h5>
       )}
       {renderLables()}

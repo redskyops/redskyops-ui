@@ -11,6 +11,12 @@ describe('Component: MetricParameterChart', () => {
     metricsList: ['duration', 'cost'],
     parametersList: ['cpu', 'memory'],
     labelsList: ['best'],
+    metricsRanges: {
+      cost: {min: 0, max: 100, rangeMin: 0, rangeMax: 100},
+      duration: {min: 0, max: 200, rangeMin: 0, rangeMax: 200},
+      cpu: {min: 0, max: 500, rangeMin: 0, rangeMax: 400},
+      memory: {min: 0, max: 100, rangeMin: 0, rangeMax: 1000},
+    },
     onMetricChange: jest.fn(),
     onParameterChange: jest.fn(),
     selectTrialHandler: jest.fn(),

@@ -1,4 +1,5 @@
 import React from 'react'
+import * as d3 from 'd3'
 
 import {connectWithState} from '../../../context/StateContext'
 import useApiCallEffect from '../../../hooks/useApiCallEffect'
@@ -70,10 +71,55 @@ export const ExperimentDetails = (props: Props) => {
 
   const trialsRequestSuccess = ({trials}) => {
     const labelsList = getAllLabelsFromTrials(trials)
+
+    let metricsRanges = {}
+    if (activeExperiment && Array.isArray(activeExperiment.metricsList)) {
+      metricsRanges = activeExperiment.metricsList.reduce((acc, key) => {
+        const [rangeMin, rangeMax] = d3.extent(
+          trials
+            .filter(t => t.status === 'completed')
+            .map(t => (t.values || []).find(v => v.metricName === key).value),
+        )
+        return {
+          ...acc,
+          [key]: {
+            rangeMin: rangeMin || null,
+            rangeMax: rangeMax || null,
+            min: 0,
+            max: rangeMax,
+          },
+        }
+      }, {})
+
+      if (activeExperiment && Array.isArray(activeExperiment.parametersList)) {
+        metricsRanges = activeExperiment.parametersList.reduce((acc, key) => {
+          const [rangeMin, rangeMax] = d3.extent(
+            trials
+              .filter(t => t.status === 'completed')
+              .map(
+                t =>
+                  (t.assignments || []).find(v => v.parameterName === key)
+                    .value,
+              ),
+          )
+          return {
+            ...acc,
+            [key]: {
+              rangeMin: rangeMin || null,
+              rangeMax: rangeMax || null,
+              min: 0,
+              max: rangeMax,
+            },
+          }
+        }, metricsRanges)
+      }
+    }
+
     updateState({
       activeExperiment: {
         ...activeExperiment,
         labelsList,
+        metricsRanges,
         isLoading: false,
       },
       trials,
@@ -349,6 +395,43 @@ export const ExperimentDetails = (props: Props) => {
     })
   }
 
+  const onMetricRangeChange = ({metric, range}) => {
+    updateState({
+      activeExperiment: {
+        ...activeExperiment,
+        metricsRanges: {
+          ...activeExperiment.metricsRanges,
+          [metric]: {
+            ...activeExperiment.metricsRanges[metric],
+            ...range,
+          },
+        },
+      },
+    })
+  }
+
+  const onTabChange = index => {
+    updateState({
+      activeExperiment: {
+        ...activeExperiment,
+        tab: index,
+        metricsRanges: Object.keys(activeExperiment.metricsRanges).reduce(
+          (acc, key) => {
+            return {
+              ...acc,
+              [key]: {
+                ...activeExperiment.metricsRanges[key],
+                min: 0,
+                max: activeExperiment.metricsRanges[key].rangeMax,
+              },
+            }
+          },
+          {},
+        ),
+      },
+    })
+  }
+
   if (!activeExperiment) {
     return (
       <div className={style.expDetails} data-dom-id="exp-details-select">
@@ -393,14 +476,18 @@ export const ExperimentDetails = (props: Props) => {
     const {metricParameterChart} = activeExperiment
 
     return (
-      <Tabs>
+      <Tabs onTabChange={onTabChange}>
         <div data-title="EXPERIMENT RESULTS">
           <ExperimentResults
             selectTrialHandler={selectTrial}
             hoverTrialHandler={hoverTrial}
             filterChangeHandler={filterChange}
           />
-          <TrialsStatistics trials={trials} />
+          <TrialsStatistics
+            trials={trials}
+            activeExperiment={activeExperiment}
+            onSliderChange={onMetricRangeChange}
+          />
         </div>
         <div data-title="PARAMETER DRILLDOWN">
           <MetricParameterChart
@@ -425,6 +512,12 @@ export const ExperimentDetails = (props: Props) => {
             selectTrialHandler={selectTrial}
             hoverTrialHandler={hoverTrial}
             filterChangeHandler={filterChange}
+            metricsRanges={activeExperiment.metricsRanges}
+          />
+          <TrialsStatistics
+            trials={trials}
+            activeExperiment={activeExperiment}
+            onSliderChange={onMetricRangeChange}
           />
         </div>
       </Tabs>

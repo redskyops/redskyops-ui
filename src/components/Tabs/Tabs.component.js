@@ -4,6 +4,7 @@ import style from './Tabs.module.scss'
 
 type TypeProps = {
   children: React.ChildrenArray<React.Element>,
+  onTabChange?: () => {},
 }
 
 export const Tabs = (props: TypeProps) => {
@@ -12,6 +13,7 @@ export const Tabs = (props: TypeProps) => {
   const btnClick = index => e => {
     e.preventDefault()
     setIndex(index)
+    typeof props.onTabChange === 'function' && props.onTabChange(index)
   }
   return (
     <div className={style.tabs}>

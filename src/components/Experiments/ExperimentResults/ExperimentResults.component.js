@@ -55,13 +55,29 @@ export const ExperimentResults = (props: TypeProps) => {
     numOfMertics: activeExperiment.metricsList.length,
     labelsFilter: activeExperiment.labelsFilter,
     xAxisMetricName: activeExperiment.xAxisMetric,
-    xAxisMinValue: 0,
-    yAxisMinValue: 0,
+    xAxisRange: {
+      min: activeExperiment.metricsRanges[activeExperiment.xAxisMetric].min,
+      max: activeExperiment.metricsRanges[activeExperiment.xAxisMetric].max,
+    },
+    xAxisMinValue:
+      activeExperiment.metricsRanges[activeExperiment.xAxisMetric].min,
     ...(numOfMertics >= 2 && {
       yAxisMetricName: activeExperiment.yAxisMetric,
+      yAxisRange: {
+        min: activeExperiment.metricsRanges[activeExperiment.yAxisMetric].min,
+        max: activeExperiment.metricsRanges[activeExperiment.yAxisMetric].max,
+      },
+      yAxisMinValue:
+        activeExperiment.metricsRanges[activeExperiment.yAxisMetric].min,
     }),
     ...(numOfMertics >= 3 && {
       zAxisMetricName: activeExperiment.zAxisMetric,
+      zAxisRange: {
+        min: activeExperiment.metricsRanges[activeExperiment.zAxisMetric].min,
+        max: activeExperiment.metricsRanges[activeExperiment.zAxisMetric].max,
+      },
+      zAxisMinValue:
+        activeExperiment.metricsRanges[activeExperiment.zAxisMetric].min,
     }),
   }
 

@@ -10,7 +10,7 @@
   background-color: $color-5;
   height: 1px;
   margin: 0 auto;
-  width: 50%;
+  width: 100%;
 }
 
 .items {
@@ -46,5 +46,10 @@
 }
 
 .icon {
+  margin-bottom: $size-2x;
+}
+
+.sliderCaption {
+  font-weight: bold;
   margin-bottom: $size-2x;
 }

@@ -1,5 +1,5 @@
 import React from 'react'
-import {mount} from 'enzyme'
+import {shallow, mount} from 'enzyme'
 
 import {ExperimentDetails} from './ExperimentDetails.component'
 import expStub from '../../../services/_stubs/exp-data'
@@ -16,6 +16,7 @@ jest.mock('../../Tabs/Tabs.component')
 jest.mock('../MetricParameterChart/MetricParameterChart.component')
 jest.mock('../Labels/Labels.component')
 jest.mock('../TrialPopup/TrialPopup.component')
+jest.mock('../TrialsStatistics/TrialsStatistics.component')
 
 describe('Component: ExperimentsDetails', () => {
   const expService = new ExperimentsService()
@@ -26,6 +27,12 @@ describe('Component: ExperimentsDetails', () => {
       metricsList: ['cost', 'duration'],
       parametersList: ['cpu', 'memory'],
       labelsList: ['best'],
+      metricsRanges: {
+        cost: {min: 0, max: 100, rangeMin: 0, rangeMax: 100},
+        duration: {min: 0, max: 200, rangeMin: 0, rangeMax: 200},
+        cpu: {min: 0, max: 500, rangeMin: 0, rangeMax: 400},
+        memory: {min: 0, max: 100, rangeMin: 0, rangeMax: 1000},
+      },
     },
     experiments: {
       list: expService.addIdsToExperiments(expStub).experiments,
@@ -52,7 +59,7 @@ describe('Component: ExperimentsDetails', () => {
   })
 
   it('should render ExperimentDetails', () => {
-    wrapper = mount(<ExperimentDetails {...props} />)
+    wrapper = shallow(<ExperimentDetails {...props} />)
     expect(wrapper).toHaveLength(1)
     wrapper.unmount()
   })
@@ -62,7 +69,7 @@ describe('Component: ExperimentsDetails', () => {
       ...props,
       activeExperiment: null,
     }
-    wrapper = mount(<ExperimentDetails {...localProps} />)
+    wrapper = shallow(<ExperimentDetails {...localProps} />)
     expect(wrapper.find('[data-dom-id="exp-details-select"]')).toHaveLength(1)
     wrapper.unmount()
   })
@@ -80,7 +87,7 @@ describe('Component: ExperimentsDetails', () => {
     }
     localProps.experiments.list.push({...props.experiments.list[0]})
     localProps.experiments.list[localProps.activeExperiment.index].metrics = []
-    wrapper = mount(<ExperimentDetails {...localProps} />)
+    wrapper = shallow(<ExperimentDetails {...localProps} />)
     expect(wrapper.find('[data-dom-id="exp-details-no-metrics"]')).toHaveLength(
       1,
     )
@@ -92,7 +99,7 @@ describe('Component: ExperimentsDetails', () => {
       ...props,
       trials: [],
     }
-    wrapper = mount(<ExperimentDetails {...localProps} />)
+    wrapper = shallow(<ExperimentDetails {...localProps} />)
     expect(wrapper.find('[data-dom-id="exp-details-no-trials"]')).toHaveLength(
       1,
     )
@@ -100,7 +107,7 @@ describe('Component: ExperimentsDetails', () => {
   })
 
   it('should ExperimentResults component with right props', () => {
-    wrapper = mount(<ExperimentDetails {...props} />)
+    wrapper = shallow(<ExperimentDetails {...props} />)
     const resultComp = wrapper.find('ExperimentResults')
     expect(resultComp).toHaveLength(1)
     const resultsProps = resultComp.props()
@@ -110,12 +117,43 @@ describe('Component: ExperimentsDetails', () => {
   })
 
   it('should render trials statistics', () => {
-    wrapper = mount(<ExperimentDetails {...props} />)
-    expect(wrapper.find('TrialsStatistics')).toHaveLength(1)
-    expect(wrapper.find('TrialsStatistics').props()).toHaveProperty(
-      'trials',
-      props.trials,
+    wrapper = shallow(<ExperimentDetails {...props} />)
+    expect(wrapper.find('TrialsStatistics')).toHaveLength(2)
+    const statisticsProps = wrapper
+      .find('TrialsStatistics')
+      .first()
+      .props()
+    expect(statisticsProps).toHaveProperty('trials', props.trials)
+    expect(statisticsProps).toHaveProperty(
+      'activeExperiment',
+      props.activeExperiment,
     )
+    expect(typeof statisticsProps.onSliderChange).toBe('function')
+    wrapper.unmount()
+  })
+
+  it('should update state on slider change', () => {
+    wrapper = shallow(<ExperimentDetails {...props} />)
+    expect(wrapper.find('TrialsStatistics')).toHaveLength(2)
+    const statisticsProps = wrapper
+      .find('TrialsStatistics')
+      .first()
+      .props()
+    statisticsProps.onSliderChange({metric: 'cost', range: {min: 5, max: 20}})
+    expect(props.updateState).toHaveBeenCalledTimes(1)
+    expect(props.updateState.mock.calls[0][0]).toEqual({
+      activeExperiment: {
+        ...props.activeExperiment,
+        metricsRanges: {
+          ...props.activeExperiment.metricsRanges,
+          cost: {
+            ...props.activeExperiment.metricsRanges.cost,
+            min: 5,
+            max: 20,
+          },
+        },
+      },
+    })
     wrapper.unmount()
   })
 
@@ -131,7 +169,7 @@ describe('Component: ExperimentsDetails', () => {
         isLoading: true,
       },
     }
-    wrapper = mount(<ExperimentDetails {...localProps} />)
+    wrapper = shallow(<ExperimentDetails {...localProps} />)
     expect(expService.getTrialsFactory).toHaveBeenCalledTimes(1)
     expect(expService.getTrialsFactory).toHaveBeenCalledWith({
       name: localProps.experiments.list[0].id,
@@ -139,7 +177,7 @@ describe('Component: ExperimentsDetails', () => {
     wrapper.unmount()
   })
 
-  it('should update state when trials are loaded', async done => {
+  it('should update state and set metrics ranges when trials are loaded', async done => {
     expService.getTrialsFactory.mockImplementationOnce(() => [
       () => Promise.resolve(trialsStub),
       () => {},
@@ -154,11 +192,37 @@ describe('Component: ExperimentsDetails', () => {
     wrapper = await mount(<ExperimentDetails {...localProps} />)
     setImmediate(() => {
       expect(localProps.updateState).toHaveBeenCalledTimes(1)
-      expect(localProps.updateState.mock.calls[0][0]).toMatchObject({
+      expect(localProps.updateState.mock.calls[0][0]).toEqual({
         trials: trialsStub.trials,
         activeExperiment: {
           ...props.activeExperiment,
           isLoading: false,
+          metricsRanges: {
+            cost: {
+              max: 96,
+              min: 0,
+              rangeMax: 96,
+              rangeMin: 3,
+            },
+            cpu: {
+              max: 3935,
+              min: 0,
+              rangeMax: 3935,
+              rangeMin: 100,
+            },
+            duration: {
+              max: 131,
+              min: 0,
+              rangeMax: 131,
+              rangeMin: 1,
+            },
+            memory: {
+              max: 4000,
+              min: 0,
+              rangeMax: 4000,
+              rangeMin: 500,
+            },
+          },
         },
       })
       wrapper.unmount()
@@ -166,8 +230,8 @@ describe('Component: ExperimentsDetails', () => {
     })
   })
 
-  it('should render MetricParameterChart component', async () => {
-    wrapper = await mount(<ExperimentDetails {...props} />)
+  it('should render MetricParameterChart component', () => {
+    wrapper = shallow(<ExperimentDetails {...props} />)
     expect(wrapper.find('MetricParameterChart')).toHaveLength(1)
     let chartProps = wrapper.find('MetricParameterChart').props()
     expect(chartProps).toHaveProperty('trials', props.trials)
@@ -192,8 +256,8 @@ describe('Component: ExperimentsDetails', () => {
     wrapper.unmount()
   })
 
-  it('should update change when metric changed in MetricParameterChart', async () => {
-    wrapper = await mount(<ExperimentDetails {...props} />)
+  it('should update change when metric changed in MetricParameterChart', () => {
+    wrapper = shallow(<ExperimentDetails {...props} />)
     expect(wrapper.find('MetricParameterChart')).toHaveLength(1)
     wrapper.find('MetricParameterChart').prop('onMetricChange')({
       item: {value: 'duration'},
@@ -234,8 +298,8 @@ describe('Component: ExperimentsDetails', () => {
     wrapper.unmount()
   })
 
-  it('should update state when parameter changed in MetricParameterChart', async () => {
-    wrapper = await mount(<ExperimentDetails {...props} />)
+  it('should update state when parameter changed in MetricParameterChart', () => {
+    wrapper = shallow(<ExperimentDetails {...props} />)
     expect(wrapper.find('MetricParameterChart')).toHaveLength(1)
 
     wrapper.find('MetricParameterChart').prop('onParameterChange')({
@@ -278,8 +342,8 @@ describe('Component: ExperimentsDetails', () => {
     wrapper.unmount()
   })
 
-  it('should update state when trial is selected in MetricParameterChart', async () => {
-    wrapper = await mount(<ExperimentDetails {...props} />)
+  it('should update state when trial is selected in MetricParameterChart', () => {
+    wrapper = shallow(<ExperimentDetails {...props} />)
     expect(wrapper.find('MetricParameterChart')).toHaveLength(1)
     wrapper.find('MetricParameterChart').prop('selectTrialHandler')({
       index: 1,
@@ -308,8 +372,8 @@ describe('Component: ExperimentsDetails', () => {
     wrapper.unmount()
   })
 
-  it('should update state filter if change in one of chart components', async () => {
-    wrapper = await mount(<ExperimentDetails {...props} />)
+  it('should update state filter if change in one of chart components', () => {
+    wrapper = shallow(<ExperimentDetails {...props} />)
     expect(wrapper.find('MetricParameterChart')).toHaveLength(1)
     wrapper.find('MetricParameterChart').prop('filterChangeHandler')({
       indexs: [0],
@@ -326,12 +390,12 @@ describe('Component: ExperimentsDetails', () => {
     wrapper.unmount()
   })
 
-  it('should render trial detail if active trial is selected', async () => {
+  it('should render trial detail if active trial is selected', () => {
     const activeTrial = {
       index: 2,
       trial: trialsStub.trials[2],
     }
-    wrapper = await mount(
+    wrapper = shallow(
       <ExperimentDetails {...props} activeTrial={activeTrial} />,
     )
     expect(wrapper.find('TrialDetails')).toHaveLength(1)
@@ -344,12 +408,12 @@ describe('Component: ExperimentsDetails', () => {
     wrapper.unmount()
   })
 
-  it('should update state to clear active trial', async () => {
+  it('should update state to clear active trial', () => {
     const activeTrial = {
       index: 2,
       trial: trialsStub.trials[2],
     }
-    wrapper = await mount(
+    wrapper = shallow(
       <ExperimentDetails {...props} activeTrial={activeTrial} />,
     )
     expect(wrapper.find('TrialDetails')).toHaveLength(1)
@@ -361,8 +425,8 @@ describe('Component: ExperimentsDetails', () => {
     wrapper.unmount()
   })
 
-  it('should render TrialPopup component', async () => {
-    wrapper = await mount(<ExperimentDetails {...props} />)
+  it('should render TrialPopup component', () => {
+    wrapper = shallow(<ExperimentDetails {...props} />)
     expect(wrapper.find('TrialPopup')).toHaveLength(1)
     expect(typeof wrapper.find('TrialPopup').prop('mouseOver')).toBe('function')
     expect(typeof wrapper.find('TrialPopup').prop('mouseOut')).toBe('function')
@@ -372,9 +436,9 @@ describe('Component: ExperimentsDetails', () => {
     wrapper.unmount()
   })
 
-  it('should hide trial popup after delay for mouse sensitivity', async () => {
+  it('should hide trial popup after delay for mouse sensitivity', () => {
     jest.useFakeTimers()
-    wrapper = mount(<ExperimentDetails {...props} />)
+    wrapper = shallow(<ExperimentDetails {...props} />)
     wrapper.find('ExperimentResults').prop('hoverTrialHandler')({
       trial: null,
     })
@@ -387,9 +451,9 @@ describe('Component: ExperimentsDetails', () => {
     jest.useRealTimers()
   })
 
-  it('should top hiding trial popup if it hovered', async () => {
+  it('should top hiding trial popup if it hovered', () => {
     const clearIntMock = jest.spyOn(window, 'clearInterval')
-    wrapper = await mount(<ExperimentDetails {...props} />)
+    wrapper = shallow(<ExperimentDetails {...props} />)
     expect(wrapper.find('TrialPopup')).toHaveLength(1)
     wrapper.find('TrialPopup').prop('mouseOver')()
     expect(clearIntMock).toHaveBeenCalledTimes(1)
@@ -397,9 +461,9 @@ describe('Component: ExperimentsDetails', () => {
     clearIntMock.mockRestore()
   })
 
-  it('should trigger hiding of popup if popup mouse out', async () => {
+  it('should trigger hiding of popup if popup mouse out', () => {
     const setTimeMock = jest.spyOn(window, 'setTimeout')
-    wrapper = await mount(<ExperimentDetails {...props} />)
+    wrapper = shallow(<ExperimentDetails {...props} />)
     expect(wrapper.find('TrialPopup')).toHaveLength(1)
     wrapper.find('TrialPopup').prop('mouseOut')()
     expect(setTimeMock).toHaveBeenCalledTimes(1)
@@ -407,8 +471,8 @@ describe('Component: ExperimentsDetails', () => {
     setTimeMock.mockRestore()
   })
 
-  it('should update state and set ADD new label flag if set baseline clicked in trial popup', async () => {
-    wrapper = await mount(<ExperimentDetails {...props} />)
+  it('should update state and set ADD new label flag if set baseline clicked in trial popup', () => {
+    wrapper = shallow(<ExperimentDetails {...props} />)
     expect(wrapper.find('TrialPopup')).toHaveLength(1)
     wrapper.find('TrialPopup').prop('baselineClick')(true, props.trials[3])()
     expect(props.updateState).toHaveBeenCalledTimes(1)
@@ -423,7 +487,7 @@ describe('Component: ExperimentsDetails', () => {
     wrapper.unmount()
   })
 
-  it('should update state and set REMOVE label flag if set baseline clicked in trial popup', async () => {
+  it('should update state and set REMOVE label flag if set baseline clicked in trial popup', () => {
     const localProps = {
       ...props,
       trials: [...props.trials],
@@ -433,7 +497,7 @@ describe('Component: ExperimentsDetails', () => {
       labels: {[BASELINE_LABEL]: true},
     }
 
-    wrapper = await mount(<ExperimentDetails {...localProps} />)
+    wrapper = shallow(<ExperimentDetails {...localProps} />)
     expect(wrapper.find('TrialPopup')).toHaveLength(1)
     wrapper.find('TrialPopup').prop('baselineClick')(true, props.trials[3])()
     expect(props.updateState).toHaveBeenCalledTimes(1)
@@ -451,7 +515,7 @@ describe('Component: ExperimentsDetails', () => {
     wrapper.unmount()
   })
 
-  it('should call back end to remove current baseline trial if new one selected', async () => {
+  it('should call back end to remove current baseline trial if new one selected', () => {
     expService.postLabelToTrialFactory.mockImplementationOnce(() => [
       () => Promise.resolve({}),
       () => {},
@@ -468,7 +532,7 @@ describe('Component: ExperimentsDetails', () => {
         baselineDelNumber: props.trials[5].number,
       },
     }
-    wrapper = await mount(<ExperimentDetails {...localProps} />)
+    wrapper = shallow(<ExperimentDetails {...localProps} />)
     expect(expService.postLabelToTrialFactory).toHaveBeenCalledTimes(1)
     expect(expService.postLabelToTrialFactory.mock.calls[0][0]).toEqual({
       experimentId: props.experiments.list[props.activeExperiment.index].id,
@@ -478,7 +542,7 @@ describe('Component: ExperimentsDetails', () => {
     wrapper.unmount()
   })
 
-  it('should update state on successful baseline label delete', async done => {
+  it('should update state on successful baseline label delete', done => {
     expService.postLabelToTrialFactory.mockImplementationOnce(() => [
       () => Promise.resolve({}),
       () => {},
@@ -495,7 +559,7 @@ describe('Component: ExperimentsDetails', () => {
         baselineDelNumber: props.trials[5].number,
       },
     }
-    wrapper = await mount(<ExperimentDetails {...localProps} />)
+    wrapper = mount(<ExperimentDetails {...localProps} />)
     expect(expService.postLabelToTrialFactory).toHaveBeenCalledTimes(1)
     setImmediate(() => {
       expect(props.updateState).toHaveBeenCalledTimes(1)
@@ -513,7 +577,7 @@ describe('Component: ExperimentsDetails', () => {
     })
   })
 
-  it('should update state and remove popup on successful baseline label delete', async done => {
+  it('should update state and remove popup on successful baseline label delete', done => {
     expService.postLabelToTrialFactory.mockImplementationOnce(() => [
       () => Promise.resolve({}),
       () => {},
@@ -530,7 +594,7 @@ describe('Component: ExperimentsDetails', () => {
         baselineDelNumber: props.trials[5].number,
       },
     }
-    wrapper = await mount(<ExperimentDetails {...localProps} />)
+    wrapper = mount(<ExperimentDetails {...localProps} />)
     expect(expService.postLabelToTrialFactory).toHaveBeenCalledTimes(1)
     setImmediate(() => {
       expect(props.updateState).toHaveBeenCalledTimes(1)
@@ -549,7 +613,7 @@ describe('Component: ExperimentsDetails', () => {
     })
   })
 
-  it('should call back end to ADD current baseline trial', async () => {
+  it('should call back end to ADD current baseline trial', () => {
     expService.postLabelToTrialFactory.mockImplementationOnce(() => [
       () => Promise.resolve({}),
       () => {},
@@ -566,7 +630,7 @@ describe('Component: ExperimentsDetails', () => {
         baselineDelNumber: -1,
       },
     }
-    wrapper = await mount(<ExperimentDetails {...localProps} />)
+    wrapper = shallow(<ExperimentDetails {...localProps} />)
     expect(expService.postLabelToTrialFactory).toHaveBeenCalledTimes(1)
     expect(expService.postLabelToTrialFactory.mock.calls[0][0]).toEqual({
       experimentId: props.experiments.list[props.activeExperiment.index].id,
@@ -576,7 +640,7 @@ describe('Component: ExperimentsDetails', () => {
     wrapper.unmount()
   })
 
-  it('should update state on successful baseline label post', async done => {
+  it('should update state on successful baseline label post', done => {
     expService.postLabelToTrialFactory.mockImplementationOnce(() => [
       () => Promise.resolve({}),
       () => {},
@@ -593,7 +657,7 @@ describe('Component: ExperimentsDetails', () => {
         baselineDelNumber: -1,
       },
     }
-    wrapper = await mount(<ExperimentDetails {...localProps} />)
+    wrapper = mount(<ExperimentDetails {...localProps} />)
     expect(expService.postLabelToTrialFactory).toHaveBeenCalledTimes(1)
     setImmediate(() => {
       expect(props.updateState).toHaveBeenCalledTimes(1)
@@ -612,7 +676,7 @@ describe('Component: ExperimentsDetails', () => {
     })
   })
 
-  it('should update state in case of error in baseline label backend calls', async done => {
+  it('should update state in case of error in baseline label backend calls', done => {
     expService.postLabelToTrialFactory.mockImplementationOnce(() => [
       () => Promise.reject({message: 'test_error'}),
       () => {},
@@ -629,7 +693,7 @@ describe('Component: ExperimentsDetails', () => {
         baselineDelNumber: -1,
       },
     }
-    wrapper = await mount(<ExperimentDetails {...localProps} />)
+    wrapper = mount(<ExperimentDetails {...localProps} />)
     setImmediate(() => {
       expect(props.updateState).toHaveBeenCalledTimes(1)
       expect(props.updateState.mock.calls[0][0].labels).toEqual({
