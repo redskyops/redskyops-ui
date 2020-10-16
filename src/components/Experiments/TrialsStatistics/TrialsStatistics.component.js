@@ -119,6 +119,8 @@ export const TrialsStatistics = ({
                 max={activeExperiment.metricsRanges[key].max}
                 rangeMin={0}
                 rangeMax={activeExperiment.metricsRanges[key].rangeMax}
+                filteredMin={activeExperiment.metricsRanges[key].filteredMin}
+                filteredMax={activeExperiment.metricsRanges[key].filteredMax}
                 onChange={onChange(key)}
               />
             </li>

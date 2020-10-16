@@ -87,6 +87,8 @@ export const ExperimentDetails = (props: Props) => {
             rangeMax: rangeMax || null,
             min: 0,
             max: rangeMax,
+            filteredMin: rangeMin,
+            filteredMax: rangeMax,
           },
         }
       }, {})

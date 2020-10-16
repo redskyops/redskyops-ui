@@ -16,6 +16,7 @@ $btn-size: 30px;
   padding-top: 13px;
   position: relative;
   width: 100%;
+  // background-color: #ff0;
 }
 
 .line {
@@ -23,6 +24,15 @@ $btn-size: 30px;
   display: block;
   height: 3px;
   width: 100%;
+}
+
+.lineDark {
+  background-color: $border-dark-gray;
+  display: block;
+  height: 3px;
+  position: absolute;
+  top: 13px;
+  width: 2px;
 }
 
 .btn {
@@ -38,6 +48,7 @@ $btn-size: 30px;
   position: absolute;
   top: 0;
   width: 30px;
+  opacity: .3;
 
   &.left {
     left: 0;

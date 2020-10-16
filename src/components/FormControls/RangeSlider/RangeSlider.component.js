@@ -7,6 +7,8 @@ type TypeProps = {
   max: number,
   rangeMin: number,
   rangeMax: number,
+  filteredMin: number,
+  filteredMax: number,
   onChange: () => {},
 }
 
@@ -15,7 +17,15 @@ const RIGHT = 'R'
 const BTN_WIDTH = 30
 
 export const RangeSlider = (props: TypeProps) => {
-  const {min, max, rangeMin, rangeMax, onChange} = props
+  const {
+    min,
+    max,
+    rangeMin,
+    rangeMax,
+    filteredMin,
+    filteredMax,
+    onChange,
+  } = props
   const [isDragging, setIsSragging] = useState(null)
   const [mouseClickOffset, setMouseClickOffset] = useState(0)
   const [sliderRect, setSliderRect] = useState({
@@ -31,6 +41,7 @@ export const RangeSlider = (props: TypeProps) => {
   const leftRef = useRef()
   const rightRef = useRef()
   const sliderRef = useRef()
+  const filteredRef = useRef()
 
   useEffect(() => {
     setSliderRect(sliderRef.current.getBoundingClientRect())
@@ -49,6 +60,16 @@ export const RangeSlider = (props: TypeProps) => {
     _setMinValue(Math.round(min))
     _setMaxValue(Math.round(max))
   }, [min, max])
+
+  useEffect(() => {
+    const rect = sliderRef.current.getBoundingClientRect()
+    const width = rect.width
+    const leftPos = (width * (filteredMin - rangeMin)) / (rangeMax - rangeMin)
+    const rightPos = (width * (filteredMax - rangeMin)) / (rangeMax - rangeMin)
+    console.log(Math.round(rightPos - leftPos))
+    filteredRef.current.style.left = `${Math.round(leftPos)}px`
+    filteredRef.current.style.width = `${Math.round(rightPos - leftPos)}px`
+  }, [filteredMin, filteredMax])
 
   const dragStart = side => e => {
     setIsSragging(side)
@@ -120,6 +141,7 @@ export const RangeSlider = (props: TypeProps) => {
     <div className={style.rangeSlider} onMouseMove={mouseMove}>
       <div className={style.sliderInner} ref={sliderRef}>
         <div className={style.line} />
+        <div className={style.lineDark} ref={filteredRef} />
         <button
           className={`${style.btn} ${style.left}`}
           ref={leftRef}
