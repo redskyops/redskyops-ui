@@ -16,7 +16,6 @@ $btn-size: 30px;
   padding-top: 13px;
   position: relative;
   width: 100%;
-  // background-color: #ff0;
 }
 
 .line {
@@ -27,6 +26,7 @@ $btn-size: 30px;
 }
 
 .lineDark {
+  @include transition('left, width', .3s);
   background-color: $border-dark-gray;
   display: block;
   height: 3px;
@@ -36,7 +36,6 @@ $btn-size: 30px;
 }
 
 .btn {
-  @include transition('left', .2);
   align-items: center;
   background-color: $white;
   border: 1px solid $border-dark-gray;
@@ -48,7 +47,6 @@ $btn-size: 30px;
   position: absolute;
   top: 0;
   width: 30px;
-  opacity: .3;
 
   &.left {
     left: 0;

@@ -57,8 +57,8 @@ export const RangeSlider = (props: TypeProps) => {
     const rightPos = (width * (max - rangeMin)) / (rangeMax - rangeMin)
     leftRef.current.style.left = `${leftPos}px`
     rightRef.current.style.left = `${rightPos}px`
-    _setMinValue(Math.round(min))
-    _setMaxValue(Math.round(max))
+    _setMinValue(Math.floor(min))
+    _setMaxValue(Math.ceil(max))
   }, [min, max])
 
   useEffect(() => {
@@ -66,8 +66,8 @@ export const RangeSlider = (props: TypeProps) => {
     const width = rect.width
     const leftPos = (width * (filteredMin - rangeMin)) / (rangeMax - rangeMin)
     const rightPos = (width * (filteredMax - rangeMin)) / (rangeMax - rangeMin)
-    filteredRef.current.style.left = `${Math.round(leftPos)}px`
-    filteredRef.current.style.width = `${Math.round(rightPos - leftPos)}px`
+    filteredRef.current.style.left = `${Math.ceil(leftPos)}px`
+    filteredRef.current.style.width = `${Math.ceil(rightPos - leftPos)}px`
   }, [filteredMin, filteredMax])
 
   const dragStart = side => e => {
@@ -109,7 +109,7 @@ export const RangeSlider = (props: TypeProps) => {
         xPos = rightXPos
       }
       leftRef.current.style.left = `${xPos}px`
-      const _minValue = Math.round(
+      const _minValue = Math.floor(
         (rangeMax - rangeMin) * (xPos / sliderRect.width),
       )
       _setMinValue(_minValue)
@@ -129,7 +129,7 @@ export const RangeSlider = (props: TypeProps) => {
         xPos = leftXPos
       }
       rightRef.current.style.left = `${xPos}px`
-      const _maxValue = Math.round(
+      const _maxValue = Math.ceil(
         (rangeMax - rangeMin) * (xPos / sliderRect.width),
       )
       _setMaxValue(_maxValue)
