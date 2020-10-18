@@ -66,7 +66,6 @@ export const RangeSlider = (props: TypeProps) => {
     const width = rect.width
     const leftPos = (width * (filteredMin - rangeMin)) / (rangeMax - rangeMin)
     const rightPos = (width * (filteredMax - rangeMin)) / (rangeMax - rangeMin)
-    console.log(Math.round(rightPos - leftPos))
     filteredRef.current.style.left = `${Math.round(leftPos)}px`
     filteredRef.current.style.width = `${Math.round(rightPos - leftPos)}px`
   }, [filteredMin, filteredMax])
@@ -100,7 +99,7 @@ export const RangeSlider = (props: TypeProps) => {
         rightRef.current.getBoundingClientRect().x -
         sliderRect.x
       let xPos =
-        window.scrollX + BTN_WIDTH + e.screenX - sliderRect.x - mouseClickOffset
+        window.scrollX + BTN_WIDTH + e.clientX - sliderRect.x - mouseClickOffset
 
       if (xPos < 0) {
         xPos = 0
@@ -122,7 +121,7 @@ export const RangeSlider = (props: TypeProps) => {
         leftRef.current.getBoundingClientRect().x +
         BTN_WIDTH -
         sliderRect.x
-      let xPos = window.scrollX + e.screenX - sliderRect.x - mouseClickOffset
+      let xPos = window.scrollX + e.clientX - sliderRect.x - mouseClickOffset
       if (xPos > sliderRect.width) {
         xPos = sliderRect.width
       }
