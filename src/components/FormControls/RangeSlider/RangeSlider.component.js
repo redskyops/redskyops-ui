@@ -141,26 +141,34 @@ export const RangeSlider = (props: TypeProps) => {
       <div className={style.sliderInner} ref={sliderRef}>
         <div className={style.line} />
         <div className={style.lineDark} ref={filteredRef} />
-        <button
+        <div
           className={`${style.btn} ${style.left}`}
           ref={leftRef}
+          role="button"
+          tabIndex={-1}
           onMouseDown={dragStart(LEFT)}
+          onFocus={() => {}}
+          onBlur={() => {}}
         >
           <span className={style.valueLabel}>{minValue}</span>
           <span className={style.btnIconLine} />
           <span className={style.btnIconLine} />
           <span className={style.btnIconLine} />
-        </button>
-        <button
+        </div>
+        <div
           className={`${style.btn} ${style.rigth}`}
           ref={rightRef}
+          role="button"
+          tabIndex={-1}
           onMouseDown={dragStart(RIGHT)}
+          onFocus={() => {}}
+          onBlur={() => {}}
         >
           <span className={style.valueLabel}>{maxValue}</span>
           <span className={style.btnIconLine} />
           <span className={style.btnIconLine} />
           <span className={style.btnIconLine} />
-        </button>
+        </div>
       </div>
     </div>
   )
