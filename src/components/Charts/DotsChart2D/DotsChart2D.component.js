@@ -185,7 +185,7 @@ export class DotsChart2D extends React.Component<
       yAxisMetricName,
       hoverTrialHandler,
     }) =>
-      function _circleOver(dataPoint) {
+      function _circleOver(_, dataPoint) {
         let xValue = 0
         switch (xAxisValueType) {
           case AXIS_TYPE.PARAMETER:
@@ -225,7 +225,7 @@ export class DotsChart2D extends React.Component<
       }
 
     const circleOut = ({activeTrial, hoverTrialHandler}) =>
-      function _circleOut(dataPoint) {
+      function _circleOut(_, dataPoint) {
         d3.select(this)
           .classed(style.active, false)
           .attr(
@@ -237,7 +237,7 @@ export class DotsChart2D extends React.Component<
       }
 
     const circleClick = selectTrialHandler =>
-      function _circleClick(dataPoint) {
+      function _circleClick(_, dataPoint) {
         selectTrialHandler({
           index: dataPoint.index,
           trial: dataPoint,
