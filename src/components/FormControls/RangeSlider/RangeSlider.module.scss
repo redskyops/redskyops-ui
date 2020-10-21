@@ -5,10 +5,19 @@
 $btn-size: 30px;
 
 .rangeSlider {
+  cursor: pointer;
   display: block;
   height: 30px;
   padding-left: $btn-size;
   padding-right: $btn-size;
+
+  // sass-lint:disable no-vendor-prefixes
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  // sass-lint:enable no-vendor-prefixes
+  user-select: none;
 }
 
 .sliderInner {
@@ -25,11 +34,21 @@ $btn-size: 30px;
   width: 100%;
 }
 
+.lineDark {
+  @include transition('left, width', .3s);
+  background-color: $border-dark-gray;
+  display: block;
+  height: 3px;
+  position: absolute;
+  top: 13px;
+  width: 2px;
+}
+
 .btn {
-  @include transition('left', .2);
   align-items: center;
   background-color: $white;
   border: 1px solid $border-dark-gray;
+  cursor: pointer;
   display: flex;
   flex-direction: row;
   height: 30px;
@@ -37,6 +56,7 @@ $btn-size: 30px;
   padding: 0 2px;
   position: absolute;
   top: 0;
+  user-select: none;
   width: 30px;
 
   &.left {
@@ -50,10 +70,12 @@ $btn-size: 30px;
 }
 
 .valueLabel {
+  cursor: pointer;
   font-size: 13px;
-  left: 0;
+  left: 50%;
   position: absolute;
   top: 30px;
+  transform: translateX(-50%);
 }
 
 .btnIconLine {
