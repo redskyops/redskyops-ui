@@ -40,4 +40,9 @@ describe('Icon component', () => {
     expect(wrapper.find('svg').props().style).toHaveProperty('--icon-color')
     expect(wrapper.find('svg').props().style['--icon-color']).toBe('#f00')
   })
+
+  it('should set alt property if passed as prop', () => {
+    wrapper.setProps({alt: 'test_alt'})
+    expect(wrapper.find('svg').props().alt).toBe('test_alt')
+  })
 })

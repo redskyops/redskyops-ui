@@ -199,24 +199,32 @@ describe('Component: ExperimentsDetails', () => {
           isLoading: false,
           metricsRanges: {
             cost: {
+              filteredMax: 96,
+              filteredMin: 3,
               max: 96,
               min: 0,
               rangeMax: 96,
               rangeMin: 3,
             },
             cpu: {
+              filteredMax: 3935,
+              filteredMin: 100,
               max: 3935,
               min: 0,
               rangeMax: 3935,
               rangeMin: 100,
             },
             duration: {
+              filteredMax: 131,
+              filteredMin: 1,
               max: 131,
               min: 0,
               rangeMax: 131,
               rangeMin: 1,
             },
             memory: {
+              filteredMax: 4000,
+              filteredMin: 500,
               max: 4000,
               min: 0,
               rangeMax: 4000,

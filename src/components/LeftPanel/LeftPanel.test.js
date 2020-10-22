@@ -128,4 +128,78 @@ describe('Component: LeftPanel', () => {
     })
     wrapper.unmount()
   })
+
+  it('should render link to home in help document route', () => {
+    wrapper = mount(
+      <Router location="/helpDocs" context={{}}>
+        <LeftPanel {...props} />
+      </Router>,
+    )
+    expect(wrapper.find('Link')).toHaveLength(1)
+    expect(wrapper.find('Link').prop('to')).toBe('/')
+    wrapper.unmount()
+  })
+
+  it('should render button to toggle panel visibility', () => {
+    wrapper = mount(
+      <Router>
+        <LeftPanel {...props} />
+      </Router>,
+    )
+    expect(wrapper.find('button[data-dom-id="panel-toggle"]')).toHaveLength(1)
+    expect(
+      typeof wrapper.find('button[data-dom-id="panel-toggle"]').prop('onClick'),
+    ).toBe('function')
+
+    wrapper.unmount()
+  })
+
+  it('should shuld hide panel if toggle button clicked', () => {
+    wrapper = mount(
+      <Router>
+        <LeftPanel {...props} />
+      </Router>,
+    )
+    expect(wrapper.find('button[data-dom-id="panel-toggle"] i').text()).toBe(
+      'keyboard_arrow_left',
+    )
+    wrapper.find('button[data-dom-id="panel-toggle"]').simulate('click')
+    expect(props.updateState).toHaveBeenCalledTimes(1)
+    expect(props.updateState.mock.calls[0][0]).toEqual({
+      leftPanel: {
+        ...props.leftPanel,
+        show: false,
+      },
+    })
+
+    wrapper.unmount()
+  })
+
+  it('should shuld open panel if toggle button clicked', () => {
+    const localProps = {
+      ...props,
+      leftPanel: {
+        ...props.leftPanel,
+        show: false,
+      },
+    }
+    wrapper = mount(
+      <Router>
+        <LeftPanel {...localProps} />
+      </Router>,
+    )
+    expect(wrapper.find('button[data-dom-id="panel-toggle"] i').text()).toBe(
+      'keyboard_arrow_right',
+    )
+    wrapper.find('button[data-dom-id="panel-toggle"]').simulate('click')
+    expect(props.updateState).toHaveBeenCalledTimes(1)
+    expect(props.updateState.mock.calls[0][0]).toEqual({
+      leftPanel: {
+        ...props.leftPanel,
+        show: true,
+      },
+    })
+
+    wrapper.unmount()
+  })
 })

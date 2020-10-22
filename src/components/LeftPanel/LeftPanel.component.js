@@ -79,7 +79,11 @@ export const LeftPanel = (props: TypeProps) => {
   )
   return (
     <div className={style.leftPanel}>
-      <button className={style.button} onClick={togglePanel}>
+      <button
+        className={style.button}
+        onClick={togglePanel}
+        data-dom-id="panel-toggle"
+      >
         <i className={`material-icons ${style.btnIcon}`}>
           {leftPanel.show ? 'keyboard_arrow_left' : 'keyboard_arrow_right'}
         </i>
