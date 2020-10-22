@@ -10,13 +10,44 @@ describe('Component: TrialsStatistics', () => {
     trials: trialsStub.trials,
     activeExperiment: {
       tab: 0,
-      metricsList: ['cost', 'duration'],
+      metricsList: ['cost', 'duration', 'cpu'],
       metricsRanges: {
-        cost: {min: 0, max: 100, rangeMin: 0, rangeMax: 100},
-        duration: {min: 0, max: 200, rangeMin: 0, rangeMax: 200},
-        cpu: {min: 0, max: 500, rangeMin: 0, rangeMax: 400},
-        memory: {min: 0, max: 100, rangeMin: 0, rangeMax: 1000},
+        cost: {
+          min: 0,
+          max: 100,
+          rangeMin: 0,
+          rangeMax: 100,
+          filteredMin: 0,
+          filteredMax: 100,
+        },
+        duration: {
+          min: 0,
+          max: 200,
+          rangeMin: 0,
+          rangeMax: 200,
+          filteredMin: 0,
+          filteredMax: 200,
+        },
+        cpu: {
+          min: 0,
+          max: 500,
+          rangeMin: 0,
+          rangeMax: 400,
+          filteredMin: 0,
+          filteredMax: 400,
+        },
+        memory: {
+          min: 0,
+          max: 100,
+          rangeMin: 0,
+          rangeMax: 1000,
+          filteredMin: 0,
+          filteredMax: 1000,
+        },
       },
+      xAxisMetric: 'cost',
+      yAxisMetric: 'duration',
+      zAxisMetric: 'cpu',
     },
     onSliderChange: jest.fn(),
   }
@@ -106,6 +137,71 @@ describe('Component: TrialsStatistics', () => {
       wrapper.find('[data-dom-id="statistics-failed-text"]').text(),
     ).toContain('Unstable Configurations')
     expect(wrapper.find('[data-dom-id="statistics-failed"]').text()).toBe(`0`)
+    wrapper.unmount()
+  })
+
+  it('should render sliders based on metricsList', () => {
+    wrapper = shallow(<TrialsStatistics {...props} />)
+    expect(wrapper.find('RangeSlider')).toHaveLength(
+      props.activeExperiment.metricsList.length,
+    )
+    wrapper.find('RangeSlider').forEach((slider, index) => {
+      expect(slider.props()).toMatchObject(
+        props.activeExperiment.metricsRanges[
+          props.activeExperiment.metricsList[index]
+        ],
+      )
+      expect(typeof slider.prop('onChange')).toBe('function')
+    })
+    wrapper.unmount()
+  })
+
+  it('should render sliders based on metric parameter axis selection ', () => {
+    const localProps = {
+      ...props,
+      activeExperiment: {
+        ...props.activeExperiment,
+        tab: 1,
+        metricParameterChart: {
+          metric: 'cost',
+          parameter: 'cpu',
+        },
+      },
+    }
+    wrapper = shallow(<TrialsStatistics {...localProps} />)
+    expect(wrapper.find('RangeSlider')).toHaveLength(2)
+    expect(
+      wrapper
+        .find('RangeSlider')
+        .at(0)
+        .props(),
+    ).toMatchObject(
+      props.activeExperiment.metricsRanges[
+        localProps.activeExperiment.metricParameterChart.metric
+      ],
+    )
+    expect(
+      typeof wrapper
+        .find('RangeSlider')
+        .at(0)
+        .prop('onChange'),
+    ).toBe('function')
+    expect(
+      wrapper
+        .find('RangeSlider')
+        .at(1)
+        .props(),
+    ).toMatchObject(
+      props.activeExperiment.metricsRanges[
+        localProps.activeExperiment.metricParameterChart.parameter
+      ],
+    )
+    expect(
+      typeof wrapper
+        .find('RangeSlider')
+        .at(1)
+        .prop('onChange'),
+    ).toBe('function')
     wrapper.unmount()
   })
 })

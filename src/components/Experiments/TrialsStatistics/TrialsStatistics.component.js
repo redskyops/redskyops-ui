@@ -100,20 +100,15 @@ export const TrialsStatistics = ({
         {slidersList.map((key, i) => {
           if (
             !activeExperiment.metricsRanges[key] ||
-            !activeExperiment.metricsRanges[key].rangeMax ||
-            !activeExperiment.metricsRanges[key].rangeMin
+            !('rangeMax' in activeExperiment.metricsRanges[key]) ||
+            !('rangeMin' in activeExperiment.metricsRanges[key])
           ) {
             return null
           }
 
           return (
             <li className={style.item} key={`${axisNames[i]}-${key}`}>
-              <div
-                data-dom-id="statistics-failed-text"
-                className={style.sliderCaption}
-              >
-                {key}
-              </div>
+              <div className={style.sliderCaption}>{key}</div>
               <RangeSlider
                 min={activeExperiment.metricsRanges[key].min}
                 max={activeExperiment.metricsRanges[key].max}
