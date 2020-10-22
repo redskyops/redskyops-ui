@@ -18,8 +18,7 @@ export const RangeIndicator = ({min, max, value, width = 200}: Props) => {
     .clamp(true)
 
   let indicatorWidth = xScale(value) * 100
-  if (indicatorWidth > 100) indicatorWidth = 100
-  if (indicatorWidth < 0) indicatorWidth = 0
+
   return (
     <div className={style.rangeIndicator} style={{width}}>
       <div className={style.bar} data-dom-id="range-bar">

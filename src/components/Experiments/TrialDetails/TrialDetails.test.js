@@ -22,6 +22,16 @@ describe('Component: TrialDetails', () => {
     wrapper.unmount()
   })
 
+  it('should render nothing if trial is not set', () => {
+    const localProps = {...props}
+    delete localProps.trial
+
+    wrapper = shallow(<TrialDetails {...localProps} />)
+    expect(wrapper).toHaveLength(1)
+    expect(wrapper.text()).toBe('')
+    wrapper.unmount()
+  })
+
   it('should render DisplayValue component for values', () => {
     wrapper = shallow(<TrialDetails {...props} />)
     expect(wrapper.find('.metricsCol ValueDisplay')).toHaveLength(2)
