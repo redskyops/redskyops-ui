@@ -156,6 +156,19 @@ describe('Component: TrialsStatistics', () => {
     wrapper.unmount()
   })
 
+  it('should render on slider if metrics list contains one slider', () => {
+    const localProps = {
+      ...props,
+      activeExperiment: {
+        ...props.activeExperiment,
+        metricsList: ['cost'],
+      },
+    }
+    wrapper = shallow(<TrialsStatistics {...localProps} />)
+    expect(wrapper.find('RangeSlider')).toHaveLength(1)
+    wrapper.unmount()
+  })
+
   it('should render sliders based on metric parameter axis selection ', () => {
     const localProps = {
       ...props,
@@ -202,6 +215,79 @@ describe('Component: TrialsStatistics', () => {
         .at(1)
         .prop('onChange'),
     ).toBe('function')
+    wrapper.unmount()
+  })
+
+  it('should not render sliders if neither metric nor parameter selected', () => {
+    const localProps = {
+      ...props,
+      activeExperiment: {
+        ...props.activeExperiment,
+        tab: 1,
+        metricParameterChart: null,
+      },
+    }
+    wrapper = shallow(<TrialsStatistics {...localProps} />)
+    expect(wrapper.find('RangeSlider')).toHaveLength(0)
+
+    wrapper.unmount()
+  })
+
+  it('should render sliders for metrics with valid rangeMax and rangeMin', () => {
+    const localProps = {
+      ...props,
+      activeExperiment: {
+        ...props.activeExperiment,
+        metricsRanges: {
+          ...props.activeExperiment.metricsRanges,
+          cost: {
+            min: 0,
+            max: 100,
+            rangeMax: 100,
+            filteredMin: 0,
+            filteredMax: 100,
+          },
+          duration: {
+            min: 0,
+            max: 200,
+            rangeMin: 0,
+            filteredMin: 0,
+            filteredMax: 200,
+          },
+        },
+      },
+    }
+    delete localProps.activeExperiment.metricsRanges.cpu
+
+    wrapper = shallow(<TrialsStatistics {...localProps} />)
+    expect(wrapper.find('RangeSlider')).toHaveLength(0)
+    wrapper.unmount()
+  })
+
+  it('should call onSliderChange', () => {
+    wrapper = shallow(<TrialsStatistics {...props} />)
+    expect(wrapper.find('RangeSlider')).toHaveLength(
+      props.activeExperiment.metricsList.length,
+    )
+    wrapper
+      .find('RangeSlider')
+      .first()
+      .prop('onChange')({min: 23, max: 208})
+    expect(props.onSliderChange).toHaveBeenCalledTimes(1)
+    expect(props.onSliderChange.mock.calls[0][0]).toEqual({
+      metric: 'cost',
+      range: {min: 23, max: 208},
+    })
+
+    wrapper
+      .find('RangeSlider')
+      .at(1)
+      .prop('onChange')({min: 59, max: 98})
+    expect(props.onSliderChange).toHaveBeenCalledTimes(2)
+    expect(props.onSliderChange.mock.calls[1][0]).toEqual({
+      metric: 'duration',
+      range: {min: 59, max: 98},
+    })
     wrapper.unmount()
   })
 })
