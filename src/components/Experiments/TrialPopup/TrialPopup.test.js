@@ -98,7 +98,7 @@ describe('Component: TrialPopup', () => {
       hoveredTrial: {
         ...props.hoveredTrial,
         trial: {
-          labels: {},
+          labels: null,
         },
       },
     }
@@ -258,6 +258,15 @@ describe('Component: TrialPopup', () => {
       .first()
       .simulate('mouseOut')
     expect(props.mouseOut).toHaveBeenCalledTimes(1)
+
+    wrapper
+      .find('div')
+      .first()
+      .simulate('focus')
+    wrapper
+      .find('div')
+      .first()
+      .simulate('blur')
     wrapper.unmount()
   })
 
