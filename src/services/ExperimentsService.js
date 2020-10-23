@@ -1,6 +1,7 @@
 import {HttpService} from './HttpService'
 
 import {backedAddress} from '../config'
+import {mapMetricsValues} from '../utilities/trialsFunctions'
 
 let instance
 
@@ -51,7 +52,9 @@ export class ExperimentsService {
         if (!response) {
           throw new Error('Error in ExperimentsService.getTrials')
         }
-        return await response.json()
+        const data = await response.json()
+        const mapedData = {...data, trials: mapMetricsValues(data.trials)}
+        return mapedData
       })
     return [getTrials, abort]
   }

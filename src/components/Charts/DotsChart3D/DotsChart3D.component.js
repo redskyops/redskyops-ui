@@ -261,20 +261,15 @@ export class DotsChart3D extends React.Component<ChartPropsType> {
     const zValueName = this.props.zAxisMetricName
 
     this.completedTrials = this.props.trials
-      .map((t, index) => ({...t, index}))
       .filter(t => t.status === 'completed')
       .filter(t => {
-        const metVals = (t.values || []).reduce(
-          (acc, v) => ({...acc, [v.metricName]: v.value}),
-          {},
-        )
         return (
-          metVals[xValueName] >= this.props.xAxisRange.min &&
-          metVals[xValueName] <= this.props.xAxisRange.max &&
-          metVals[yValueName] >= this.props.yAxisRange.min &&
-          metVals[yValueName] <= this.props.yAxisRange.max &&
-          metVals[zValueName] >= this.props.zAxisRange.min &&
-          metVals[zValueName] <= this.props.zAxisRange.max
+          t.allValues[xValueName] >= this.props.xAxisRange.min &&
+          t.allValues[xValueName] <= this.props.xAxisRange.max &&
+          t.allValues[yValueName] >= this.props.yAxisRange.min &&
+          t.allValues[yValueName] <= this.props.yAxisRange.max &&
+          t.allValues[zValueName] >= this.props.zAxisRange.min &&
+          t.allValues[zValueName] <= this.props.zAxisRange.max
         )
       })
 

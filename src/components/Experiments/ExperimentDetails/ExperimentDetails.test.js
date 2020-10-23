@@ -132,7 +132,7 @@ describe('Component: ExperimentsDetails', () => {
     wrapper.unmount()
   })
 
-  it('should update state on slider change', () => {
+  it('should update state when range slider changes', () => {
     wrapper = shallow(<ExperimentDetails {...props} />)
     expect(wrapper.find('TrialsStatistics')).toHaveLength(2)
     const statisticsProps = wrapper
@@ -150,6 +150,32 @@ describe('Component: ExperimentsDetails', () => {
             ...props.activeExperiment.metricsRanges.cost,
             min: 5,
             max: 20,
+          },
+        },
+      },
+    })
+    wrapper.unmount()
+  })
+
+  fit('should set filtered data max and min for each metric', () => {
+    wrapper = shallow(<ExperimentDetails {...props} />)
+    expect(wrapper.find('TrialsStatistics')).toHaveLength(2)
+    const statisticsProps = wrapper
+      .find('TrialsStatistics')
+      .first()
+      .props()
+    statisticsProps.onSliderChange({metric: 'cost', range: {min: 5, max: 20}})
+    expect(props.updateState).toHaveBeenCalledTimes(1)
+    expect(props.updateState.mock.calls[0][0]).toEqual({
+      activeExperiment: {
+        ...props.activeExperiment,
+        metricsRanges: {
+          ...props.activeExperiment.metricsRanges,
+          cost: {
+            ...props.activeExperiment.metricsRanges.cost,
+            min: 5,
+            max: 20,
+            filteredMin: 10,
           },
         },
       },

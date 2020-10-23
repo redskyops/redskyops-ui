@@ -19,16 +19,11 @@ export class DotsChart1D extends React.Component<ChartPropsType> {
     const xValueName = this.props.xAxisMetricName
 
     const completedTrials = this.props.trials
-      .map((t, index) => ({...t, index}))
       .filter(t => t.status === 'completed')
       .filter(t => {
-        const metVals = (t.values || []).reduce(
-          (acc, v) => ({...acc, [v.metricName]: v.value}),
-          {},
-        )
         return (
-          metVals[xValueName] >= this.props.xAxisRange.min &&
-          metVals[xValueName] <= this.props.xAxisRange.max
+          t.allValues[xValueName] >= this.props.xAxisRange.min &&
+          t.allValues[xValueName] <= this.props.xAxisRange.max
         )
       })
 

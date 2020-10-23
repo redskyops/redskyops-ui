@@ -44,22 +44,13 @@ export class DotsChart2D extends React.Component<
     const yValueName = this.props.yAxisMetricName
 
     const completedTrials = this.props.trials
-      .map((t, index) => ({...t, index}))
       .filter(t => t.status === 'completed')
       .filter(t => {
-        let metVals = (t.values || []).reduce(
-          (acc, v) => ({...acc, [v.metricName]: v.value}),
-          {},
-        )
-        metVals = (t.assignments || []).reduce(
-          (acc, v) => ({...acc, [v.parameterName]: v.value}),
-          metVals,
-        )
         return (
-          metVals[xValueName] >= this.props.xAxisRange.min &&
-          metVals[xValueName] <= this.props.xAxisRange.max &&
-          metVals[yValueName] >= this.props.yAxisRange.min &&
-          metVals[yValueName] <= this.props.yAxisRange.max
+          t.allValues[xValueName] >= this.props.xAxisRange.min &&
+          t.allValues[xValueName] <= this.props.xAxisRange.max &&
+          t.allValues[yValueName] >= this.props.yAxisRange.min &&
+          t.allValues[yValueName] <= this.props.yAxisRange.max
         )
       })
 
