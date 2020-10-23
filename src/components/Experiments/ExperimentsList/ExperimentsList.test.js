@@ -341,7 +341,7 @@ describe('Component: ExperimentList', () => {
     wrapper.unmount()
   })
 
-  it('should sort metrics list by minimize property', () => {
+  it('should sort metrics list to keep const at firs in list', () => {
     let localProps = {
       ...props,
       experiments: {
@@ -350,8 +350,8 @@ describe('Component: ExperimentList', () => {
       },
     }
     localProps.experiments.list[4] = {...localProps.experiments.list[4]}
-    localProps.experiments.list[4].metrics.forEach(m => (m.minimize = false))
-    localProps.experiments.list[4].metrics[1].minimize = true
+    localProps.experiments.list[4].metrics.reverse()
+    expect(localProps.experiments.list[4].metrics[2].name).toBe('cost')
     wrapper = shallow(<ExperimentsList {...localProps} />)
     wrapper
       .find('button.btn')
@@ -361,7 +361,7 @@ describe('Component: ExperimentList', () => {
     expect(props.updateState.mock.calls[0][0]).toMatchObject({
       activeExperiment: {
         index: 4,
-        metricsList: ['cost', 'latency', 'throughput'],
+        metricsList: ['cost', 'throughput', 'latency'],
       },
     })
     wrapper.unmount()
