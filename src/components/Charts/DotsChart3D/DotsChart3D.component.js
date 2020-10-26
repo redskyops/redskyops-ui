@@ -283,19 +283,13 @@ export class DotsChart3D extends React.Component<ChartPropsType> {
     )
 
     const [minCost, maxCost] = d3.extent(
-      this.completedTrials.map(
-        v => v.values.filter(c => c.metricName === xValueName)[0].value,
-      ),
+      this.completedTrials.map(v => v.allValues[xValueName]),
     )
     const [minDuration, maxDuration] = d3.extent(
-      this.completedTrials.map(v => {
-        return v.values.filter(c => c.metricName === yValueName)[0].value
-      }),
+      this.completedTrials.map(v => v.allValues[yValueName]),
     )
     const [minThroughput, maxThroughput] = d3.extent(
-      this.completedTrials.map(v => {
-        return v.values.filter(c => c.metricName === zValueName)[0].value
-      }),
+      this.completedTrials.map(v => v.allValues[zValueName]),
     )
 
     const minXValue = (min => (!isNaN(min) ? min : minCost))(

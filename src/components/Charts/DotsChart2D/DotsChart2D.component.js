@@ -65,19 +65,12 @@ export class DotsChart2D extends React.Component<
 
     const [minCost, maxCost] = d3.extent(
       completedTrials.map(v => {
-        switch (this.props.xAxisValueType) {
-          case AXIS_TYPE.PARAMETER:
-            return v.assignments.filter(p => p.parameterName === xValueName)[0]
-              .value
-          case AXIS_TYPE.METRIC:
-          default:
-            return v.values.filter(c => c.metricName === xValueName)[0].value
-        }
+        return v.allValues[xValueName]
       }),
     )
     const [minDuration, maxDuration] = d3.extent(
       completedTrials.map(v => {
-        return v.values.filter(c => c.metricName === yValueName)[0].value
+        return v.allValues[yValueName]
       }),
     )
 

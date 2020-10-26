@@ -37,9 +37,7 @@ export class DotsChart1D extends React.Component<ChartPropsType> {
     )
 
     const [minCost, maxCost] = d3.extent(
-      completedTrials.map(
-        v => v.values.filter(c => c.metricName === xValueName)[0].value,
-      ),
+      completedTrials.map(v => v.allValues[xValueName]),
     )
 
     const minXValue = (min => (!isNaN(min) ? min : minCost))(
