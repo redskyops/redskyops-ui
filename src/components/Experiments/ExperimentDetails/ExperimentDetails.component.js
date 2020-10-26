@@ -23,7 +23,7 @@ import Tabs from '../../Tabs/Tabs.component'
 import arrowImage from '../../../assets/images/ArrowLeft.png'
 import TrialPopup from '../TrialPopup/TrialPopup.component'
 import {DEFAULT_LABEL_VALUE, BASELINE_LABEL} from '../../../constants'
-import {getDataFilteredRanges} from '../../../utilities/trialsFunctions'
+import {getTrialsFilteredRanges} from '../../../utilities/trialsFunctions'
 
 const POPUP_HIDE_DELAY = 300
 
@@ -408,7 +408,7 @@ export const ExperimentDetails = (props: Props) => {
         ...range,
       },
     }
-    const filteredRanges = getDataFilteredRanges(trials, newMetricsRanges)
+    const filteredRanges = getTrialsFilteredRanges(trials, newMetricsRanges)
     Object.keys(newMetricsRanges).forEach(key => {
       newMetricsRanges[key] = {
         ...newMetricsRanges[key],

@@ -27,7 +27,7 @@ export const getFilteredTrials = (_trials, _metricsRanges) => {
   return filteredData
 }
 
-export const getDataFilteredRanges = (_trials, _metricsRanges) => {
+export const getTrialsFilteredRanges = (_trials, _metricsRanges) => {
   const filteredData = getFilteredTrials(_trials, _metricsRanges)
   return Object.keys(_metricsRanges).reduce((acc, key) => {
     const [filteredMin, filteredMax] = d3.extent(
