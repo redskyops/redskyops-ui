@@ -170,24 +170,8 @@ export class DotsChart2D extends React.Component<
       hoverTrialHandler,
     }) =>
       function _circleOver(_, dataPoint) {
-        let xValue = 0
-        switch (xAxisValueType) {
-          case AXIS_TYPE.PARAMETER:
-            xValue = dataPoint.assignments.filter(
-              v => v.parameterName === xValueName,
-            )[0].value
-            break
-          case AXIS_TYPE.METRIC:
-          default:
-            xValue = dataPoint.values.filter(
-              v => v.metricName === xValueName,
-            )[0].value
-            break
-        }
-
-        var yValue = dataPoint.values.filter(
-          v => v.metricName === yValueName,
-        )[0].value
+        const xValue = dataPoint.allValues[xValueName] || 0
+        const yValue = dataPoint.allValues[yValueName] || 0
 
         d3.select(this)
           .classed(style.active, true)
@@ -247,27 +231,9 @@ export class DotsChart2D extends React.Component<
       .enter()
       .append('g')
       .attr('transform', d => {
-        const duration = d.values.reduce((acc, v) => {
-          if (v.metricName === yValueName) acc = v
-          return acc
-        }, 0)
-        let cost = {value: 0}
-        switch (this.props.xAxisValueType) {
-          case AXIS_TYPE.PARAMETER:
-            cost = d.assignments.reduce((acc, v) => {
-              if (v.parameterName === xValueName) acc = v
-              return acc
-            }, 0)
-            break
-          case AXIS_TYPE.METRIC:
-          default:
-            cost = d.values.reduce((acc, v) => {
-              if (v.metricName === xValueName) acc = v
-              return acc
-            }, 0)
-            break
-        }
-        return `translate(${xScale(cost.value)}, ${yScale(duration.value)})`
+        const durationValue = d.allValues[yValueName] || 0
+        const costValue = d.allValues[xValueName] || 0
+        return `translate(${xScale(costValue)}, ${yScale(durationValue)})`
       })
       .attr('class', 'point')
       .classed('baseline', d => {

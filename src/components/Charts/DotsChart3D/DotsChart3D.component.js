@@ -353,12 +353,9 @@ export class DotsChart3D extends React.Component<ChartPropsType> {
     }
     this.dots = []
     this.filteredTrials.forEach(d => {
-      const [xPoint, yPoint, zPoint] = d.values.reduce((acc, v) => {
-        if (v.metricName === this.scales[0].name) acc[0] = v
-        if (v.metricName === this.scales[1].name) acc[1] = v
-        if (v.metricName === this.scales[2].name) acc[2] = v
-        return acc
-      }, [])
+      const xPointValue = d.allValues[this.scales[0].name]
+      const yPointValue = d.allValues[this.scales[1].name]
+      const zPointValue = d.allValues[this.scales[2].name]
 
       const color = d.labels && d.labels.best ? BEST_COLOR : NORMAL_COLOR
       const material = new THREE.MeshLambertMaterial({
@@ -370,9 +367,9 @@ export class DotsChart3D extends React.Component<ChartPropsType> {
       const geometry = new THREE.SphereGeometry(sphereRadis, 32, 32)
 
       const dot = new THREE.Mesh(geometry, material)
-      dot.position.x = this.scales[0].scale(xPoint.value)
-      dot.position.y = this.scales[1].scale(yPoint.value)
-      dot.position.z = this.scales[2].scale(zPoint.value)
+      dot.position.x = this.scales[0].scale(xPointValue)
+      dot.position.y = this.scales[1].scale(yPointValue)
+      dot.position.z = this.scales[2].scale(zPointValue)
       dot.dataIndex = d.index
       this.scene.add(dot)
       this.dots.push(dot)
