@@ -101,7 +101,9 @@ export const TrialsStatistics = ({
           if (
             !activeExperiment.metricsRanges[key] ||
             !('rangeMax' in activeExperiment.metricsRanges[key]) ||
-            !('rangeMin' in activeExperiment.metricsRanges[key])
+            !('rangeMin' in activeExperiment.metricsRanges[key]) ||
+            activeExperiment.metricsRanges[key].rangeMin === null ||
+            activeExperiment.metricsRanges[key].rangeMax === null
           ) {
             return null
           }
