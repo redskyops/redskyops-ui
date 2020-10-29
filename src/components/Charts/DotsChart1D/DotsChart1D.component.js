@@ -19,16 +19,11 @@ export class DotsChart1D extends React.Component<ChartPropsType> {
     const xValueName = this.props.xAxisMetricName
 
     const completedTrials = this.props.trials
-      .map((t, index) => ({...t, index}))
       .filter(t => t.status === 'completed')
       .filter(t => {
-        const metVals = (t.values || []).reduce(
-          (acc, v) => ({...acc, [v.metricName]: v.value}),
-          {},
-        )
         return (
-          metVals[xValueName] >= this.props.xAxisRange.min &&
-          metVals[xValueName] <= this.props.xAxisRange.max
+          t.allValues[xValueName] >= this.props.xAxisRange.min &&
+          t.allValues[xValueName] <= this.props.xAxisRange.max
         )
       })
 
@@ -42,9 +37,7 @@ export class DotsChart1D extends React.Component<ChartPropsType> {
     )
 
     const [minCost, maxCost] = d3.extent(
-      completedTrials.map(
-        v => v.values.filter(c => c.metricName === xValueName)[0].value,
-      ),
+      completedTrials.map(v => v.allValues[xValueName]),
     )
 
     const minXValue = (min => (!isNaN(min) ? min : minCost))(
@@ -96,10 +89,8 @@ export class DotsChart1D extends React.Component<ChartPropsType> {
       )
 
     const circleOver = ({hoverTrialHandler, xAxisMetricName}) =>
-      function _circleOver(dataPoint) {
-        var xValue = dataPoint.values.filter(
-          v => v.metricName === xValueName,
-        )[0].value
+      function _circleOver(_, dataPoint) {
+        var xValue = dataPoint.allValues[xValueName]
 
         d3.select(this)
           .classed(style.active, true)
@@ -121,7 +112,7 @@ export class DotsChart1D extends React.Component<ChartPropsType> {
       }
 
     const circleOut = ({activeTrial, hoverTrialHandler}) =>
-      function _circleOut(dataPoint) {
+      function _circleOut(_, dataPoint) {
         d3.select(this)
           .classed(style.active, false)
           .attr(
@@ -132,7 +123,7 @@ export class DotsChart1D extends React.Component<ChartPropsType> {
       }
 
     const circleClick = selectTrialHandler =>
-      function _circleClick(dataPoint) {
+      function _circleClick(_, dataPoint) {
         selectTrialHandler({
           index: dataPoint.index,
           trial: dataPoint,
@@ -158,11 +149,8 @@ export class DotsChart1D extends React.Component<ChartPropsType> {
       .enter()
       .append('g')
       .attr('transform', d => {
-        const [cost] = d.values.reduce((acc, v) => {
-          if (v.metricName === xValueName) acc[0] = v
-          return acc
-        }, [])
-        return `translate(${xScale(cost.value)}, ${height})`
+        const costValue = d.allValues[xValueName] || 0
+        return `translate(${xScale(costValue)}, ${height})`
       })
       .attr('class', 'point')
       .classed('baseline', d => {

@@ -44,22 +44,13 @@ export class DotsChart2D extends React.Component<
     const yValueName = this.props.yAxisMetricName
 
     const completedTrials = this.props.trials
-      .map((t, index) => ({...t, index}))
       .filter(t => t.status === 'completed')
       .filter(t => {
-        let metVals = (t.values || []).reduce(
-          (acc, v) => ({...acc, [v.metricName]: v.value}),
-          {},
-        )
-        metVals = (t.assignments || []).reduce(
-          (acc, v) => ({...acc, [v.parameterName]: v.value}),
-          metVals,
-        )
         return (
-          metVals[xValueName] >= this.props.xAxisRange.min &&
-          metVals[xValueName] <= this.props.xAxisRange.max &&
-          metVals[yValueName] >= this.props.yAxisRange.min &&
-          metVals[yValueName] <= this.props.yAxisRange.max
+          t.allValues[xValueName] >= this.props.xAxisRange.min &&
+          t.allValues[xValueName] <= this.props.xAxisRange.max &&
+          t.allValues[yValueName] >= this.props.yAxisRange.min &&
+          t.allValues[yValueName] <= this.props.yAxisRange.max
         )
       })
 
@@ -74,19 +65,12 @@ export class DotsChart2D extends React.Component<
 
     const [minCost, maxCost] = d3.extent(
       completedTrials.map(v => {
-        switch (this.props.xAxisValueType) {
-          case AXIS_TYPE.PARAMETER:
-            return v.assignments.filter(p => p.parameterName === xValueName)[0]
-              .value
-          case AXIS_TYPE.METRIC:
-          default:
-            return v.values.filter(c => c.metricName === xValueName)[0].value
-        }
+        return v.allValues[xValueName]
       }),
     )
     const [minDuration, maxDuration] = d3.extent(
       completedTrials.map(v => {
-        return v.values.filter(c => c.metricName === yValueName)[0].value
+        return v.allValues[yValueName]
       }),
     )
 
@@ -185,25 +169,9 @@ export class DotsChart2D extends React.Component<
       yAxisMetricName,
       hoverTrialHandler,
     }) =>
-      function _circleOver(dataPoint) {
-        let xValue = 0
-        switch (xAxisValueType) {
-          case AXIS_TYPE.PARAMETER:
-            xValue = dataPoint.assignments.filter(
-              v => v.parameterName === xValueName,
-            )[0].value
-            break
-          case AXIS_TYPE.METRIC:
-          default:
-            xValue = dataPoint.values.filter(
-              v => v.metricName === xValueName,
-            )[0].value
-            break
-        }
-
-        var yValue = dataPoint.values.filter(
-          v => v.metricName === yValueName,
-        )[0].value
+      function _circleOver(_, dataPoint) {
+        const xValue = dataPoint.allValues[xValueName] || 0
+        const yValue = dataPoint.allValues[yValueName] || 0
 
         d3.select(this)
           .classed(style.active, true)
@@ -225,7 +193,7 @@ export class DotsChart2D extends React.Component<
       }
 
     const circleOut = ({activeTrial, hoverTrialHandler}) =>
-      function _circleOut(dataPoint) {
+      function _circleOut(_, dataPoint) {
         d3.select(this)
           .classed(style.active, false)
           .attr(
@@ -237,7 +205,7 @@ export class DotsChart2D extends React.Component<
       }
 
     const circleClick = selectTrialHandler =>
-      function _circleClick(dataPoint) {
+      function _circleClick(_, dataPoint) {
         selectTrialHandler({
           index: dataPoint.index,
           trial: dataPoint,
@@ -263,27 +231,9 @@ export class DotsChart2D extends React.Component<
       .enter()
       .append('g')
       .attr('transform', d => {
-        const duration = d.values.reduce((acc, v) => {
-          if (v.metricName === yValueName) acc = v
-          return acc
-        }, 0)
-        let cost = {value: 0}
-        switch (this.props.xAxisValueType) {
-          case AXIS_TYPE.PARAMETER:
-            cost = d.assignments.reduce((acc, v) => {
-              if (v.parameterName === xValueName) acc = v
-              return acc
-            }, 0)
-            break
-          case AXIS_TYPE.METRIC:
-          default:
-            cost = d.values.reduce((acc, v) => {
-              if (v.metricName === xValueName) acc = v
-              return acc
-            }, 0)
-            break
-        }
-        return `translate(${xScale(cost.value)}, ${yScale(duration.value)})`
+        const durationValue = d.allValues[yValueName] || 0
+        const costValue = d.allValues[xValueName] || 0
+        return `translate(${xScale(costValue)}, ${yScale(durationValue)})`
       })
       .attr('class', 'point')
       .classed('baseline', d => {

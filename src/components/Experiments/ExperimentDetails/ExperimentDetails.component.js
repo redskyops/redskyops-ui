@@ -23,6 +23,7 @@ import Tabs from '../../Tabs/Tabs.component'
 import arrowImage from '../../../assets/images/ArrowLeft.png'
 import TrialPopup from '../TrialPopup/TrialPopup.component'
 import {DEFAULT_LABEL_VALUE, BASELINE_LABEL} from '../../../constants'
+import {getTrialsFilteredRanges} from '../../../utilities/trialsFunctions'
 
 const POPUP_HIDE_DELAY = 300
 
@@ -111,6 +112,8 @@ export const ExperimentDetails = (props: Props) => {
               rangeMax: rangeMax || null,
               min: 0,
               max: rangeMax,
+              filteredMin: rangeMin || null,
+              filteredMax: rangeMax || null,
             },
           }
         }, metricsRanges)
@@ -397,47 +400,6 @@ export const ExperimentDetails = (props: Props) => {
     })
   }
 
-  const getFilteredTrials = (_trials, _metricsRanges) => {
-    const filteredData = _trials
-      .filter(t => t.status === 'completed')
-      .map(t => {
-        let allValues = (t.values || []).reduce(
-          (acc, v) => ({...acc, [v.metricName]: v.value}),
-          {},
-        )
-        allValues = (t.assignments || []).reduce(
-          (acc, v) => ({...acc, [v.parameterName]: v.value}),
-          allValues,
-        )
-        return {...t, allValues}
-      })
-      .filter(t => {
-        return Object.keys(_metricsRanges).reduce((acc, key) => {
-          const inRange =
-            t.allValues[key] >= _metricsRanges[key].min &&
-            t.allValues[key] <= _metricsRanges[key].max
-          return acc && inRange
-        }, true)
-      })
-    return filteredData
-  }
-
-  const getDataFilteredRanges = (_trials, _metricsRanges) => {
-    const filteredData = getFilteredTrials(_trials, _metricsRanges)
-    return Object.keys(_metricsRanges).reduce((acc, key) => {
-      const [filteredMin, filteredMax] = d3.extent(
-        filteredData.map(t => t.allValues[key]),
-      )
-      return {
-        ...acc,
-        [key]: {
-          filteredMin,
-          filteredMax,
-        },
-      }
-    }, {})
-  }
-
   const onMetricRangeChange = ({metric, range}) => {
     const newMetricsRanges = {
       ...activeExperiment.metricsRanges,
@@ -446,7 +408,7 @@ export const ExperimentDetails = (props: Props) => {
         ...range,
       },
     }
-    const filteredRanges = getDataFilteredRanges(trials, newMetricsRanges)
+    const filteredRanges = getTrialsFilteredRanges(trials, newMetricsRanges)
     Object.keys(newMetricsRanges).forEach(key => {
       newMetricsRanges[key] = {
         ...newMetricsRanges[key],

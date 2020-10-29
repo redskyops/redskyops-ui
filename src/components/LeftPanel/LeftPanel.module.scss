@@ -97,6 +97,7 @@
   background-color: $color-7;
   border: 0;
   color: $white;
+  cursor: pointer;
   position: absolute;
   width: 30px;
   height: 40px;
@@ -113,4 +114,9 @@
     color: $white;
     text-decoration: none;
   }
+}
+
+.btnIcon {
+  font-size: 30px;
+  line-height: 40px;
 }

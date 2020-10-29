@@ -77,6 +77,20 @@ describe('Hook: useApiCallEffect', () => {
     })
   })
 
+  it('should do nothing in case of AbortError', async done => {
+    request.mockImplementationOnce(() => Promise.reject({name: 'AbortError'}))
+    const TestComponent = () => {
+      useApiCallEffect(requestFactory, successHandler, errorHandler)
+      return <div id="test" />
+    }
+    await mount(<TestComponent />)
+    setImmediate(() => {
+      expect(successHandler).toHaveBeenCalledTimes(0)
+      expect(errorHandler).toHaveBeenCalledTimes(0)
+      done()
+    })
+  })
+
   it('should call abort when component unmount', () => {
     const TestComponent = () => {
       useApiCallEffect(requestFactory, successHandler, errorHandler)

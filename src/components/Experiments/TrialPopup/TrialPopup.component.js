@@ -30,7 +30,7 @@ export const TrialPopup = (props: TypeProps) => {
     return null
   }
   const {left, top, xData, yData, zData, trial} = hoveredTrial
-  const isBaselineTrial = BASELINE_LABEL in trial.labels
+  const isBaselineTrial = BASELINE_LABEL in (trial.labels || {})
   const experiment =
     activeExperiment && experiments.list[activeExperiment.index]
       ? experiments.list[activeExperiment.index]

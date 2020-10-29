@@ -261,20 +261,15 @@ export class DotsChart3D extends React.Component<ChartPropsType> {
     const zValueName = this.props.zAxisMetricName
 
     this.completedTrials = this.props.trials
-      .map((t, index) => ({...t, index}))
       .filter(t => t.status === 'completed')
       .filter(t => {
-        const metVals = (t.values || []).reduce(
-          (acc, v) => ({...acc, [v.metricName]: v.value}),
-          {},
-        )
         return (
-          metVals[xValueName] >= this.props.xAxisRange.min &&
-          metVals[xValueName] <= this.props.xAxisRange.max &&
-          metVals[yValueName] >= this.props.yAxisRange.min &&
-          metVals[yValueName] <= this.props.yAxisRange.max &&
-          metVals[zValueName] >= this.props.zAxisRange.min &&
-          metVals[zValueName] <= this.props.zAxisRange.max
+          t.allValues[xValueName] >= this.props.xAxisRange.min &&
+          t.allValues[xValueName] <= this.props.xAxisRange.max &&
+          t.allValues[yValueName] >= this.props.yAxisRange.min &&
+          t.allValues[yValueName] <= this.props.yAxisRange.max &&
+          t.allValues[zValueName] >= this.props.zAxisRange.min &&
+          t.allValues[zValueName] <= this.props.zAxisRange.max
         )
       })
 
@@ -288,19 +283,13 @@ export class DotsChart3D extends React.Component<ChartPropsType> {
     )
 
     const [minCost, maxCost] = d3.extent(
-      this.completedTrials.map(
-        v => v.values.filter(c => c.metricName === xValueName)[0].value,
-      ),
+      this.completedTrials.map(v => v.allValues[xValueName]),
     )
     const [minDuration, maxDuration] = d3.extent(
-      this.completedTrials.map(v => {
-        return v.values.filter(c => c.metricName === yValueName)[0].value
-      }),
+      this.completedTrials.map(v => v.allValues[yValueName]),
     )
     const [minThroughput, maxThroughput] = d3.extent(
-      this.completedTrials.map(v => {
-        return v.values.filter(c => c.metricName === zValueName)[0].value
-      }),
+      this.completedTrials.map(v => v.allValues[zValueName]),
     )
 
     const minXValue = (min => (!isNaN(min) ? min : minCost))(
@@ -364,12 +353,9 @@ export class DotsChart3D extends React.Component<ChartPropsType> {
     }
     this.dots = []
     this.filteredTrials.forEach(d => {
-      const [xPoint, yPoint, zPoint] = d.values.reduce((acc, v) => {
-        if (v.metricName === this.scales[0].name) acc[0] = v
-        if (v.metricName === this.scales[1].name) acc[1] = v
-        if (v.metricName === this.scales[2].name) acc[2] = v
-        return acc
-      }, [])
+      const xPointValue = d.allValues[this.scales[0].name]
+      const yPointValue = d.allValues[this.scales[1].name]
+      const zPointValue = d.allValues[this.scales[2].name]
 
       const color = d.labels && d.labels.best ? BEST_COLOR : NORMAL_COLOR
       const material = new THREE.MeshLambertMaterial({
@@ -381,9 +367,9 @@ export class DotsChart3D extends React.Component<ChartPropsType> {
       const geometry = new THREE.SphereGeometry(sphereRadis, 32, 32)
 
       const dot = new THREE.Mesh(geometry, material)
-      dot.position.x = this.scales[0].scale(xPoint.value)
-      dot.position.y = this.scales[1].scale(yPoint.value)
-      dot.position.z = this.scales[2].scale(zPoint.value)
+      dot.position.x = this.scales[0].scale(xPointValue)
+      dot.position.y = this.scales[1].scale(yPointValue)
+      dot.position.z = this.scales[2].scale(zPointValue)
       dot.dataIndex = d.index
       this.scene.add(dot)
       this.dots.push(dot)

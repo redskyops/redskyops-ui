@@ -186,4 +186,18 @@ describe('Service: HttpService', () => {
     await request()
     expect(console.log).toHaveBeenCalledTimes(1)
   })
+
+  it('should throw error again if AbortError', async () => {
+    console.log = jest.fn(() => {})
+
+    const testMiddle = jest.fn(() => true)
+    httpService.addMiddleware(testMiddle)
+
+    global.fetch = mockFetch({
+      responseData: {test: 1},
+      error: {name: 'AbortError'},
+    })
+    const [request] = httpService.get({url: '/api/v1/cases'})
+    await expect(request()).rejects.toEqual({name: 'AbortError'})
+  })
 })
