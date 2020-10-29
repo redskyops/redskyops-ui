@@ -42,16 +42,22 @@ export class DotsChart2D extends React.Component<
 
     const xValueName = this.props.xAxisMetricName
     const yValueName = this.props.yAxisMetricName
+    const isStringX =
+      typeof this.props.trials[0].allValues[xValueName] === 'string'
 
     const completedTrials = this.props.trials
       .filter(t => t.status === 'completed')
       .filter(t => {
-        return (
-          t.allValues[xValueName] >= this.props.xAxisRange.min &&
-          t.allValues[xValueName] <= this.props.xAxisRange.max &&
+        let inRange =
           t.allValues[yValueName] >= this.props.yAxisRange.min &&
           t.allValues[yValueName] <= this.props.yAxisRange.max
-        )
+        if (!isStringX) {
+          inRange =
+            inRange &&
+            t.allValues[xValueName] >= this.props.xAxisRange.min &&
+              t.allValues[xValueName] <= this.props.xAxisRange.max
+        }
+        return inRange
       })
 
     const filteredTrials = completedTrials.filter(
@@ -82,10 +88,25 @@ export class DotsChart2D extends React.Component<
       parseInt(this.props.yAxisMinValue, 10),
     )
 
-    const xScale = d3
-      .scaleLinear()
-      .domain([minXValue, maxCost])
-      .range([0, width])
+    let xScale
+    let allXStringValues = {}
+    if (isStringX) {
+      allXStringValues = completedTrials.reduce((acc, t) => {
+        if (!(t.allValues[xValueName] in acc)) {
+          acc[t.allValues[xValueName]] = Object.keys(acc).length + 1
+        }
+        return acc
+      }, allXStringValues)
+      xScale = d3
+        .scaleLinear()
+        .domain([0, Object.keys(allXStringValues).length + 1])
+        .range([0, width])
+    } else {
+      xScale = d3
+        .scaleLinear()
+        .domain([minXValue, maxCost])
+        .range([0, width])
+    }
 
     const yScale = d3
       .scaleLinear()
@@ -118,7 +139,18 @@ export class DotsChart2D extends React.Component<
       .style('fill', '#000')
       .text(yValueName.toUpperCase().replace(/_/g, ' '))
 
-    const xAxis = d3.axisBottom(xScale).ticks(10)
+    /* eslint-disable indent */
+    const xAxis = isStringX
+      ? d3
+          .axisBottom(xScale)
+          .ticks(Object.keys(allXStringValues).length)
+          .tickFormat(d => {
+            return Object.keys(allXStringValues)[
+              Object.values(allXStringValues).indexOf(d)
+            ]
+          })
+      : d3.axisBottom(xScale).ticks(10)
+    /* eslint-enable indent */
 
     svg
       .append('g')
@@ -232,7 +264,9 @@ export class DotsChart2D extends React.Component<
       .append('g')
       .attr('transform', d => {
         const durationValue = d.allValues[yValueName] || 0
-        const costValue = d.allValues[xValueName] || 0
+        const costValue = isStringX
+          ? allXStringValues[d.allValues[xValueName]]
+          : d.allValues[xValueName] || 0
         return `translate(${xScale(costValue)}, ${yScale(durationValue)})`
       })
       .attr('class', 'point')

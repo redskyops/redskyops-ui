@@ -103,13 +103,17 @@ export const TrialsStatistics = ({
             !('rangeMax' in activeExperiment.metricsRanges[key]) ||
             !('rangeMin' in activeExperiment.metricsRanges[key]) ||
             activeExperiment.metricsRanges[key].rangeMin === null ||
-            activeExperiment.metricsRanges[key].rangeMax === null
+            activeExperiment.metricsRanges[key].rangeMax === null ||
+            typeof activeExperiment.metricsRanges[key].rangeMin === 'string'
           ) {
             return null
           }
 
           return (
-            <li className={style.item} key={`${axisNames[i]}-${key}`}>
+            <li
+              className={style.item}
+              key={`${activeExperiment.tab}-${axisNames[i]}-${key}`}
+            >
               <div className={style.sliderCaption}>{key}</div>
               <RangeSlider
                 min={activeExperiment.metricsRanges[key].min}

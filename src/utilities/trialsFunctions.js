@@ -18,6 +18,9 @@ export const getFilteredTrials = (_trials, _metricsRanges) => {
     .filter(t => t.status === 'completed')
     .filter(t => {
       return Object.keys(_metricsRanges).reduce((acc, key) => {
+        if (typeof t.allValues[key] !== 'number') {
+          return acc
+        }
         const inRange =
           t.allValues[key] >= _metricsRanges[key].min &&
           t.allValues[key] <= _metricsRanges[key].max

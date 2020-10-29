@@ -79,7 +79,7 @@ export const ExperimentDetails = (props: Props) => {
         const [rangeMin, rangeMax] = d3.extent(
           trials
             .filter(t => t.status === 'completed')
-            .map(t => (t.values || []).find(v => v.metricName === key).value),
+            .map(t => t.allValues[key]),
         )
         return {
           ...acc,
@@ -99,11 +99,7 @@ export const ExperimentDetails = (props: Props) => {
           const [rangeMin, rangeMax] = d3.extent(
             trials
               .filter(t => t.status === 'completed')
-              .map(
-                t =>
-                  (t.assignments || []).find(v => v.parameterName === key)
-                    .value,
-              ),
+              .map(t => t.allValues[key]),
           )
           return {
             ...acc,
