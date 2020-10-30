@@ -34,7 +34,9 @@ export const getTrialsFilteredRanges = (_trials, _metricsRanges) => {
   const filteredData = getFilteredTrials(_trials, _metricsRanges)
   return Object.keys(_metricsRanges).reduce((acc, key) => {
     const [filteredMin, filteredMax] = d3.extent(
-      filteredData.map(t => t.allValues[key]),
+      filteredData
+        .map(t => t.allValues[key])
+        .filter(t => typeof t === 'number'),
     )
     return {
       ...acc,

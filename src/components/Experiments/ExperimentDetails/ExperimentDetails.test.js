@@ -6,6 +6,7 @@ import expStub from '../../../services/_stubs/exp-data'
 import trialsStub from '../../../services/_stubs/trials-data'
 import {ExperimentsService} from '../../../services/ExperimentsService'
 import {BASELINE_LABEL, DEFAULT_LABEL_VALUE} from '../../../constants'
+import {mapMetricsValues} from '../../../utilities/trialsFunctions'
 
 jest.mock('../../../services/ExperimentsService', () =>
   jest.requireActual('../../../services/__mocks__/ExperimentsService'),
@@ -29,16 +30,16 @@ describe('Component: ExperimentsDetails', () => {
       labelsList: ['best'],
       metricsRanges: {
         cost: {min: 0, max: 100, rangeMin: 0, rangeMax: 100},
-        duration: {min: 0, max: 200, rangeMin: 0, rangeMax: 200},
-        cpu: {min: 0, max: 500, rangeMin: 0, rangeMax: 400},
-        memory: {min: 0, max: 100, rangeMin: 0, rangeMax: 1000},
+        duration: {min: 0, max: 10000, rangeMin: 0, rangeMax: 10000},
+        cpu: {min: 0, max: 10000, rangeMin: 0, rangeMax: 10000},
+        memory: {min: 0, max: 10000, rangeMin: 0, rangeMax: 10000},
       },
     },
     experiments: {
       list: expService.addIdsToExperiments(expStub).experiments,
       labelsFilter: [],
     },
-    trials: trialsStub.trials,
+    trials: mapMetricsValues(trialsStub.trials),
     activeTrial: null,
     labels: {
       postingNewLabel: false,
@@ -150,6 +151,25 @@ describe('Component: ExperimentsDetails', () => {
             ...props.activeExperiment.metricsRanges.cost,
             min: 5,
             max: 20,
+            rangeMax: 100,
+            rangeMin: 0,
+            filteredMax: 18,
+            filteredMin: 5,
+          },
+          duration: {
+            ...props.activeExperiment.metricsRanges.duration,
+            filteredMax: 8,
+            filteredMin: 2,
+          },
+          cpu: {
+            ...props.activeExperiment.metricsRanges.cpu,
+            filteredMax: 557,
+            filteredMin: 100,
+          },
+          memory: {
+            ...props.activeExperiment.metricsRanges.memory,
+            filteredMax: 4000,
+            filteredMin: 500,
           },
         },
       },
@@ -157,25 +177,28 @@ describe('Component: ExperimentsDetails', () => {
     wrapper.unmount()
   })
 
-  fit('should set filtered data max and min for each metric', () => {
-    wrapper = shallow(<ExperimentDetails {...props} />)
+  it('should set filtered data max and min for each metric', () => {
+    const localProps = {...props}
+    localProps.trials = [...props.trials].splice(0, 20)
+    wrapper = shallow(<ExperimentDetails {...localProps} />)
     expect(wrapper.find('TrialsStatistics')).toHaveLength(2)
     const statisticsProps = wrapper
       .find('TrialsStatistics')
       .first()
       .props()
-    statisticsProps.onSliderChange({metric: 'cost', range: {min: 5, max: 20}})
+    statisticsProps.onSliderChange({metric: 'cost', range: {min: 10, max: 80}})
     expect(props.updateState).toHaveBeenCalledTimes(1)
-    expect(props.updateState.mock.calls[0][0]).toEqual({
+    expect(props.updateState.mock.calls[0][0]).toMatchObject({
       activeExperiment: {
         ...props.activeExperiment,
         metricsRanges: {
           ...props.activeExperiment.metricsRanges,
           cost: {
             ...props.activeExperiment.metricsRanges.cost,
-            min: 5,
-            max: 20,
+            min: 10,
+            max: 80,
             filteredMin: 10,
+            filteredMax: 77,
           },
         },
       },
@@ -205,7 +228,7 @@ describe('Component: ExperimentsDetails', () => {
 
   it('should update state and set metrics ranges when trials are loaded', async done => {
     expService.getTrialsFactory.mockImplementationOnce(() => [
-      () => Promise.resolve(trialsStub),
+      () => Promise.resolve({trials: mapMetricsValues(trialsStub.trials)}),
       () => {},
     ])
     const localProps = {
@@ -219,11 +242,12 @@ describe('Component: ExperimentsDetails', () => {
     setImmediate(() => {
       expect(localProps.updateState).toHaveBeenCalledTimes(1)
       expect(localProps.updateState.mock.calls[0][0]).toEqual({
-        trials: trialsStub.trials,
+        trials: props.trials,
         activeExperiment: {
-          ...props.activeExperiment,
+          ...localProps.activeExperiment,
           isLoading: false,
           metricsRanges: {
+            ...localProps.activeExperiment.metricsRanges,
             cost: {
               filteredMax: 96,
               filteredMin: 3,
@@ -232,14 +256,6 @@ describe('Component: ExperimentsDetails', () => {
               rangeMax: 96,
               rangeMin: 3,
             },
-            cpu: {
-              filteredMax: 3935,
-              filteredMin: 100,
-              max: 3935,
-              min: 0,
-              rangeMax: 3935,
-              rangeMin: 100,
-            },
             duration: {
               filteredMax: 131,
               filteredMin: 1,
@@ -247,6 +263,14 @@ describe('Component: ExperimentsDetails', () => {
               min: 0,
               rangeMax: 131,
               rangeMin: 1,
+            },
+            cpu: {
+              filteredMax: 3935,
+              filteredMin: 100,
+              max: 3935,
+              min: 0,
+              rangeMax: 3935,
+              rangeMin: 100,
             },
             memory: {
               filteredMax: 4000,

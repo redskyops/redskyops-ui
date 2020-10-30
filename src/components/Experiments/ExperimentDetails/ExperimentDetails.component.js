@@ -127,9 +127,11 @@ export const ExperimentDetails = (props: Props) => {
     })
   }
 
-  const triallsRequestError = () => {
+  const triallsRequestError = e => {
+    console.log(e)
     updateState({
       activeExperiment: {
+        ...activeExperiment,
         isLoading: false,
       },
     })
