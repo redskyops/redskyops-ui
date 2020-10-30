@@ -44,7 +44,10 @@ export const RangeSlider = (props: TypeProps) => {
   const filteredRef = useRef()
 
   useEffect(() => {
-    setSliderRect(sliderRef.current.getBoundingClientRect())
+    const rect = sliderRef.current.getBoundingClientRect()
+    rect.x += window.scrollX
+    rect.y += window.scrollY
+    setSliderRect(rect)
     return () => {
       document.removeEventListener('mouseup', dragEnd)
     }
@@ -64,8 +67,14 @@ export const RangeSlider = (props: TypeProps) => {
   useEffect(() => {
     const rect = sliderRef.current.getBoundingClientRect()
     const width = rect.width
-    const leftPos = (width * (filteredMin - rangeMin)) / (rangeMax - rangeMin)
-    const rightPos = (width * (filteredMax - rangeMin)) / (rangeMax - rangeMin)
+    let leftPos = (width * (filteredMin - rangeMin)) / (rangeMax - rangeMin)
+    let rightPos = (width * (filteredMax - rangeMin)) / (rangeMax - rangeMin)
+    if (isNaN(leftPos)) {
+      leftPos = 0
+    }
+    if (isNaN(rightPos)) {
+      rightPos = 0
+    }
     filteredRef.current.style.left = `${Math.ceil(leftPos)}px`
     filteredRef.current.style.width = `${Math.ceil(rightPos - leftPos)}px`
   }, [filteredMin, filteredMax])
@@ -78,8 +87,8 @@ export const RangeSlider = (props: TypeProps) => {
 
   const dragEnd = () => {
     setIsSragging(null)
-    document.removeEventListener('mouseup', dragEnd)
     onChange({min: minRef.current, max: maxRef.current})
+    document.removeEventListener('mouseup', dragEnd)
   }
 
   const _setMinValue = _minValue => {
